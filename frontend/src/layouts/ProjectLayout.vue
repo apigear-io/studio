@@ -1,19 +1,58 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header>
+    <q-header class="bg-grey-10">
       <q-toolbar>
-        <q-btn flat icon="cottage" @click="toggleLeftDrawer"/>
-        <q-toolbar-title> ApiGear Studio </q-toolbar-title>
-
+        <q-icon name="api" color="red-7" size="md"/>
+        <q-toolbar-title>ApiGear Studio</q-toolbar-title>
         <q-space />
-        <q-btn flat icon="content_copy" label="Copy Path" @click="copyProjectPath()"/>
-        <q-btn flat icon="sync" label="Sync"/>
-        <q-btn flat icon="swap_horiz" :label="project.name" to="/"/>
+        <q-btn-dropdown flat class="text-primary" label="New Document" dropdown-icon="add_box" no-caps>
+          <q-list class="q-pa-md">
+            <q-item clickable v-close-popup @click="onNewModule" class="text-primary">
+              <q-item-section avatar>
+                <q-icon name="api" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Module</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="onNewSolution" class="text-primary">
+              <q-item-section avatar>
+                <q-icon name="chair" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Solution</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="onNewSimulation" class="text-primary">
+              <q-item-section avatar>
+                <q-icon name="av_timer" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Simulation</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+        <q-space />
+        <q-btn-group flat class="text-primary">
+          <q-btn icon="swap_horiz" :label="project.name" to="/" no-caps>
+            <q-tooltip>Switch projects</q-tooltip>
+          </q-btn>
+          <q-btn icon="sync">
+            <q-tooltip>Sync project folder</q-tooltip>
+          </q-btn>
+          <q-btn icon="content_copy" @click="copyProjectPath()">
+            <q-tooltip>Copy project location to clipboard</q-tooltip>
+          </q-btn>
+          <q-btn icon="help" @click="openHelp">
+            <q-tooltip>Help</q-tooltip>
+          </q-btn>
+        </q-btn-group>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="120" behavior="desktop" :breakpoint="640">
-      <q-tabs vertical>
+    <q-drawer v-model="leftDrawerOpen" show-if-above :width="96" :breakpoint="640" bordered>
+      <q-tabs vertical class="q-py-md q-px-xs">
         <q-route-tab
           v-for="mode in modes"
           :key="mode.icon"
@@ -21,7 +60,7 @@
           :label="mode.title"
           :to="mode.to"
           no-caps
-          active-class="bg-primary"
+          active-class="text-primary"
           exact
         ></q-route-tab>
       </q-tabs>
@@ -31,12 +70,12 @@
       <router-view />
     </q-page-container>
 
-    <q-footer>
+    <q-footer class="bg-grey-10">
       <div class="row">
-        <q-btn flat size="sm" label="(c) 2020 ApiGear Studio" />
+        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" no-caps/>
         <q-space />
-        <q-btn flat size="sm" label="v 2020.3" />
-        </div>
+        <q-btn flat size="md" label="v 2020.3"  no-caps/>
+      </div>
     </q-footer>
   </q-layout>
 </template>
@@ -44,7 +83,7 @@
 <script>
 import { useQuasar } from "quasar";
 import { onMounted, ref } from "vue";
-import { CurrentProject } from "../wailsjs/go/main/App";
+import { CurrentProject, NewDocument } from "../wailsjs/go/main/App";
 
 const ICONS = {
   dashboard: "dashboard",
@@ -114,6 +153,57 @@ export default {
       });
     }
 
+    function openHelp() {
+      try {
+        window.runtime.BrowserOpenURL("https://docs.apigear.io/");
+      } catch (e) {
+        $q.notify({
+          message: e,
+          color: 'negative',
+          icon: 'error'
+        })
+      }
+    }
+
+    function onNewModule() {
+      $q.dialog({
+        title: "New Module",
+        message: "Enter module name",
+        prompt: {
+          model: '',
+          type: 'text' // optional
+        }
+      }).onOk(async (name) => {
+        await NewDocument(name, "module")
+      });
+    }
+
+    function onNewSolution() {
+      $q.dialog({
+        title: "New Solution",
+        message: "Enter solution name",
+        prompt: {
+          model: '',
+          type: 'text' // optional
+        }
+      }).onOk(async (name) => {
+        await NewDocument(name, "solution")
+      });
+    }
+
+    function onNewSimulation() {
+      $q.dialog({
+        title: "New Simulation",
+        message: "Enter simulation name",
+        prompt: {
+          model: '',
+          type: 'text' // optional
+        }
+      }).onOk(async (name) => {
+        await NewDocument(name, "simulation")
+      });
+    }
+
     return {
       modes: modes,
       leftDrawerOpen,
@@ -122,6 +212,10 @@ export default {
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
+      onNewModule,
+      onNewSolution,
+      onNewSimulation,
+      openHelp,
     };
   },
 };

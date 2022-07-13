@@ -4,12 +4,12 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer>
+    <q-footer class="bg-grey-10">
       <div class="row">
-        <q-btn flat size="sm" label="(c) 2020 ApiGear Studio" />
+        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" no-caps/>
         <q-space />
-        <q-btn flat size="sm" label="v 2020.3" />
-        </div>
+        <q-btn flat size="md" label="v 2020.3"  no-caps/>
+      </div>
     </q-footer>
   </q-layout>
 </template>

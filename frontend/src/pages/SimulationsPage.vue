@@ -1,28 +1,34 @@
 <template>
-  <q-page>
-    <q-toolbar>
-      <q-btn flat icon="av_timer"/>
-      <q-toolbar-title>Simulation Scenarios</q-toolbar-title>
-      <q-space />
-      <q-btn flat label="Messages" style="width:120px"/>
-    </q-toolbar>
-    <q-list bordered>
-      <q-item clickable v-ripple v-for="item in documents" :key="item.path">
-        <q-item-section avatar>
-          <q-icon :name="icon(item.type)" />
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>{{ item.name }}</q-item-label>
-          <q-item-label caption lines="2">{{ item.path }}</q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-btn-group flat>
-            <q-btn label="Run" icon="directions_run" @click="runDocument(item)"/>
-            <q-btn label="Edit" icon="edit" @click="editDocument(item)"/>
-          </q-btn-group>
-        </q-item-section>
-      </q-item>
-    </q-list>
+  <q-page padding>
+    <q-card>
+      <q-card-section>
+      <q-toolbar class="bg-primary text-white rounded-borders">
+          <q-btn flat icon="av_timer"/>
+          <q-toolbar-title>Simulation Scenarios</q-toolbar-title>
+          <q-space />
+          <q-btn flat label="Messages" style="width:120px"/>
+        </q-toolbar>
+      </q-card-section>
+      <q-card-section>
+        <q-list separator padding>
+          <q-item v-ripple v-for="item in documents" :key="item.path">
+            <q-item-section avatar>
+              <q-icon :name="icon(item.type)" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>{{ item.name }}</q-item-label>
+              <q-item-label caption lines="2">{{ item.path }}</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-btn-group class="text-primary">
+                <q-btn class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)"/>
+                <q-btn class="text-primary" label="Edit" icon="edit" @click="editDocument(item)"/>
+              </q-btn-group>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 

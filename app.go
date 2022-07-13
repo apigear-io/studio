@@ -164,3 +164,7 @@ func (a App) ReadSettings() AppSettings {
 func (a App) WriteSettings(settings AppSettings) {
 	log.Infof("Write Settings %+v", settings)
 }
+
+func (a App) NewDocument(name string, docType string) {
+	log.Infof("New Document %s %s", name, docType)
+}

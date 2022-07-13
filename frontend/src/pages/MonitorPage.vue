@@ -1,13 +1,15 @@
 <template>
-  <q-page>
-    <q-toolbar>
-      <q-btn flat icon="data_object"/>
-      <q-toolbar-title>Monitor</q-toolbar-title>
-      <q-space />
-      <q-toggle size="sm" v-model="isListening" label="Scroll" style="min-width:120px"/>
-      <q-btn flat icon="block" label="Clear" style="min-width:120px"/>
-    </q-toolbar>
+  <q-page padding>
     <q-card>
+      <q-card-section>
+      <q-toolbar class="bg-primary text-white rounded-borders">
+          <q-btn flat icon="data_object"/>
+          <q-toolbar-title>Monitor</q-toolbar-title>
+          <q-space />
+          <q-toggle size="sm" v-model="isListening" label="Scroll" style="min-width:120px"/>
+          <q-btn flat icon="block" label="Clear" style="min-width:120px"/>
+        </q-toolbar>
+      </q-card-section>
       <q-card-section>
         <q-table
           title="Monitor Messages"
@@ -16,7 +18,6 @@
           row-key="time"
           dense
           flat
-          bordered
         />
       </q-card-section>
     </q-card>

@@ -1,15 +1,17 @@
 <template>
-  <q-page>
-    <q-toolbar>
-      <q-btn flat icon="view_list"/>
-      <q-toolbar-title>Logs</q-toolbar-title>
-      <q-space/>
-      <q-toggle color="positive" label="Solution" v-model="topicSelection" val="sol" />
-      <q-toggle color="positive" label="Simulation" v-model="topicSelection" val="sim" />
-      <q-toggle color="positive" label="Monitor" v-model="topicSelection" val="mon" />
-      <q-toggle color="positive" label="Application" v-model="topicSelection" val="app" />
-    </q-toolbar>
+  <q-page padding>
     <q-card>
+      <q-card-section>
+      <q-toolbar class="bg-primary text-white rounded-borders">
+          <q-btn flat icon="view_list"/>
+          <q-toolbar-title>Logs</q-toolbar-title>
+          <q-space/>
+          <q-toggle color="positive" label="Solution" v-model="topicSelection" val="sol" icon="filter_alt"/>
+          <q-toggle color="positive" label="Simulation" v-model="topicSelection" val="sim" icon="filter_alt"/>
+          <q-toggle color="positive" label="Monitor" v-model="topicSelection" val="mon" icon="filter_alt"/>
+          <q-toggle color="positive" label="Application" v-model="topicSelection" val="app" icon="filter_alt"/>
+        </q-toolbar>
+      </q-card-section>
       <q-card-section>
         <q-table
           title="Log Messages"
@@ -18,7 +20,6 @@
           row-key="time"
           dense
           flat
-          bordered
         />
       </q-card-section>
     </q-card>

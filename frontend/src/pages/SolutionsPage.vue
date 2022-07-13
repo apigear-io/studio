@@ -1,51 +1,57 @@
 <template>
-  <q-page>
-    <q-toolbar>
-      <q-btn flat icon="chair"/>
-      <q-toolbar-title>SDK Solutions</q-toolbar-title>
-      <q-space />
-      <q-btn flat label="Summary" style="width:120px"/>
-      <q-btn flat label="Messages" style="width:120px"/>
-    </q-toolbar>
-    <q-list bordered>
-      <q-item clickable v-ripple v-for="item in documents" :key="item.path">
-        <q-item-section avatar>
-          <q-icon :name="icon(item.type)" />
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>{{ item.name }}</q-item-label>
-          <q-item-label caption lines="2">{{ item.path }}</q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-btn-group flat>
-            <q-btn label="Run" icon="directions_run" @click="runDocument(item)"/>
-            <q-btn label="Edit" icon="edit" @click="editDocument(item)"/>
-            <q-btn icon="more_vert">
-              <q-menu fit>
-                <q-list style="min-width: 120px">
-                  <q-item clickable v-close-popup @click="copyPath(item)">
-                    <q-item-section avatar>
-                      <q-icon name="file_copy" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>Copy Path</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                  <q-item clickable v-close-popup @click="toggleAutoRun(item)">
-                    <q-item-section avatar>
-                      <q-icon name="directions_run" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>Enable Auto Run</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn>
-          </q-btn-group>
-        </q-item-section>
-      </q-item>
-    </q-list>
+  <q-page padding>
+    <q-card>
+      <q-card-section>
+      <q-toolbar class="bg-primary text-white rounded-borders">
+          <q-btn flat icon="chair"/>
+          <q-toolbar-title>SDK Solutions</q-toolbar-title>
+          <q-space />
+          <q-btn flat label="Summary" style="width:120px"/>
+          <q-btn flat label="Messages" style="width:120px"/>
+        </q-toolbar>
+      </q-card-section>
+      <q-card-section>
+      <q-list separator padding>
+        <q-item clickable v-ripple v-for="item in documents" :key="item.path">
+          <q-item-section avatar>
+            <q-icon :name="icon(item.type)" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ item.name }}</q-item-label>
+            <q-item-label caption lines="2">{{ item.path }}</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-btn-group flat>
+              <q-btn class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)"/>
+              <q-btn class="text-primary" label="Edit" icon="edit" @click="editDocument(item)"/>
+              <q-btn class="text-primary" icon="more_vert">
+                <q-menu fit>
+                  <q-list style="min-width: 240px" class="q-pa-md">
+                    <q-item clickable v-close-popup @click="copyPath(item)" dense class="text-primary">
+                      <q-item-section avatar>
+                        <q-icon name="file_copy" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>Copy Path</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <q-item clickable v-close-popup @click="toggleAutoRun(item)" dense class="text-primary">
+                      <q-item-section avatar>
+                        <q-icon name="directions_run" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>Enable Auto Run</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-btn>
+            </q-btn-group>
+          </q-item-section>
+        </q-item>
+      </q-list>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
