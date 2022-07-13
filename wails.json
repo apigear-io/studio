@@ -1,5 +1,5 @@
 {
-  "name": "go-studio",
+  "name": "ApiGear Studio",
   "assetdir": "frontend/dist/spa",
   "wailsjsdir": "frontend/src",
   "outputfilename": "go-studio",
@@ -10,5 +10,12 @@
   "author": {
     "name": "Jürgen Ryannel",
     "email": "juergen.ryannel@icloud.com"
+  },
+  "info": {
+    "companyName": "ApiGear",
+    "productName": "ApiGear Studio",
+    "productVersion": "1.0.0",
+    "copyright": "(c) 2020 ApiGear",
+    "comments": "ApiGear Studio is an application for creating and managing API driven SDKs."
   }
 }
