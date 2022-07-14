@@ -51,24 +51,28 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above :width="96" :breakpoint="640" bordered>
-      <q-tabs vertical class="q-py-md q-px-xs">
-        <q-route-tab
-          v-for="mode in modes"
-          :key="mode.icon"
-          :icon="mode.icon"
-          :label="mode.title"
-          :to="mode.to"
-          no-caps
-          active-class="text-primary"
-          exact
-        ></q-route-tab>
-      </q-tabs>
-    </q-drawer>
-
     <q-page-container>
-      <router-view />
+      <div class="row q-dark">
+        <div class="col-2 q-py-md shadow-4">
+          <q-tabs vertical>
+            <q-route-tab
+              v-for="mode in modes"
+              :key="mode.icon"
+              :icon="mode.icon"
+              :label="mode.title"
+              :to="mode.to"
+              no-caps
+              active-class="text-primary"
+              exact
+            ></q-route-tab>
+          </q-tabs>
+        </div>
+        <div class="col-10 shadow-4">
+            <router-view />
+        </div>
+      </div>
     </q-page-container>
+
 
     <q-footer class="bg-grey-10">
       <div class="row">

@@ -12,12 +12,15 @@
       </q-card-section>
       <q-card-section>
         <q-table
+          table-class="text-positive"
+          table-header-class="text-primary"
           title="Monitor Messages"
-          :rows="rows"
+          :rows="app.monEventItems"
           :columns="columns"
-          row-key="time"
+          row-key="id"
           dense
           flat
+          :pagination="initialPagination"
         />
       </q-card-section>
     </q-card>
@@ -26,54 +29,30 @@
 
 <script>
 import { ref, onMounted } from 'vue'
+import { useAppStore } from '../stores/app'
+
 export default {
   setup() {
+    const app = useAppStore()
     const isListening = ref(false)
-    const rows = ref([])
     const columns = ref([
-      {
-        name: 'time',
-        label: 'Time',
-        field: 'time',
-        align: 'left',
-        style: 'width: 120px',
-      },
-      {
-        name: 'topic',
-        label: 'Topic',
-        field: 'topic',
-        align: 'center',
-        style: 'width: 120px',
-      },
-      {
-        name: 'message',
-        label: 'Message',
-        field: 'message',
-        align: 'left',
-        style: 'width: 640px',
-      },
+      { name: 'time', label: 'Time', field: 'timestamp', align: 'left', style: 'width: 120px', sortable: true },
+      { name: 'source', label: 'Source', field: 'source', align: 'center', style: 'width: 80px' },
+      { name: 'type', label: 'Type', field: 'type', align: 'left', style: 'width: 80px' },
+      { name: 'symbol', label: 'Symbol', field: 'symbol', align: 'left', style: 'width: 240px' },
+      { name: 'data', label: 'Data', field: 'data', align: 'center', style: 'width: 480px' },
     ])
+    const initialPagination = {
+      sortBy: 'time',
+      descending: true,
+      page: 1,
+      rowsPerPage: 16,
+    }
     onMounted(() => {
-      rows.value = [
-        {
-          time: '2020-01-01T00:00:00Z',
-          topic: 'topic1',
-          message: 'message1',
-        },
-        {
-          time: '2020-01-01T00:00:00Z',
-          topic: 'topic2',
-          message: 'message2',
-        },
-        {
-          time: '2020-01-01T00:00:00Z',
-          topic: 'topic3',
-          message: 'message3',
-        },
-      ]
     })
     return {
-      rows,
+      app,
+      initialPagination,
       columns,
       isListening,
     }

@@ -27,6 +27,10 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	err := StartServices(ctx, config.GetServerPort())
+	if err != nil {
+		log.Errorf("Failed to start services: %s", err)
+	}
 }
 
 func (a App) CurrentProject() (*Project, error) {
@@ -37,7 +41,7 @@ func (a App) CurrentProject() (*Project, error) {
 }
 
 func (a App) RecentProjects() []string {
-	return config.ReadRecentProjects()
+	return config.GetRecentEntries()
 }
 
 func (a *App) OpenProject() (*Project, error) {
@@ -53,7 +57,7 @@ func (a *App) OpenProject() (*Project, error) {
 		return nil, err
 	}
 	a.currentProject = p
-	config.AppendRecentProject(dir)
+	config.AppendRecentEntry(dir)
 	return p, nil
 }
 
@@ -65,7 +69,7 @@ func (a *App) OpenRecentProject(source string) (*Project, error) {
 		return nil, err
 	}
 	a.currentProject = p
-	config.AppendRecentProject(source)
+	config.AppendRecentEntry(source)
 	return p, nil
 }
 
@@ -84,7 +88,7 @@ func (a *App) CreateProject() (*Project, error) {
 		return nil, err
 	}
 	a.currentProject = p
-	config.AppendRecentProject(dir)
+	config.AppendRecentEntry(dir)
 	return p, nil
 }
 
@@ -153,18 +157,33 @@ func guessDocumentType(path string) string {
 }
 
 func (a App) ReadSettings() AppSettings {
+	server_port := config.GetServerPort()
+	update_channel := config.GetUpdateChannel()
+	editor_command := config.GetEditorCommand()
 	return AppSettings{
-		ServerPort:        8080,
-		MonitorAddress:    "http://localhost:8080",
-		SimulationAddress: "http://localhost:8080",
-		UpdateChannel:     "stable",
+		ServerPort:    server_port,
+		UpdateChannel: update_channel,
+		EditorCommand: editor_command,
 	}
 }
 
 func (a App) WriteSettings(settings AppSettings) {
 	log.Infof("Write Settings %+v", settings)
+	config.Set(config.KeyServerPort, settings.ServerPort)
+	config.Set(config.KeyUpdateChannel, settings.UpdateChannel)
+	config.Set(config.KeyEditorCommand, settings.EditorCommand)
+	config.WriteConfig()
+
 }
 
 func (a App) NewDocument(name string, docType string) {
 	log.Infof("New Document %s %s", name, docType)
+}
+
+func (a App) GetMonitorAddress() (string, error) {
+	return GetMonitorAddress()
+}
+
+func (a App) GetSimulationAddress() (string, error) {
+	return GetSimulationAddress()
 }

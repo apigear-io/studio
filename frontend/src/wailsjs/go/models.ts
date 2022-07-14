@@ -1,5 +1,21 @@
 export namespace main {
 	
+	export class AppSettings {
+	    server_port: number;
+	    update_channel: string;
+	    editor_command: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new AppSettings(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.server_port = source["server_port"];
+	        this.update_channel = source["update_channel"];
+	        this.editor_command = source["editor_command"];
+	    }
+	}
 	export class DocumentInfo {
 	    name: string;
 	    path: string;
@@ -49,25 +65,6 @@ export namespace main {
 		    }
 		    return a;
 		}
-	}
-	
-	export class AppSettings {
-	    server_port: number;
-	    monitor_address: string;
-	    simulation_address: string;
-	    update_channel: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new AppSettings(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.server_port = source["server_port"];
-	        this.monitor_address = source["monitor_address"];
-	        this.simulation_address = source["simulation_address"];
-	        this.update_channel = source["update_channel"];
-	    }
 	}
 
 }

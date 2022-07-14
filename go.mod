@@ -5,8 +5,14 @@ go 1.17
 require github.com/wailsapp/wails/v2 v2.0.0-beta.38
 
 require (
+	github.com/dlclark/regexp2 v1.4.1-0.20201116162257-a2a8dda75c91 // indirect
+	github.com/dop251/goja v0.0.0-20220705101429-189bfeb9f530 // indirect
+	github.com/dop251/goja_nodejs v0.0.0-20220706223936-8bb8eec2f26a // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-chi/chi/v5 v5.0.7 // indirect
+	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
+	github.com/gocarina/gocsv v0.0.0-20220707092902-b9da1f06c77e // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect

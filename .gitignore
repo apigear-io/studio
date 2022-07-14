@@ -22,3 +22,6 @@ go.work
 
 # Build dir
 build
+
+.vscode
+.DS_Store

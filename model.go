@@ -13,8 +13,7 @@ type Project struct {
 }
 
 type AppSettings struct {
-	ServerPort        int    `json:"server_port"`
-	MonitorAddress    string `json:"monitor_address"`
-	SimulationAddress string `json:"simulation_address"`
-	UpdateChannel     string `json:"update_channel"`
+	ServerPort    int    `json:"server_port"`
+	UpdateChannel string `json:"update_channel"`
+	EditorCommand string `json:"editor_command"`
 }

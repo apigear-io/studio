@@ -20,7 +20,7 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group flat>
-                <q-btn class="text-primary" label="Edit" icon="edit" @click="editDocument(item)"/>
+                <q-btn size="md" class="text-primary" label="Edit" icon="edit" @click="editDocument(item)"/>
               </q-btn-group>
             </q-item-section>
           </q-item>
