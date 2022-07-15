@@ -20,7 +20,7 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group flat>
-                <q-btn size="md" class="text-primary" label="Edit" icon="edit" @click="editDocument(item)"/>
+                <q-btn size="md" class="text-primary" label="Edit" icon="edit" @click.stop="editDocument(item)"/>
               </q-btn-group>
             </q-item-section>
           </q-item>
@@ -32,7 +32,7 @@
 
 <script>
 import { ref, onMounted } from "vue";
-import { CurrentProject } from "../wailsjs/go/main/App";
+import { CurrentProject, OpenProjectInEditor } from "../wailsjs/go/main/App";
 import { useQuasar } from "quasar";
 import { useRouter
  } from "vue-router";
@@ -50,6 +50,7 @@ export default {
       }
     }
     function openDocument(item) {
+      console.log("openDocument", item)
       $q.notify({
         message: `Opening ${item.name}`,
         color: 'positive',
@@ -73,8 +74,22 @@ export default {
           })
       }
     }
-    function editDocument(doc) {
+    async function editDocument(doc) {
       console.log("editDocument", doc)
+      try {
+        $q.notify({
+          message: `Opening ${doc.name} in editor`,
+          color: 'positive',
+          icon: 'info'
+        })
+        await OpenProjectInEditor(doc.path)
+      } catch {
+        $q.notify({
+          message: `Failed to open ${item.name}`,
+          color: "negative",
+          icon: "error"
+        })
+      }
     }
     onMounted(async () => {
       try {

@@ -22,7 +22,7 @@
             <q-item-section side>
               <q-btn-group class="text-primary">
                 <q-btn class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)"/>
-                <q-btn class="text-primary" label="Edit" icon="edit" @click="editDocument(item)"/>
+                <q-btn class="text-primary" label="Edit" icon="edit" @click.stop="editDocument(item)"/>
               </q-btn-group>
             </q-item-section>
           </q-item>
@@ -34,10 +34,12 @@
 
 <script>
 import { onMounted, ref } from 'vue'
-import { CurrentProject, DocumentsByType } from '../wailsjs/go/main/App'
+import { CurrentProject, DocumentsByType, OpenProjectInEditor } from '../wailsjs/go/main/App'
+import { useQuasar } from 'quasar'
 
 export default {
   setup() {
+    const $q = useQuasar()
     const project = ref({})
     const documents = ref([])
     function icon(docType) {
@@ -52,8 +54,22 @@ export default {
       console.log("runDocument", doc)
     }
 
-    function editDocument(doc) {
+    async function editDocument(doc) {
       console.log("editDocument", doc)
+      try {
+        $q.notify({
+          message: `Opening ${doc.name} in editor`,
+          color: 'positive',
+          icon: 'info'
+        })
+        await OpenProjectInEditor(doc.path)
+      } catch {
+        $q.notify({
+          message: `Failed to open ${item.name}`,
+          color: "negative",
+          icon: "error"
+        })
+      }
     }
 
     onMounted(async () => {

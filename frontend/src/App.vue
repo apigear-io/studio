@@ -4,7 +4,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { useAppStore } from './stores/app'
+import { useAppStore } from './stores/app-store'
 
 export default defineComponent({
   name: 'App',

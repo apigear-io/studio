@@ -29,7 +29,7 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import { useAppStore } from '../stores/app'
+import { useAppStore } from '../stores/app-store'
 
 export default {
   setup() {

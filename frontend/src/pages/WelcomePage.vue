@@ -51,6 +51,9 @@
                 <q-item-section>
                   <q-item-label>{{item}}</q-item-label>
                 </q-item-section>
+                <q-item-section side>
+                  <q-btn size="sm" color="primary" flat icon="close" @click="onRemoveItem(item)" />
+                </q-item-section>
               </q-item>
             </q-list>
           </q-card-section>
@@ -80,7 +83,7 @@
 
 <script>
 import { onMounted, ref } from "vue";
-import { RecentProjects, OpenProject, CreateProject, OpenRecentProject, ImportProject } from "../wailsjs/go/main/App";
+import { RecentProjects, OpenProject, CreateProject, OpenRecentProject, RemoveRecentProject } from "../wailsjs/go/main/App";
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 
@@ -96,6 +99,21 @@ export default {
     onMounted(async () => {
       recent.value = await RecentProjects()
     })
+
+    async function onRemoveItem(item) {
+      recent.value = recent.value.filter(i => i !== item)
+      try {
+      await RemoveRecentProject(item)
+      recent.value = await RecentProjects()
+      } catch (e) {
+        console.error(e)
+        $q.notify({
+          message: 'Error removing recent project',
+          color: 'negative',
+          icon: 'error',
+        })
+      }
+    }
 
     async function openProject() {
       try {
@@ -127,6 +145,7 @@ export default {
     async function createProject() {
       try {
         await CreateProject()
+        router.push('/projects')
       } catch (e) {
         $q.notify({
           message: e,
@@ -153,6 +172,7 @@ export default {
       openRecentProject,
       createProject,
       openUrl,
+      onRemoveItem,
       more: MoreItems,
     };
   }

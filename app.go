@@ -9,6 +9,7 @@ import (
 
 	"github.com/apigear-io/cli/pkg/config"
 	"github.com/apigear-io/cli/pkg/log"
+	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -79,16 +80,17 @@ func (a *App) CreateProject() (*Project, error) {
 		Title:                "Open Folder",
 		CanCreateDirectories: true,
 	}
-	dir, err := runtime.OpenDirectoryDialog(a.ctx, opts)
+	source, err := runtime.OpenDirectoryDialog(a.ctx, opts)
 	if err != nil {
 		return nil, err
 	}
-	p, err := readProject(dir)
+	prj.InitProject(source)
+	p, err := readProject(source)
 	if err != nil {
 		return nil, err
 	}
 	a.currentProject = p
-	config.AppendRecentEntry(dir)
+	config.AppendRecentEntry(source)
 	return p, nil
 }
 
@@ -186,4 +188,12 @@ func (a App) GetMonitorAddress() (string, error) {
 
 func (a App) GetSimulationAddress() (string, error) {
 	return GetSimulationAddress()
+}
+
+func (a App) RemoveRecentProject(source string) {
+	config.RemoveRecentEntry(source)
+}
+func (a App) OpenProjectInEditor(source string) error {
+	log.Infof("Open Project In Editor %s", source)
+	return prj.OpenEditor(source)
 }
