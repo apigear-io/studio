@@ -10,7 +10,7 @@
     </q-card-section>
       <q-card-section>
         <q-list separator padding>
-          <q-item clickable v-ripple v-for="item in project.documents" :key="item.path" @click="openDocument(item)">
+          <q-item clickable v-ripple v-for="item in store.documents" :key="item.path" @click="openDocument(item)">
             <q-item-section avatar>
               <q-icon :name="icon(item.type)" />
             </q-item-section>
@@ -30,86 +30,75 @@
   </q-page>
 </template>
 
-<script>
-import { ref, onMounted } from "vue";
-import { CurrentProject, OpenProjectInEditor } from "../wailsjs/go/main/App";
+<script setup>
 import { useQuasar } from "quasar";
-import { useRouter
- } from "vue-router";
-export default {
-  setup() {
-    const project = ref({})
-    const $q = useQuasar()
-    const router = useRouter()
+import { OpenSourceInEditor } from "../wailsjs/go/main/App";
+// import { EventsOn } from "../wailsjs/runtime/runtime";
+import { useRouter } from "vue-router";
+import { useProjectStore } from "../stores/project-store";
+const router = useRouter();
+const $q = useQuasar();
+const store = useProjectStore();
 
-    function icon(docType) {
-      switch(docType) {
-        case "module": return "api";
-        case "solution": return "chair";
-        case "scenario": return "av_timer";
-      }
-    }
-    function openDocument(item) {
-      console.log("openDocument", item)
-      $q.notify({
-        message: `Opening ${item.name}`,
-        color: 'positive',
-        icon: 'info'
-      })
-      switch(item.type) {
-        case "module":
-          router.push('/projects/modules/')
-          break;
-        case "solution":
-          router.push(`/projects/solutions`)
-          break;
-        case "scenario":
-          router.push(`/projects/scenarios`)
-          break;
-        default:
-          $q.notify({
-            message: `Unknown document type ${item.type}`,
-            color: 'negative',
-            icon: 'error'
-          })
-      }
-    }
-    async function editDocument(doc) {
-      console.log("editDocument", doc)
-      try {
-        $q.notify({
-          message: `Opening ${doc.name} in editor`,
-          color: 'positive',
-          icon: 'info'
-        })
-        await OpenProjectInEditor(doc.path)
-      } catch {
-        $q.notify({
-          message: `Failed to open ${item.name}`,
-          color: "negative",
-          icon: "error"
-        })
-      }
-    }
-    onMounted(async () => {
-      try {
-        project.value = await CurrentProject()
-      } catch (e) {
-        console.error(e)
-        $q.notify({
-          message: e,
-          color: "negative",
-          icon: "error"
-        })
-        project.value = { name: "NoName", documents: [], path: "NoPath" }
-      }
-    })
-    return {
-      project,
-      icon,
-      openDocument,
-      editDocument,
-    };
+// async function sync() {
+//   console.log("sync");
+//   state.project = await GetCurrentProject();
+//   state.documents = state.project.documents
+// }
+
+// EventsOn("ProjectChanged", sync);
+
+// onMounted(sync)
+
+function icon(docType) {
+  switch(docType) {
+    case "module": return "api";
+    case "solution": return "chair";
+    case "scenario": return "av_timer";
   }
-};
+}
+
+async function openDocument(doc) {
+    console.log("openDocument", doc)
+    $q.notify({
+      message: `Opening ${doc.name}`,
+      color: 'positive',
+      icon: 'info'
+    })
+    switch(doc.type) {
+      case "module":
+        router.push('/projects/modules/')
+        break;
+      case "solution":
+        router.push(`/projects/solutions`)
+        break;
+      case "scenario":
+        router.push(`/projects/scenarios`)
+        break;
+      default:
+        $q.notify({
+          message: `Unknown document type ${doc.type}`,
+          color: 'negative',
+          icon: 'error'
+        })
+    }
+}
+async function editDocument(doc) {
+  console.log("editDocument", doc)
+  try {
+    $q.notify({
+      message: `Opening ${doc.name} in editor`,
+      color: 'positive',
+      icon: 'info'
+    })
+    await OpenSourceInEditor(doc.path)
+  } catch {
+    $q.notify({
+      message: `Failed to open ${doc.name}`,
+      color: "negative",
+      icon: "error"
+    })
+  }
+}
+
 </script>

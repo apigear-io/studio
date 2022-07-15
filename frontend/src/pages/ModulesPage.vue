@@ -10,7 +10,7 @@
       </q-card-section>
       <q-card-section>
         <q-list separator padding>
-          <q-item clickable v-ripple v-for="item in documents" :key="item.path" @click="openDocument(item)">
+          <q-item clickable v-ripple v-for="item in store.modules" :key="item.path" @click="openDocument(item)">
             <q-item-section avatar>
               <q-icon :name="icon(item.type)" />
             </q-item-section>
@@ -30,52 +30,51 @@
   </q-page>
 </template>
 
-<script>
-import { onMounted, ref } from 'vue'
-import { CurrentProject, DocumentsByType, OpenProjectInEditor } from '../wailsjs/go/main/App'
+<script setup>
+import {  reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { useRouter } from 'vue-router'
+import { OpenSourceInEditor } from '../wailsjs/go/main/App'
+import { useProjectStore } from '../stores/project-store';
 
-export default {
-  setup() {
-    const $q = useQuasar()
-    const project = ref({})
-    const documents = ref([])
-    function icon(docType) {
-      switch(docType) {
-        case "module": return "api";
-        case "solution": return "chair";
-        case "scenario": return "av_timer";
-      }
-    }
 
-    async function editDocument(doc) {
-      console.log("editDocument", doc)
-      try {
-        $q.notify({
-          message: `Opening ${doc.name} in editor`,
-          color: 'positive',
-          icon: 'info'
-        })
-        await OpenProjectInEditor(doc.path)
-      } catch {
-        $q.notify({
-          message: `Failed to open ${item.name}`,
-          color: "negative",
-          icon: "error"
-        })
-      }
-    }
+const store = useProjectStore();
+const $q = useQuasar()
+const router = useRouter()
+const state = reactive({
+  project: {},
+  documents: []
+})
 
-    onMounted(async () => {
-      project.value = await CurrentProject()
-      documents.value = await DocumentsByType("module")
+async function sync() {
+  console.log("sync");
+  await store.sync()
+}
+
+
+function icon(docType) {
+  switch(docType) {
+    case "module": return "api";
+    case "solution": return "chair";
+    case "scenario": return "av_timer";
+  }
+}
+
+async function editDocument(doc) {
+  console.log("editDocument", doc)
+  try {
+    $q.notify({
+      message: `Opening ${doc.name} in editor`,
+      color: 'positive',
+      icon: 'info'
     })
-    return {
-      project,
-      documents,
-      editDocument,
-      icon,
-    }
+    await OpenSourceInEditor(doc.path)
+  } catch {
+    $q.notify({
+      message: `Failed to open ${doc.name}`,
+      color: "negative",
+      icon: "error"
+    })
   }
 }
 </script>

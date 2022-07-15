@@ -7,7 +7,7 @@
         <q-space />
         <q-btn-dropdown flat class="text-primary" label="New Document" dropdown-icon="add_box" no-caps>
           <q-list class="q-pa-md">
-            <q-item clickable v-close-popup @click="onNewModule" class="text-primary">
+            <q-item clickable v-close-popup @click="onNewDocument('module')" class="text-primary">
               <q-item-section avatar>
                 <q-icon name="api" />
               </q-item-section>
@@ -15,7 +15,7 @@
                 <q-item-label>Module</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="onNewSolution" class="text-primary">
+            <q-item clickable v-close-popup @click="onNewDocument('solution')" class="text-primary">
               <q-item-section avatar>
                 <q-icon name="chair" />
               </q-item-section>
@@ -23,7 +23,7 @@
                 <q-item-label>Solution</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="onNewSimulation" class="text-primary">
+            <q-item clickable v-close-popup @click="onNewDocument('scenario')" class="text-primary">
               <q-item-section avatar>
                 <q-icon name="av_timer" />
               </q-item-section>
@@ -35,10 +35,10 @@
         </q-btn-dropdown>
         <q-space />
         <q-btn-group flat class="text-primary">
-          <q-btn icon="swap_horiz" :label="project.name" to="/" no-caps>
+          <q-btn icon="swap_horiz" :label="store.project.name" to="/" no-caps>
             <q-tooltip>Switch projects</q-tooltip>
           </q-btn>
-          <q-btn icon="sync">
+          <q-btn icon="sync" @click="onSync()">
             <q-tooltip>Sync project folder</q-tooltip>
           </q-btn>
           <q-btn icon="content_copy" @click="copyProjectPath()">
@@ -84,10 +84,11 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { useQuasar } from "quasar";
-import { onMounted, ref } from "vue";
-import { CurrentProject, NewDocument } from "../wailsjs/go/main/App";
+import { onMounted, reactive, ref } from "vue";
+import { GetCurrentProject, NewDocument, RefreshProject } from "../wailsjs/go/main/App";
+import { useProjectStore } from "../stores/project-store";
 
 const ICONS = {
   dashboard: "dashboard",
@@ -98,6 +99,7 @@ const ICONS = {
   logs: "view_list",
   settings: "settings",
 };
+
 
 const modes = [
   {
@@ -137,90 +139,72 @@ const modes = [
   },
 ];
 
-export default {
-  setup() {
-    const $q = useQuasar();
-    const leftDrawerOpen = ref(true);
-    const project = ref({name: ""});
+  const $q = useQuasar();
+  const state = reactive({
+    leftDrawerOpen: false,
+  });
 
-    onMounted(async () => {
-      project.value = await CurrentProject()
-    });
+async function onSync() {
+  await RefreshProject();
+}
 
-    function copyProjectPath() {
-      navigator.clipboard.writeText(project.value.path);
+const store = useProjectStore();
+
+
+onMounted(store.sync)
+
+
+function copyProjectPath() {
+  navigator.clipboard.writeText(store.project.path);
+  $q.notify({
+    message: `${store.project.path} copied to clipboard`,
+    color: "positive",
+    icon: "done",
+    timeout: 2000,
+  });
+}
+
+function openHelp() {
+  try {
+    window.runtime.BrowserOpenURL("https://docs.apigear.io/");
+  } catch (e) {
+    $q.notify({
+      message: e,
+      color: 'negative',
+      icon: 'error'
+    })
+  }
+}
+
+function onNewDocument(docType) {
+  $q.dialog({
+    title: `New ${docType}`,
+    message: `Enter ${docType} name`,
+    prompt: {
+      model: '',
+      type: 'text' // optional
+    }
+  }).onOk(async (name) => {
+    try {
+      console.log('new document', docType, name);
+      const target = await NewDocument(docType, name)
+      await store.sync()
       $q.notify({
-        message: `${project.value.path} copied to clipboard`,
+        message: `Document ${target} created`,
         color: "positive",
         icon: "done",
-        timeout: 2000,
       });
+    } catch (e) {
+      $q.notify({
+        message: e,
+        color: 'negative',
+        icon: 'error'
+      })
     }
+  });
+}
 
-    function openHelp() {
-      try {
-        window.runtime.BrowserOpenURL("https://docs.apigear.io/");
-      } catch (e) {
-        $q.notify({
-          message: e,
-          color: 'negative',
-          icon: 'error'
-        })
-      }
-    }
-
-    function onNewModule() {
-      $q.dialog({
-        title: "New Module",
-        message: "Enter module name",
-        prompt: {
-          model: '',
-          type: 'text' // optional
-        }
-      }).onOk(async (name) => {
-        await NewDocument(name, "module")
-      });
-    }
-
-    function onNewSolution() {
-      $q.dialog({
-        title: "New Solution",
-        message: "Enter solution name",
-        prompt: {
-          model: '',
-          type: 'text' // optional
-        }
-      }).onOk(async (name) => {
-        await NewDocument(name, "solution")
-      });
-    }
-
-    function onNewSimulation() {
-      $q.dialog({
-        title: "New Simulation",
-        message: "Enter simulation name",
-        prompt: {
-          model: '',
-          type: 'text' // optional
-        }
-      }).onOk(async (name) => {
-        await NewDocument(name, "simulation")
-      });
-    }
-
-    return {
-      modes: modes,
-      leftDrawerOpen,
-      project,
-      copyProjectPath,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-      onNewModule,
-      onNewSolution,
-      onNewSimulation,
-      openHelp,
-    };
-  },
-};
+function toggleLeftDrawer() {
+  state.leftDrawerOpen = !state.leftDrawerOpen;
+}
 </script>

@@ -44,7 +44,7 @@
           <q-card-section>
             <q-list>
               <q-item-label header>Recent</q-item-label>
-              <q-item clickable v-ripple active v-for="item in recent" :key="item" @click="openRecentProject(item)">
+              <q-item clickable v-ripple active v-for="item in store.recent" :key="item" @click="openRecentProject(item)">
                 <q-item-section avatar>
                   <q-icon name="folder_open" />
                 </q-item-section>
@@ -81,100 +81,77 @@
   </q-page>
 </template>
 
-<script>
-import { onMounted, ref } from "vue";
-import { RecentProjects, OpenProject, CreateProject, OpenRecentProject, RemoveRecentProject } from "../wailsjs/go/main/App";
+<script setup>
+import { onMounted, reactive } from "vue";
+import { RecentProjects, CreateProject, RemoveRecentProject, OpenProject, OpenRecentProject, GetCurrentProject, RefreshProject } from "../wailsjs/go/main/App";
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-
-const MoreItems = [
+import { useProjectStore } from "../stores/project-store";
+const more = [
   { icon: 'info', title: 'About', description: 'About ApiGear Studio', link: 'http://apigear.io' },
 ];
 
-export default {
-  setup() {
-    const $q = useQuasar()
-    const router = useRouter()
-    const recent = ref([])
-    onMounted(async () => {
-      recent.value = await RecentProjects()
+const store = useProjectStore();
+const $q = useQuasar()
+const router = useRouter()
+
+
+async function sync() {
+  await store.sync();
+}
+
+onMounted(sync)
+
+async function onRemoveItem(item) {
+  try {
+    await RemoveRecentProject(item)
+    await sync()
+  } catch (e) {
+    console.error(e)
+    $q.notify({
+      message: 'Error removing recent project',
+      color: 'negative',
+      icon: 'error',
     })
-
-    async function onRemoveItem(item) {
-      recent.value = recent.value.filter(i => i !== item)
-      try {
-      await RemoveRecentProject(item)
-      recent.value = await RecentProjects()
-      } catch (e) {
-        console.error(e)
-        $q.notify({
-          message: 'Error removing recent project',
-          color: 'negative',
-          icon: 'error',
-        })
-      }
-    }
-
-    async function openProject() {
-      try {
-        await OpenProject()
-        router.push('/projects')
-      } catch (e) {
-        $q.notify({
-          message: e,
-          color: 'negative',
-          icon: 'error'
-        })
-      }
-    }
-    function importProject() {
-      router.push('/import')
-    }
-    async function openRecentProject(item) {
-      try {
-        await OpenRecentProject(item)
-        router.push('/projects')
-      } catch (e) {
-        $q.notify({
-          message: e,
-          color: 'negative',
-          icon: 'error'
-        })
-      }
-    }
-    async function createProject() {
-      try {
-        await CreateProject()
-        router.push('/projects')
-      } catch (e) {
-        $q.notify({
-          message: e,
-          color: 'negative',
-          icon: 'error'
-        })
-      }
-    }
-    async function openUrl(url) {
-      try {
-        window.runtime.BrowserOpenURL(url)
-      } catch (e) {
-        $q.notify({
-          message: e,
-          color: 'negative',
-          icon: 'error'
-        })
-      }
-    }
-    return {
-      recent,
-      openProject,
-      importProject,
-      openRecentProject,
-      createProject,
-      openUrl,
-      onRemoveItem,
-      more: MoreItems,
-    };
   }
-};
+}
+
+async function openProject() {
+  const project = await OpenProject()
+  await sync()
+  router.push('/projects')
+}
+
+function importProject() {
+  router.push('/import')
+}
+
+async function openRecentProject(item) {
+  await OpenRecentProject(item)
+  await sync()
+  router.push('/projects')
+}
+async function createProject() {
+  try {
+    await CreateProject()
+    router.push('/projects')
+  } catch (e) {
+    $q.notify({
+      message: e,
+      color: 'negative',
+      icon: 'error'
+    })
+  }
+}
+async function openUrl(url) {
+  try {
+    window.runtime.BrowserOpenURL(url)
+  } catch (e) {
+    $q.notify({
+      message: e,
+      color: 'negative',
+      icon: 'error'
+    })
+  }
+}
 </script>

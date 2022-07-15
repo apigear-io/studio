@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -34,11 +33,8 @@ func (a *App) startup(ctx context.Context) {
 	}
 }
 
-func (a App) CurrentProject() (*Project, error) {
-	if a.currentProject == nil {
-		return nil, fmt.Errorf("no current project")
-	}
-	return a.currentProject, nil
+func (a App) GetCurrentProject() *Project {
+	return a.currentProject
 }
 
 func (a App) RecentProjects() []string {
@@ -53,25 +49,18 @@ func (a *App) OpenProject() (*Project, error) {
 	if err != nil {
 		return nil, err
 	}
-	p, err := readProject(dir)
-	if err != nil {
-		return nil, err
-	}
-	a.currentProject = p
-	config.AppendRecentEntry(dir)
-	return p, nil
+	a.UpdateCurrentProject(&Project{Path: dir})
+	return a.currentProject, nil
 }
 
 // OpenRecentProject opens a project with the given source
 func (a *App) OpenRecentProject(source string) (*Project, error) {
 	log.Infof("Open Recent Project %s", source)
-	p, err := readProject(source)
+	project, err := a.UpdateCurrentProject(&Project{Path: source})
 	if err != nil {
 		return nil, err
 	}
-	a.currentProject = p
-	config.AppendRecentEntry(source)
-	return p, nil
+	return project, nil
 }
 
 // CreateProject creates a new project in the given source
@@ -85,13 +74,11 @@ func (a *App) CreateProject() (*Project, error) {
 		return nil, err
 	}
 	prj.InitProject(source)
-	p, err := readProject(source)
+	proj, err := a.UpdateCurrentProject(&Project{Path: source})
 	if err != nil {
 		return nil, err
 	}
-	a.currentProject = p
-	config.AppendRecentEntry(source)
-	return p, nil
+	return proj, nil
 }
 
 // ImportProject imports a project from a local or remote source
@@ -111,7 +98,77 @@ func (a *App) InstallTemplate(source string) {
 	log.Infof("Install Template %s", source)
 }
 
-func readProject(source string) (*Project, error) {
+func (a App) DocumentsByType(docType string) []DocumentInfo {
+	var docs []DocumentInfo
+	for _, doc := range a.currentProject.Documents {
+		if doc.Type == docType {
+			docs = append(docs, doc)
+		}
+	}
+	return docs
+}
+
+func (a App) ReadSettings() AppSettings {
+	server_port := config.GetServerPort()
+	update_channel := config.GetUpdateChannel()
+	editor_command := config.GetEditorCommand()
+	return AppSettings{
+		ServerPort:    server_port,
+		UpdateChannel: update_channel,
+		EditorCommand: editor_command,
+	}
+}
+
+func (a App) WriteSettings(settings AppSettings) {
+	log.Infof("Write Settings %+v", settings)
+	config.Set(config.KeyServerPort, settings.ServerPort)
+	config.Set(config.KeyUpdateChannel, settings.UpdateChannel)
+	config.Set(config.KeyEditorCommand, settings.EditorCommand)
+	config.WriteConfig()
+
+}
+
+// NewDocument creates a new document in the current project
+func (a App) NewDocument(docType string, name string) (string, error) {
+	log.Infof("New Document %s %s", name, docType)
+	prjDir := a.currentProject.Path
+	target, err := prj.CreateProjectDocument(prjDir, docType, name)
+	a.RefreshProject()
+	return target, err
+}
+
+func (a App) GetMonitorAddress() (string, error) {
+	return GetMonitorAddress()
+}
+
+func (a App) GetSimulationAddress() (string, error) {
+	return GetSimulationAddress()
+}
+
+func (a App) RemoveRecentProject(source string) {
+	config.RemoveRecentEntry(source)
+}
+func (a App) OpenSourceInEditor(source string) error {
+	log.Infof("Open Project In Editor %s", source)
+	return prj.OpenEditor(source)
+}
+
+func (a *App) UpdateCurrentProject(project *Project) (*Project, error) {
+	a.currentProject = project
+	return a.RefreshProject()
+}
+
+func (a *App) RefreshProject() (*Project, error) {
+	p, err := doReadProject(a.currentProject.Path)
+	if err != nil {
+		log.Warnf("Failed to read project: %s", err)
+	}
+	a.currentProject = p
+	config.AppendRecentEntry(p.Path)
+	return p, err
+}
+
+func doReadProject(source string) (*Project, error) {
 	p := &Project{
 		Path: source,
 		Name: filepath.Base(source),
@@ -135,16 +192,6 @@ func readProject(source string) (*Project, error) {
 	return p, nil
 }
 
-func (a App) DocumentsByType(docType string) []DocumentInfo {
-	var docs []DocumentInfo
-	for _, doc := range a.currentProject.Documents {
-		if doc.Type == docType {
-			docs = append(docs, doc)
-		}
-	}
-	return docs
-}
-
 func guessDocumentType(path string) string {
 	if strings.HasSuffix(path, ".module.yaml") {
 		return "module"
@@ -158,42 +205,6 @@ func guessDocumentType(path string) string {
 	return "unknown"
 }
 
-func (a App) ReadSettings() AppSettings {
-	server_port := config.GetServerPort()
-	update_channel := config.GetUpdateChannel()
-	editor_command := config.GetEditorCommand()
-	return AppSettings{
-		ServerPort:    server_port,
-		UpdateChannel: update_channel,
-		EditorCommand: editor_command,
-	}
-}
-
-func (a App) WriteSettings(settings AppSettings) {
-	log.Infof("Write Settings %+v", settings)
-	config.Set(config.KeyServerPort, settings.ServerPort)
-	config.Set(config.KeyUpdateChannel, settings.UpdateChannel)
-	config.Set(config.KeyEditorCommand, settings.EditorCommand)
-	config.WriteConfig()
-
-}
-
-func (a App) NewDocument(name string, docType string) {
-	log.Infof("New Document %s %s", name, docType)
-}
-
-func (a App) GetMonitorAddress() (string, error) {
-	return GetMonitorAddress()
-}
-
-func (a App) GetSimulationAddress() (string, error) {
-	return GetSimulationAddress()
-}
-
-func (a App) RemoveRecentProject(source string) {
-	config.RemoveRecentEntry(source)
-}
-func (a App) OpenProjectInEditor(source string) error {
-	log.Infof("Open Project In Editor %s", source)
-	return prj.OpenEditor(source)
+func (a App) EmitProjectChanged() {
+	runtime.EventsEmit(a.ctx, "ProjectChanged", a.currentProject)
 }

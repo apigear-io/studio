@@ -4,16 +4,20 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { useAppStore } from './stores/app-store'
+import { useMonitorStore } from './stores/monitor-store'
+import { useProjectStore } from './stores/project-store'
 
 export default defineComponent({
   name: 'App',
   setup() {
     console.log('App.setup')
-    const app = useAppStore()
-    app.startMonitoring()
+    const monitor = useMonitorStore()
+    monitor.init()
+    const project = useProjectStore()
+    project.init()
     return {
-      app,
+      monitor,
+      project,
     }
   },
 })

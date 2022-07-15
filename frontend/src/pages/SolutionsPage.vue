@@ -12,7 +12,7 @@
       </q-card-section>
       <q-card-section>
       <q-list separator padding>
-        <q-item clickable v-ripple v-for="item in documents" :key="item.path">
+        <q-item clickable v-ripple v-for="item in store.solutions" :key="item.path">
           <q-item-section avatar>
             <q-icon :name="icon(item.type)" />
           </q-item-section>
@@ -55,68 +55,58 @@
   </q-page>
 </template>
 
-<script>
-import { onMounted, ref } from 'vue'
-import { CurrentProject, DocumentsByType, OpenProjectInEditor } from '../wailsjs/go/main/App'
+<script setup>
+import { onMounted, reactive } from 'vue'
+import { GetCurrentProject, DocumentsByType, OpenSourceInEditor } from '../wailsjs/go/main/App'
 import { useQuasar } from 'quasar'
+import { EventsOn } from '../wailsjs/runtime/runtime'
+import { useProjectStore } from '../stores/project-store';
 
-export default {
-  setup() {
-    const $q = useQuasar()
-    const project = ref({})
-    const documents = ref([])
-    function icon(docType) {
-      switch(docType) {
-        case "module": return "api";
-        case "solution": return "chair";
-        case "scenario": return "av_timer";
-      }
-    }
-    function runDocument(doc) {
-      console.log("runDocument")
-    }
+const store = useProjectStore()
+const $q = useQuasar()
+const state = reactive({
+  autoRun: false,
+})
 
-    async function editDocument(doc) {
-      console.log("editDocument", doc)
-      try {
-        $q.notify({
-          message: `Opening ${doc.name} in editor`,
-          color: 'positive',
-          icon: 'info'
-        })
-        await OpenProjectInEditor(doc.path)
-      } catch {
-        $q.notify({
-          message: `Failed to open ${item.name}`,
-          color: "negative",
-          icon: "error"
-        })
-      }
-    }
+async function sync() {
+  await store.sync()
+}
 
-    function toggleAutoRun(doc) {
-      console.log("toggleAutoRun", doc)
-    }
-
-    function copyPath(doc) {
-      console.log("copyPath", doc)
-    }
-
-
-    onMounted(async () => {
-      project.value = await CurrentProject()
-      documents.value = await DocumentsByType("solution")
-    })
-
-    return {
-      project,
-      documents,
-      icon,
-      runDocument,
-      editDocument,
-      toggleAutoRun,
-      copyPath,
-    }
+function icon(docType) {
+  switch(docType) {
+    case "module": return "api";
+    case "solution": return "chair";
+    case "scenario": return "av_timer";
   }
+}
+
+function runDocument(doc) {
+  console.log("runDocument")
+}
+
+async function editDocument(doc) {
+  console.log("editDocument", doc)
+  try {
+    $q.notify({
+      message: `Opening ${doc.name} in editor`,
+      color: 'positive',
+      icon: 'info'
+    })
+    await OpenSourceInEditor(doc.path)
+  } catch {
+    $q.notify({
+      message: `Failed to open ${doc.name}`,
+      color: "negative",
+      icon: "error"
+    })
+  }
+}
+
+function toggleAutoRun(doc) {
+  console.log("toggleAutoRun", doc)
+}
+
+function copyPath(doc) {
+  console.log("copyPath", doc)
 }
 </script>

@@ -29,7 +29,7 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import { useAppStore } from '../stores/app-store'
+import { useMonitorStore } from '../stores/monitor-store'
 
 export default {
   setup() {
