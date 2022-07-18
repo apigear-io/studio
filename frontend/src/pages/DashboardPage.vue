@@ -27,11 +27,17 @@
             <q-item-section side>
               <q-btn-group flat>
                 <q-btn
-                  size="md"
+                  size="sm"
                   class="text-primary"
                   label="Edit"
                   icon="edit"
                   @click.stop="editDocument(item)"
+                />
+                <q-btn
+                  size="sm"
+                  class="text-primary"
+                  icon="delete"
+                  @click.stop="deleteDocument(item)"
                 />
               </q-btn-group>
             </q-item-section>
@@ -63,7 +69,18 @@ function icon(docType: string) {
   }
 }
 
-async function openDocument(doc: main.DocumentInfo) {
+const deleteDocument = (item: any) => {
+  $q.dialog({
+    title: "Delete Document",
+    message: `Are you sure you want to delete ${item.name}?`,
+    ok: "Delete",
+    cancel: "Cancel",
+  }).onOk(() => {
+    console.log("Deleting", item.path);
+  });
+};
+
+const openDocument = async (doc: main.DocumentInfo) => {
   console.log("openDocument", doc);
   $q.notify({
     message: `Opening ${doc.name}`,

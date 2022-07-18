@@ -107,7 +107,7 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { onMounted } from "vue";
-import { NewDocument, RefreshProject } from "../wailsjs/go/main/App";
+import { NewDocument } from "../wailsjs/go/main/App";
 import { useProjectStore } from "../stores/project-store";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 
@@ -152,7 +152,7 @@ const modes = [
 const $q = useQuasar();
 
 async function onSync() {
-  await RefreshProject();
+  await store.sync();
 }
 
 const store = useProjectStore();

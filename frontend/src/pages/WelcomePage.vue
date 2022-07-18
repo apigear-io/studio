@@ -135,16 +135,12 @@ const store = useProjectStore();
 const $q = useQuasar();
 const router = useRouter();
 
-async function sync() {
-  await store.sync();
-}
-
-onMounted(sync);
+onMounted(store.sync);
 
 async function onRemoveItem(item: string) {
   try {
     await RemoveRecentProject(item);
-    await sync();
+    await store.sync();
   } catch (e) {
     console.error(e);
     $q.notify({
@@ -156,9 +152,18 @@ async function onRemoveItem(item: string) {
 }
 
 async function openProject() {
-  await OpenProject();
-  await sync();
-  router.push("/projects");
+  try {
+    await OpenProject();
+    await store.sync();
+    router.push("/projects");
+  } catch (e) {
+    console.error(e);
+    $q.notify({
+      message: `Error opening project: ${e}`,
+      color: "negative",
+      icon: "error",
+    });
+  }
 }
 
 function importProject() {
@@ -167,12 +172,13 @@ function importProject() {
 
 async function openRecentProject(item: string) {
   await OpenRecentProject(item);
-  await sync();
+  await store.sync();
   router.push("/projects");
 }
 async function createProject() {
   try {
     await CreateProject();
+    await store.sync();
     router.push("/projects");
   } catch (e: any) {
     $q.notify({

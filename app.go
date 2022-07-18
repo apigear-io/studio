@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -33,10 +34,6 @@ func (a *App) startup(ctx context.Context) {
 	}
 }
 
-func (a App) GetCurrentProject() *Project {
-	return a.currentProject
-}
-
 func (a App) RecentProjects() []string {
 	return config.GetRecentEntries()
 }
@@ -49,14 +46,17 @@ func (a *App) OpenProject() (*Project, error) {
 	if err != nil {
 		return nil, err
 	}
-	a.UpdateCurrentProject(&Project{Path: dir})
+	_, err = a.openProject(&Project{Path: dir})
+	if err != nil {
+		return nil, err
+	}
 	return a.currentProject, nil
 }
 
 // OpenRecentProject opens a project with the given source
 func (a *App) OpenRecentProject(source string) (*Project, error) {
 	log.Infof("Open Recent Project %s", source)
-	project, err := a.UpdateCurrentProject(&Project{Path: source})
+	project, err := a.openProject(&Project{Path: source})
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (a *App) CreateProject() (*Project, error) {
 		return nil, err
 	}
 	prj.InitProject(source)
-	proj, err := a.UpdateCurrentProject(&Project{Path: source})
+	proj, err := a.openProject(&Project{Path: source})
 	if err != nil {
 		return nil, err
 	}
@@ -96,16 +96,6 @@ func (a *App) ShareProject(project Project) string {
 // InstallTemplate installs a template either from local or remote source
 func (a *App) InstallTemplate(source string) {
 	log.Infof("Install Template %s", source)
-}
-
-func (a App) DocumentsByType(docType string) []DocumentInfo {
-	var docs []DocumentInfo
-	for _, doc := range a.currentProject.Documents {
-		if doc.Type == docType {
-			docs = append(docs, doc)
-		}
-	}
-	return docs
 }
 
 func (a App) ReadSettings() AppSettings {
@@ -133,7 +123,7 @@ func (a App) NewDocument(docType string, name string) (string, error) {
 	log.Infof("New Document %s %s", name, docType)
 	prjDir := a.currentProject.Path
 	target, err := prj.CreateProjectDocument(prjDir, docType, name)
-	a.RefreshProject()
+	a.openProject(&Project{Path: prjDir})
 	return target, err
 }
 
@@ -153,18 +143,19 @@ func (a App) OpenSourceInEditor(source string) error {
 	return prj.OpenEditor(source)
 }
 
-func (a *App) UpdateCurrentProject(project *Project) (*Project, error) {
-	a.currentProject = project
-	return a.RefreshProject()
+func (a *App) RefreshCurrentProject() (*Project, error) {
+	return a.openProject(a.currentProject)
 }
 
-func (a *App) RefreshProject() (*Project, error) {
-	if a.currentProject == nil {
+func (a *App) openProject(p *Project) (*Project, error) {
+	if p == nil {
+		a.currentProject = nil
 		return nil, nil
 	}
-	p, err := doReadProject(a.currentProject.Path)
+	p, err := doReadProject(p.Path)
 	if err != nil {
-		log.Warnf("Failed to read project: %s", err)
+		a.currentProject = nil
+		return nil, fmt.Errorf("Failed to read project: %s", err)
 	}
 	a.currentProject = p
 	config.AppendRecentEntry(p.Path)

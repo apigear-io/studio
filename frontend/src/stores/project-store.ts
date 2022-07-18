@@ -1,11 +1,17 @@
 import { defineStore } from "pinia";
-import { RecentProjects, RefreshProject } from "../wailsjs/go/main/App";
+import { RecentProjects, RefreshCurrentProject } from "../wailsjs/go/main/App";
 import { main } from "../wailsjs/go/models";
 import { EventsOn } from "../wailsjs/runtime/runtime";
 
+const nullProject = main.Project.createFrom({
+  name: "NONE",
+  path: "",
+  documents: [],
+});
+
 export const useProjectStore = defineStore("project", {
   state: () => ({
-    project: null as main.Project | null,
+    project: nullProject,
     recent: [] as string[],
   }),
   getters: {
@@ -25,7 +31,7 @@ export const useProjectStore = defineStore("project", {
     async sync() {
       console.log("sync project store");
       try {
-        this.project = (await RefreshProject()) as main.Project;
+        this.project = (await RefreshCurrentProject()) as main.Project;
         this.recent = await RecentProjects();
       } catch (e) {
         console.error(e);
