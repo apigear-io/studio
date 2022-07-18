@@ -159,6 +159,9 @@ func (a *App) UpdateCurrentProject(project *Project) (*Project, error) {
 }
 
 func (a *App) RefreshProject() (*Project, error) {
+	if a.currentProject == nil {
+		return nil, nil
+	}
 	p, err := doReadProject(a.currentProject.Path)
 	if err != nil {
 		log.Warnf("Failed to read project: %s", err)

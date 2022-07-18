@@ -2,11 +2,11 @@
   <q-page padding>
     <q-card>
       <q-card-section>
-      <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-btn flat icon="av_timer"/>
+        <q-toolbar class="bg-primary text-white rounded-borders">
+          <q-btn flat icon="av_timer" />
           <q-toolbar-title>Simulation Scenarios</q-toolbar-title>
           <q-space />
-          <q-btn flat label="Messages" style="width:120px"/>
+          <q-btn flat label="Messages" style="width: 120px" />
         </q-toolbar>
       </q-card-section>
       <q-card-section>
@@ -21,8 +21,18 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group class="text-primary">
-                <q-btn class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)"/>
-                <q-btn class="text-primary" label="Edit" icon="edit" @click.stop="editDocument(item)"/>
+                <q-btn
+                  class="text-primary"
+                  label="Run"
+                  icon="directions_run"
+                  @click="runDocument(item)"
+                />
+                <q-btn
+                  class="text-primary"
+                  label="Edit"
+                  icon="edit"
+                  @click.stop="editDocument(item)"
+                />
               </q-btn-group>
             </q-item-section>
           </q-item>
@@ -33,47 +43,44 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue'
-import { useQuasar } from 'quasar'
-import { OpenSourceInEditor } from '../wailsjs/go/main/App'
-import { useProjectStore } from '../stores/project-store';
+import { useQuasar } from "quasar";
+import { OpenSourceInEditor } from "../wailsjs/go/main/App";
+import { useProjectStore } from "../stores/project-store";
 
 const store = useProjectStore();
 
-const $q = useQuasar()
-
-async function sync() {
-  await store.sync()
-}
-
+const $q = useQuasar();
 
 function icon(docType) {
-  switch(docType) {
-    case "module": return "api";
-    case "solution": return "chair";
-    case "scenario": return "av_timer";
+  switch (docType) {
+    case "module":
+      return "api";
+    case "solution":
+      return "chair";
+    case "scenario":
+      return "av_timer";
   }
 }
 
 function runDocument(doc) {
-  console.log("runDocument", doc)
+  console.log("runDocument", doc);
 }
 
 async function editDocument(doc) {
-  console.log("editDocument", doc)
+  console.log("editDocument", doc);
   try {
     $q.notify({
       message: `Opening ${doc.name} in editor`,
-      color: 'positive',
-      icon: 'info'
-    })
-    await OpenSourceInEditor(doc.path)
+      color: "positive",
+      icon: "info",
+    });
+    await OpenSourceInEditor(doc.path);
   } catch {
     $q.notify({
       message: `Failed to open ${doc.name}`,
       color: "negative",
-      icon: "error"
-    })
+      icon: "error",
+    });
   }
 }
 </script>

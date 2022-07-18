@@ -18,7 +18,9 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Create Project</q-item-label>
-                  <q-item-label caption lines="2">Initialize a new API project inside a folder</q-item-label>
+                  <q-item-label caption lines="2"
+                    >Initialize a new API project inside a folder</q-item-label
+                  >
                 </q-item-section>
               </q-item>
               <q-item clickable v-ripple @click="openProject()" active>
@@ -27,7 +29,9 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Open Project</q-item-label>
-                  <q-item-label caption lines="2">Open an existing API project</q-item-label>
+                  <q-item-label caption lines="2"
+                    >Open an existing API project</q-item-label
+                  >
                 </q-item-section>
               </q-item>
               <q-item clickable v-ripple @click="importProject()" active>
@@ -36,7 +40,10 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Import Project</q-item-label>
-                  <q-item-label caption lines="2">Import an existing API project from a local or remote source</q-item-label>
+                  <q-item-label caption lines="2"
+                    >Import an existing API project from a local or remote
+                    source</q-item-label
+                  >
                 </q-item-section>
               </q-item>
             </q-list>
@@ -44,15 +51,28 @@
           <q-card-section>
             <q-list>
               <q-item-label header>Recent</q-item-label>
-              <q-item clickable v-ripple active v-for="item in store.recent" :key="item" @click="openRecentProject(item)">
+              <q-item
+                clickable
+                v-ripple
+                active
+                v-for="item in store.recent"
+                :key="item"
+                @click="openRecentProject(item)"
+              >
                 <q-item-section avatar>
                   <q-icon name="folder_open" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>{{item}}</q-item-label>
+                  <q-item-label>{{ item }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
-                  <q-btn size="sm" color="primary" flat icon="close" @click="onRemoveItem(item)" />
+                  <q-btn
+                    size="sm"
+                    color="primary"
+                    flat
+                    icon="close"
+                    @click="onRemoveItem(item)"
+                  />
                 </q-item-section>
               </q-item>
             </q-list>
@@ -64,13 +84,22 @@
           <q-card-section>
             <q-list>
               <q-item-label header>More ...</q-item-label>
-              <q-item clickable v-ripple active v-for="item in more" :key="item" @click="openUrl(item.link)">
+              <q-item
+                clickable
+                v-ripple
+                active
+                v-for="item in more"
+                :key="item.title"
+                @click="openUrl(item.link)"
+              >
                 <q-item-section avatar>
                   <q-icon :name="item.icon" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>{{item.title}}</q-item-label>
-                  <q-item-label caption lines="2">{{item.description}}</q-item-label>
+                  <q-item-label>{{ item.title }}</q-item-label>
+                  <q-item-label caption lines="2">{{
+                    item.description
+                  }}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -81,77 +110,87 @@
   </q-page>
 </template>
 
-<script setup>
-import { onMounted, reactive } from "vue";
-import { RecentProjects, CreateProject, RemoveRecentProject, OpenProject, OpenRecentProject, GetCurrentProject, RefreshProject } from "../wailsjs/go/main/App";
-import { useQuasar } from 'quasar'
-import { useRouter } from 'vue-router'
+<script setup lang="ts">
+import { onMounted } from "vue";
+import {
+  CreateProject,
+  RemoveRecentProject,
+  OpenProject,
+  OpenRecentProject,
+} from "../wailsjs/go/main/App";
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 import { useProjectStore } from "../stores/project-store";
+import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 const more = [
-  { icon: 'info', title: 'About', description: 'About ApiGear Studio', link: 'http://apigear.io' },
+  {
+    icon: "info",
+    title: "About",
+    description: "About ApiGear Studio",
+    link: "http://apigear.io",
+  },
 ];
 
 const store = useProjectStore();
-const $q = useQuasar()
-const router = useRouter()
-
+const $q = useQuasar();
+const router = useRouter();
 
 async function sync() {
   await store.sync();
 }
 
-onMounted(sync)
+onMounted(sync);
 
-async function onRemoveItem(item) {
+async function onRemoveItem(item: string) {
   try {
-    await RemoveRecentProject(item)
-    await sync()
+    await RemoveRecentProject(item);
+    await sync();
   } catch (e) {
-    console.error(e)
+    console.error(e);
     $q.notify({
-      message: 'Error removing recent project',
-      color: 'negative',
-      icon: 'error',
-    })
+      message: "Error removing recent project",
+      color: "negative",
+      icon: "error",
+    });
   }
 }
 
 async function openProject() {
-  const project = await OpenProject()
-  await sync()
-  router.push('/projects')
+  await OpenProject();
+  await sync();
+  router.push("/projects");
 }
 
 function importProject() {
-  router.push('/import')
+  router.push("/import");
 }
 
-async function openRecentProject(item) {
-  await OpenRecentProject(item)
-  await sync()
-  router.push('/projects')
+async function openRecentProject(item: string) {
+  await OpenRecentProject(item);
+  await sync();
+  router.push("/projects");
 }
 async function createProject() {
   try {
-    await CreateProject()
-    router.push('/projects')
-  } catch (e) {
+    await CreateProject();
+    router.push("/projects");
+  } catch (e: any) {
     $q.notify({
-      message: e,
-      color: 'negative',
-      icon: 'error'
-    })
+      message: String(e),
+      color: "negative",
+      icon: "error",
+    });
   }
 }
-async function openUrl(url) {
+async function openUrl(url: string) {
   try {
-    window.runtime.BrowserOpenURL(url)
-  } catch (e) {
+    BrowserOpenURL(url);
+  } catch (e: any) {
     $q.notify({
-      message: e,
-      color: 'negative',
-      icon: 'error'
-    })
+      message: String(e),
+      color: "negative",
+      icon: "error",
+    });
   }
 }
 </script>

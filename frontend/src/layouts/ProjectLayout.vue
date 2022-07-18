@@ -2,12 +2,23 @@
   <q-layout view="hHh lpR fFf">
     <q-header class="bg-grey-10">
       <q-toolbar>
-        <q-icon name="api" color="red-7" size="md"/>
+        <q-icon name="api" color="red-7" size="md" />
         <q-toolbar-title>ApiGear Studio</q-toolbar-title>
         <q-space />
-        <q-btn-dropdown flat class="text-primary" label="New Document" dropdown-icon="add_box" no-caps>
+        <q-btn-dropdown
+          flat
+          class="text-primary"
+          label="New Document"
+          dropdown-icon="add_box"
+          no-caps
+        >
           <q-list class="q-pa-md">
-            <q-item clickable v-close-popup @click="onNewDocument('module')" class="text-primary">
+            <q-item
+              clickable
+              v-close-popup
+              @click="onNewDocument('module')"
+              class="text-primary"
+            >
               <q-item-section avatar>
                 <q-icon name="api" />
               </q-item-section>
@@ -15,7 +26,12 @@
                 <q-item-label>Module</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="onNewDocument('solution')" class="text-primary">
+            <q-item
+              clickable
+              v-close-popup
+              @click="onNewDocument('solution')"
+              class="text-primary"
+            >
               <q-item-section avatar>
                 <q-icon name="chair" />
               </q-item-section>
@@ -23,7 +39,12 @@
                 <q-item-label>Solution</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="onNewDocument('scenario')" class="text-primary">
+            <q-item
+              clickable
+              v-close-popup
+              @click="onNewDocument('scenario')"
+              class="text-primary"
+            >
               <q-item-section avatar>
                 <q-icon name="av_timer" />
               </q-item-section>
@@ -68,17 +89,16 @@
           </q-tabs>
         </div>
         <div class="col-10 shadow-4">
-            <router-view />
+          <router-view />
         </div>
       </div>
     </q-page-container>
 
-
     <q-footer class="bg-grey-10">
       <div class="row">
-        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" no-caps/>
+        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" no-caps />
         <q-space />
-        <q-btn flat size="md" label="v 2020.3"  no-caps/>
+        <q-btn flat size="md" label="v 2020.3" no-caps />
       </div>
     </q-footer>
   </q-layout>
@@ -86,20 +106,10 @@
 
 <script setup>
 import { useQuasar } from "quasar";
-import { onMounted, reactive, ref } from "vue";
-import { GetCurrentProject, NewDocument, RefreshProject } from "../wailsjs/go/main/App";
+import { onMounted } from "vue";
+import { NewDocument, RefreshProject } from "../wailsjs/go/main/App";
 import { useProjectStore } from "../stores/project-store";
-
-const ICONS = {
-  dashboard: "dashboard",
-  module: "api",
-  solution: "chair",
-  scenario: "av_timer",
-  monitor: "data_object",
-  logs: "view_list",
-  settings: "settings",
-};
-
+import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 
 const modes = [
   {
@@ -139,10 +149,7 @@ const modes = [
   },
 ];
 
-  const $q = useQuasar();
-  const state = reactive({
-    leftDrawerOpen: false,
-  });
+const $q = useQuasar();
 
 async function onSync() {
   await RefreshProject();
@@ -150,9 +157,7 @@ async function onSync() {
 
 const store = useProjectStore();
 
-
-onMounted(store.sync)
-
+onMounted(store.sync);
 
 function copyProjectPath() {
   navigator.clipboard.writeText(store.project.path);
@@ -166,13 +171,13 @@ function copyProjectPath() {
 
 function openHelp() {
   try {
-    window.runtime.BrowserOpenURL("https://docs.apigear.io/");
+    BrowserOpenURL("https://docs.apigear.io/");
   } catch (e) {
     $q.notify({
       message: e,
-      color: 'negative',
-      icon: 'error'
-    })
+      color: "negative",
+      icon: "error",
+    });
   }
 }
 
@@ -181,14 +186,14 @@ function onNewDocument(docType) {
     title: `New ${docType}`,
     message: `Enter ${docType} name`,
     prompt: {
-      model: '',
-      type: 'text' // optional
-    }
+      model: "",
+      type: "text", // optional
+    },
   }).onOk(async (name) => {
     try {
-      console.log('new document', docType, name);
-      const target = await NewDocument(docType, name)
-      await store.sync()
+      console.log("new document", docType, name);
+      const target = await NewDocument(docType, name);
+      await store.sync();
       $q.notify({
         message: `Document ${target} created`,
         color: "positive",
@@ -197,14 +202,10 @@ function onNewDocument(docType) {
     } catch (e) {
       $q.notify({
         message: e,
-        color: 'negative',
-        icon: 'error'
-      })
+        color: "negative",
+        icon: "error",
+      });
     }
   });
-}
-
-function toggleLeftDrawer() {
-  state.leftDrawerOpen = !state.leftDrawerOpen;
 }
 </script>
