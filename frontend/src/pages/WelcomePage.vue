@@ -111,23 +111,23 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted } from 'vue';
 import {
   CreateProject,
   RemoveRecentProject,
   OpenProject,
   OpenRecentProject,
-} from "../wailsjs/go/main/App";
-import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
-import { useProjectStore } from "../stores/project-store";
-import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
+} from '../wailsjs/go/main/App';
+import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+import { useProjectStore } from '../stores/project-store';
+import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
 const more = [
   {
-    icon: "info",
-    title: "About",
-    description: "About ApiGear Studio",
-    link: "http://apigear.io",
+    icon: 'info',
+    title: 'About',
+    description: 'About ApiGear Studio',
+    link: 'http://apigear.io',
   },
 ];
 
@@ -144,9 +144,9 @@ async function onRemoveItem(item: string) {
   } catch (e) {
     console.error(e);
     $q.notify({
-      message: "Error removing recent project",
-      color: "negative",
-      icon: "error",
+      message: 'Error removing recent project',
+      color: 'negative',
+      icon: 'error',
     });
   }
 }
@@ -155,36 +155,36 @@ async function openProject() {
   try {
     await OpenProject();
     await store.sync();
-    router.push("/projects");
+    router.push('/projects');
   } catch (e) {
     console.error(e);
     $q.notify({
       message: `Error opening project: ${e}`,
-      color: "negative",
-      icon: "error",
+      color: 'negative',
+      icon: 'error',
     });
   }
 }
 
 function importProject() {
-  router.push("/import");
+  router.push('/import');
 }
 
 async function openRecentProject(item: string) {
   await OpenRecentProject(item);
   await store.sync();
-  router.push("/projects");
+  router.push('/projects');
 }
 async function createProject() {
   try {
     await CreateProject();
     await store.sync();
-    router.push("/projects");
+    router.push('/projects');
   } catch (e: any) {
     $q.notify({
       message: String(e),
-      color: "negative",
-      icon: "error",
+      color: 'negative',
+      icon: 'error',
     });
   }
 }
@@ -194,8 +194,8 @@ async function openUrl(url: string) {
   } catch (e: any) {
     $q.notify({
       message: String(e),
-      color: "negative",
-      icon: "error",
+      color: 'negative',
+      icon: 'error',
     });
   }
 }

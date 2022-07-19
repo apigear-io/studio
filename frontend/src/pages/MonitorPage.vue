@@ -33,46 +33,46 @@
 </template>
 
 <script setup lang="ts">
-import { QTableProps } from "quasar";
-import { reactive } from "vue";
-import { useMonitorStore } from "../stores/monitor-store";
+import { QTableProps } from 'quasar';
+import { reactive } from 'vue';
+import { useMonitorStore } from '../stores/monitor-store';
 
-const columns: QTableProps["columns"] = [
+const columns: QTableProps['columns'] = [
   {
-    name: "time",
-    label: "Time",
-    field: "timestamp",
-    align: "left",
-    style: "width: 120px",
+    name: 'time',
+    label: 'Time',
+    field: 'timestamp',
+    align: 'left',
+    style: 'width: 120px',
     sortable: true,
   },
   {
-    name: "source",
-    label: "Source",
-    field: "source",
-    align: "center",
-    style: "width: 80px",
+    name: 'source',
+    label: 'Source',
+    field: 'source',
+    align: 'center',
+    style: 'width: 80px',
   },
   {
-    name: "type",
-    label: "Type",
-    field: "type",
-    align: "center",
-    style: "width: 80px",
+    name: 'type',
+    label: 'Type',
+    field: 'type',
+    align: 'center',
+    style: 'width: 80px',
   },
   {
-    name: "symbol",
-    label: "Symbol",
-    field: "symbol",
-    align: "left",
-    style: "width: 240px",
+    name: 'symbol',
+    label: 'Symbol',
+    field: 'symbol',
+    align: 'left',
+    style: 'width: 240px',
   },
   {
-    name: "data",
-    label: "Data",
-    field: "data",
-    align: "center",
-    style: "width: 480px",
+    name: 'data',
+    label: 'Data',
+    field: 'data',
+    align: 'center',
+    style: 'width: 480px',
   },
 ];
 
@@ -80,7 +80,7 @@ const mon = useMonitorStore();
 const state = reactive({
   isListening: false,
   initialPagination: {
-    sortBy: "time",
+    sortBy: 'time',
     descending: true,
     page: 1,
     rowsPerPage: 16,

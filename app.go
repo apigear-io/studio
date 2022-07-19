@@ -10,13 +10,14 @@ import (
 	"github.com/apigear-io/cli/pkg/config"
 	"github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/prj"
+	"github.com/apigear-io/cli/pkg/tpl"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
 type App struct {
 	ctx            context.Context
-	currentProject *Project
+	currentProject *ProjectInfo
 }
 
 // NewApp creates a new App application struct
@@ -38,7 +39,7 @@ func (a App) RecentProjects() []string {
 	return config.GetRecentEntries()
 }
 
-func (a *App) OpenProject() (*Project, error) {
+func (a *App) OpenProject() (*ProjectInfo, error) {
 	opts := runtime.OpenDialogOptions{
 		Title: "Open Project",
 	}
@@ -46,7 +47,7 @@ func (a *App) OpenProject() (*Project, error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = a.openProject(&Project{Path: dir})
+	_, err = a.openProject(&ProjectInfo{Path: dir})
 	if err != nil {
 		return nil, err
 	}
@@ -54,9 +55,9 @@ func (a *App) OpenProject() (*Project, error) {
 }
 
 // OpenRecentProject opens a project with the given source
-func (a *App) OpenRecentProject(source string) (*Project, error) {
+func (a *App) OpenRecentProject(source string) (*ProjectInfo, error) {
 	log.Infof("Open Recent Project %s", source)
-	project, err := a.openProject(&Project{Path: source})
+	project, err := a.openProject(&ProjectInfo{Path: source})
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +65,7 @@ func (a *App) OpenRecentProject(source string) (*Project, error) {
 }
 
 // CreateProject creates a new project in the given source
-func (a *App) CreateProject() (*Project, error) {
+func (a *App) CreateProject() (*ProjectInfo, error) {
 	opts := runtime.OpenDialogOptions{
 		Title:                "Open Folder",
 		CanCreateDirectories: true,
@@ -74,7 +75,7 @@ func (a *App) CreateProject() (*Project, error) {
 		return nil, err
 	}
 	prj.InitProject(source)
-	proj, err := a.openProject(&Project{Path: source})
+	proj, err := a.openProject(&ProjectInfo{Path: source})
 	if err != nil {
 		return nil, err
 	}
@@ -82,13 +83,13 @@ func (a *App) CreateProject() (*Project, error) {
 }
 
 // ImportProject imports a project from a local or remote source
-func (a *App) ImportProject(source string) Project {
+func (a *App) ImportProject(source string) ProjectInfo {
 	log.Infof("Import Project %s", source)
-	return Project{}
+	return ProjectInfo{}
 }
 
 // ShareProject returns a shareable link for the given project
-func (a *App) ShareProject(project Project) string {
+func (a *App) ShareProject(project ProjectInfo) string {
 	log.Infof("Share Project %s", project.Path)
 	return "https://example.com"
 }
@@ -123,7 +124,7 @@ func (a App) NewDocument(docType string, name string) (string, error) {
 	log.Infof("New Document %s %s", name, docType)
 	prjDir := a.currentProject.Path
 	target, err := prj.CreateProjectDocument(prjDir, docType, name)
-	a.openProject(&Project{Path: prjDir})
+	a.openProject(&ProjectInfo{Path: prjDir})
 	return target, err
 }
 
@@ -143,11 +144,11 @@ func (a App) OpenSourceInEditor(source string) error {
 	return prj.OpenEditor(source)
 }
 
-func (a *App) RefreshCurrentProject() (*Project, error) {
+func (a *App) RefreshCurrentProject() (*ProjectInfo, error) {
 	return a.openProject(a.currentProject)
 }
 
-func (a *App) openProject(p *Project) (*Project, error) {
+func (a *App) openProject(p *ProjectInfo) (*ProjectInfo, error) {
 	if p == nil {
 		a.currentProject = nil
 		return nil, nil
@@ -162,8 +163,8 @@ func (a *App) openProject(p *Project) (*Project, error) {
 	return p, err
 }
 
-func doReadProject(source string) (*Project, error) {
-	p := &Project{
+func doReadProject(source string) (*ProjectInfo, error) {
+	p := &ProjectInfo{
 		Path: source,
 		Name: filepath.Base(source),
 	}
@@ -201,4 +202,43 @@ func guessDocumentType(path string) string {
 
 func (a App) EmitProjectChanged() {
 	runtime.EventsEmit(a.ctx, "ProjectChanged", a.currentProject)
+}
+
+func (a App) GetTemplates() ([]TemplateInfo, error) {
+	in, err := tpl.ListTemplates()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(len(in))
+	out := make([]TemplateInfo, len(in))
+	for i, tpl := range in {
+		out[i] = TemplateInfo{
+			Name:   tpl.Name,
+			Source: tpl.URL,
+			Path:   tpl.Path,
+		}
+	}
+	fmt.Println(len(out))
+	return out, nil
+}
+
+func (a App) InstallTemplateFromSource(source string) (*TemplateInfo, error) {
+	log.Infof("Install Template From Source %s", source)
+	name, err := tpl.RepositoryNameFromGitUrl(source)
+	if err != nil {
+		return nil, err
+	}
+	err = tpl.InstallTemplate(name, source)
+	if err != nil {
+		return nil, err
+	}
+	return &TemplateInfo{
+		Name:   name,
+		Source: source,
+	}, nil
+}
+
+func (a App) RemoveTemplate(name string) error {
+	log.Infof("Remove Template %s", name)
+	return tpl.RemoveTemplate(name)
 }

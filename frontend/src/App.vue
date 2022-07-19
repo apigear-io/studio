@@ -3,14 +3,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { useMonitorStore } from "./stores/monitor-store";
-import { useProjectStore } from "./stores/project-store";
+import { defineComponent } from 'vue';
+import { useMonitorStore } from './stores/monitor-store';
+import { useProjectStore } from './stores/project-store';
 
 export default defineComponent({
-  name: "App",
+  name: 'App',
   setup() {
-    console.log("App.setup");
+    console.log('App.setup');
     const monitor = useMonitorStore();
     monitor.init();
     const project = useProjectStore();

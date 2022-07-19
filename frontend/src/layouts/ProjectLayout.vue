@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header class="bg-grey-10">
+    <q-header class="q-dark shadow-4">
       <q-toolbar>
         <q-icon name="api" color="red-7" size="md" />
         <q-toolbar-title>ApiGear Studio</q-toolbar-title>
@@ -10,7 +10,6 @@
           class="text-primary"
           label="New Document"
           dropdown-icon="add_box"
-          no-caps
         >
           <q-list class="q-pa-md">
             <q-item
@@ -56,7 +55,7 @@
         </q-btn-dropdown>
         <q-space />
         <q-btn-group flat class="text-primary">
-          <q-btn icon="swap_horiz" :label="store.project.name" to="/" no-caps>
+          <q-btn icon="swap_horiz" :label="store.project.name" to="/">
             <q-tooltip>Switch projects</q-tooltip>
           </q-btn>
           <q-btn icon="sync" @click="onSync()">
@@ -73,8 +72,8 @@
     </q-header>
 
     <q-page-container>
-      <div class="row q-dark">
-        <div class="col-2 q-py-md shadow-4">
+      <div class="row q-dark-page shadow-4">
+        <div class="col-2 q-py-md shadow-4 accent shadow-4">
           <q-tabs vertical>
             <q-route-tab
               v-for="mode in modes"
@@ -82,70 +81,74 @@
               :icon="mode.icon"
               :label="mode.title"
               :to="mode.to"
-              no-caps
               active-class="text-primary"
               exact
             ></q-route-tab>
           </q-tabs>
         </div>
-        <div class="col-10 shadow-4">
+        <div class="col-10">
           <router-view />
         </div>
       </div>
     </q-page-container>
 
-    <q-footer class="bg-grey-10">
+    <q-footer class="bg-grey-10 shadow-4">
       <div class="row">
-        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" no-caps />
+        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" />
         <q-space />
-        <q-btn flat size="md" label="v 2020.3" no-caps />
+        <q-btn flat size="md" label="v 2020.3" />
       </div>
     </q-footer>
   </q-layout>
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { onMounted } from "vue";
-import { NewDocument } from "../wailsjs/go/main/App";
-import { useProjectStore } from "../stores/project-store";
-import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
+import { useQuasar } from 'quasar';
+import { onMounted } from 'vue';
+import { NewDocument } from '../wailsjs/go/main/App';
+import { useProjectStore } from '../stores/project-store';
+import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
 
 const modes = [
   {
-    title: "Dashboard",
-    icon: "dashboard",
-    to: "/projects/",
+    title: 'Dashboard',
+    icon: 'dashboard',
+    to: '/projects/',
   },
   {
-    title: "Modules",
-    icon: "api",
-    to: "/projects/modules",
+    title: 'Modules',
+    icon: 'api',
+    to: '/projects/modules',
   },
   {
-    title: "Solutions",
-    icon: "chair",
-    to: "/projects/solutions",
+    title: 'Solutions',
+    icon: 'chair',
+    to: '/projects/solutions',
   },
   {
-    title: "Simulation",
-    icon: "av_timer",
-    to: "/projects/simulations",
+    title: 'Templates',
+    icon: 'auto_fix_normal',
+    to: '/projects/templates',
   },
   {
-    title: "Monitor",
-    icon: "data_object",
-    to: "/projects/monitor",
+    title: 'Simulation',
+    icon: 'av_timer',
+    to: '/projects/simulations',
   },
   {
-    title: "Logs",
-    icon: "view_list",
-    to: "/projects/logs",
+    title: 'Monitor',
+    icon: 'data_object',
+    to: '/projects/monitor',
   },
   {
-    title: "Settings",
-    icon: "settings",
-    to: "/projects/settings",
+    title: 'Logs',
+    icon: 'view_list',
+    to: '/projects/logs',
+  },
+  {
+    title: 'Settings',
+    icon: 'settings',
+    to: '/projects/settings',
   },
 ];
 
@@ -163,20 +166,20 @@ function copyProjectPath() {
   navigator.clipboard.writeText(store.project.path);
   $q.notify({
     message: `${store.project.path} copied to clipboard`,
-    color: "positive",
-    icon: "done",
+    color: 'positive',
+    icon: 'done',
     timeout: 2000,
   });
 }
 
 function openHelp() {
   try {
-    BrowserOpenURL("https://docs.apigear.io/");
+    BrowserOpenURL('https://docs.apigear.io/');
   } catch (e) {
     $q.notify({
       message: e,
-      color: "negative",
-      icon: "error",
+      color: 'negative',
+      icon: 'error',
     });
   }
 }
@@ -186,24 +189,24 @@ function onNewDocument(docType) {
     title: `New ${docType}`,
     message: `Enter ${docType} name`,
     prompt: {
-      model: "",
-      type: "text", // optional
+      model: '',
+      type: 'text', // optional
     },
   }).onOk(async (name) => {
     try {
-      console.log("new document", docType, name);
+      console.log('new document', docType, name);
       const target = await NewDocument(docType, name);
       await store.sync();
       $q.notify({
         message: `Document ${target} created`,
-        color: "positive",
-        icon: "done",
+        color: 'positive',
+        icon: 'done',
       });
     } catch (e) {
       $q.notify({
         message: e,
-        color: "negative",
-        icon: "error",
+        color: 'negative',
+        icon: 'error',
       });
     }
   });

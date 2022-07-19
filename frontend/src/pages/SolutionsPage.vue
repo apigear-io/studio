@@ -36,7 +36,7 @@
                 <q-btn
                   class="text-primary"
                   label="Edit"
-                  icon="edit"
+                  icon="edit_note"
                   @click.stop="editDocument(item)"
                 />
                 <q-btn class="text-primary" icon="more_vert">
@@ -83,51 +83,51 @@
 </template>
 
 <script setup lang="ts">
-import { OpenSourceInEditor } from "../wailsjs/go/main/App";
-import { useQuasar } from "quasar";
-import { useProjectStore } from "../stores/project-store";
-import { main } from "../wailsjs/go/models";
+import { OpenSourceInEditor } from '../wailsjs/go/main/App';
+import { useQuasar } from 'quasar';
+import { useProjectStore } from '../stores/project-store';
+import { main } from '../wailsjs/go/models';
 const store = useProjectStore();
 const $q = useQuasar();
 
 function icon(docType: string) {
   switch (docType) {
-    case "module":
-      return "api";
-    case "solution":
-      return "chair";
-    case "scenario":
-      return "av_timer";
+    case 'module':
+      return 'api';
+    case 'solution':
+      return 'chair';
+    case 'scenario':
+      return 'av_timer';
   }
 }
 
 function runDocument(item: main.DocumentInfo) {
-  console.log("runDocument", item.path);
+  console.log('runDocument', item.path);
 }
 
 async function editDocument(doc: main.DocumentInfo) {
-  console.log("editDocument", doc);
+  console.log('editDocument', doc);
   try {
     $q.notify({
       message: `Opening ${doc.name} in editor`,
-      color: "positive",
-      icon: "info",
+      color: 'positive',
+      icon: 'info',
     });
     await OpenSourceInEditor(doc.path);
   } catch {
     $q.notify({
       message: `Failed to open ${doc.name}`,
-      color: "negative",
-      icon: "error",
+      color: 'negative',
+      icon: 'error',
     });
   }
 }
 
 function toggleAutoRun(doc: main.DocumentInfo) {
-  console.log("toggleAutoRun", doc);
+  console.log('toggleAutoRun', doc);
 }
 
-function copyPath(doc: main.DocumentInfo) {
-  console.log("copyPath", doc);
-}
+const copyPath = (doc: main.DocumentInfo) => {
+  navigator.clipboard.writeText(doc.path);
+};
 </script>

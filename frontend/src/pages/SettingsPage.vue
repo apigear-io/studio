@@ -13,8 +13,8 @@
         <div class="row">
           <div class="col-2">
             <q-tabs v-model="state.tab" vertical active-class="text-primary">
-              <q-tab name="connect" icon="link" label="Connection" no-caps />
-              <q-tab name="app" icon="terminal" label="Application" no-caps />
+              <q-tab name="connect" icon="link" label="Connection" />
+              <q-tab name="app" icon="terminal" label="Application" />
             </q-tabs>
           </div>
           <div class="col-6">
@@ -106,27 +106,27 @@ import {
   WriteSettings,
   GetMonitorAddress,
   GetSimulationAddress,
-} from "../wailsjs/go/main/App";
-import { useQuasar } from "quasar";
-import { onMounted, reactive, watchEffect } from "vue";
+} from '../wailsjs/go/main/App';
+import { useQuasar } from 'quasar';
+import { onMounted, reactive, watchEffect } from 'vue';
 
 const $q = useQuasar();
 
-const updateOptions = ["stable", "beta", "dev"];
+const updateOptions = ['stable', 'beta', 'dev'];
 
 const ifValidUpdateOption = (value: string) => {
   console.log(value);
-  const values = ["stable", "beta", "dev"];
+  const values = ['stable', 'beta', 'dev'];
   return values.includes(value);
 };
 
 const state = reactive({
-  serverPort: "",
-  updateValue: "stable",
-  editorCommand: "",
-  monitorAddress: "",
-  simulationAddress: "",
-  tab: "connect",
+  serverPort: '',
+  updateValue: 'stable',
+  editorCommand: '',
+  monitorAddress: '',
+  simulationAddress: '',
+  tab: 'connect',
 });
 
 onMounted(async () => {
@@ -140,16 +140,16 @@ onMounted(async () => {
 watchEffect(async () => {
   const port = parseInt(state.serverPort);
   if (isNaN(port)) {
-    $q.notify("Server port must be a number");
+    $q.notify('Server port must be a number');
     return;
   }
   // check if server port is in range
   if (port < 1024 || port > 65535) {
-    $q.notify("Server port must be in range 1024-65535");
+    $q.notify('Server port must be in range 1024-65535');
     return;
   }
   if (ifValidUpdateOption(state.updateValue) === false) {
-    $q.notify("Update channel must be stable, beta or dev");
+    $q.notify('Update channel must be stable, beta or dev');
     return;
   }
   const settings = {
@@ -159,9 +159,9 @@ watchEffect(async () => {
   };
   await WriteSettings(settings);
   $q.notify({
-    message: "Settings saved",
-    color: "positive",
-    icon: "check",
+    message: 'Settings saved',
+    color: 'positive',
+    icon: 'check',
   });
 });
 </script>

@@ -10,9 +10,9 @@ export default {
     return {
       items: [
         {
-          title: "Dashboard",
-          icon: "school",
-          link: "https://quasar.dev",
+          title: 'Dashboard',
+          icon: 'school',
+          link: 'https://quasar.dev',
         },
       ],
     };

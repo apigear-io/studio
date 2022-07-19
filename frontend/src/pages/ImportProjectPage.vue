@@ -40,15 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import { ImportProject } from "../wailsjs/go/main/App";
-import { useQuasar } from "quasar";
-import { reactive } from "vue";
+import { ImportProject } from '../wailsjs/go/main/App';
+import { useQuasar } from 'quasar';
+import { reactive } from 'vue';
 
 const $q = useQuasar();
 
 const state = reactive({
-  source: "",
-  target: "",
+  source: '',
+  target: '',
 });
 
 async function importProject() {
@@ -57,8 +57,8 @@ async function importProject() {
   } catch (e: any) {
     $q.notify({
       message: String(e),
-      color: "negative",
-      icon: "error",
+      color: 'negative',
+      icon: 'error',
     });
   }
 }

@@ -1,15 +1,15 @@
-import { defineStore } from "pinia";
-import { RecentProjects, RefreshCurrentProject } from "../wailsjs/go/main/App";
-import { main } from "../wailsjs/go/models";
-import { EventsOn } from "../wailsjs/runtime/runtime";
+import { defineStore } from 'pinia';
+import { RecentProjects, RefreshCurrentProject } from '../wailsjs/go/main/App';
+import { main } from '../wailsjs/go/models';
+import { EventsOn } from '../wailsjs/runtime/runtime';
 
-const nullProject = main.Project.createFrom({
-  name: "NONE",
-  path: "",
+const nullProject = main.ProjectInfo.createFrom({
+  name: 'NONE',
+  path: '',
   documents: [],
 });
 
-export const useProjectStore = defineStore("project", {
+export const useProjectStore = defineStore('project', {
   state: () => ({
     project: nullProject,
     recent: [] as string[],
@@ -17,21 +17,21 @@ export const useProjectStore = defineStore("project", {
   getters: {
     documents: (state) => state.project?.documents,
     modules: (state) =>
-      state.project?.documents.filter((doc) => doc.type === "module"),
+      state.project?.documents.filter((doc) => doc.type === 'module'),
     solutions: (state) =>
-      state.project?.documents.filter((doc) => doc.type === "solution"),
+      state.project?.documents.filter((doc) => doc.type === 'solution'),
     scenarios: (state) =>
-      state.project?.documents.filter((doc) => doc.type === "scenario"),
+      state.project?.documents.filter((doc) => doc.type === 'scenario'),
   },
   actions: {
     init() {
-      console.log("init project store");
-      EventsOn("ProjectChanged", this.sync);
+      console.log('init project store');
+      EventsOn('ProjectChanged', this.sync);
     },
     async sync() {
-      console.log("sync project store");
+      console.log('sync project store');
       try {
-        this.project = (await RefreshCurrentProject()) as main.Project;
+        this.project = (await RefreshCurrentProject()) as main.ProjectInfo;
         this.recent = await RecentProjects();
       } catch (e) {
         console.error(e);

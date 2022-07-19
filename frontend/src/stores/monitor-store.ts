@@ -1,6 +1,6 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia';
 
-import { EventsOn } from "../wailsjs/runtime/runtime";
+import { EventsOn } from '../wailsjs/runtime/runtime';
 
 export interface IMonitorEvent {
   timestamp: number;
@@ -10,7 +10,7 @@ export interface IMonitorEvent {
   data: Record<string, unknown>;
 }
 
-export const useMonitorStore = defineStore("mon", {
+export const useMonitorStore = defineStore('mon', {
   state: () => ({
     monEventLimit: 500 as number,
     monEventItems: [] as IMonitorEvent[],
@@ -20,10 +20,10 @@ export const useMonitorStore = defineStore("mon", {
       this.monEventItems = [];
     },
     init() {
-      console.log("start monitoring");
+      console.log('start monitoring');
       this.monEventItems = [];
-      EventsOn("mon", (event) => {
-        console.log("mon event", event);
+      EventsOn('mon', (event) => {
+        console.log('mon event', event);
         this.monEventItems.unshift(event);
         // limit the number of events
         if (this.monEventItems.length > this.monEventLimit) {

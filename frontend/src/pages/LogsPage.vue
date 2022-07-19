@@ -51,8 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
-import { QTableProps } from "quasar";
+import { onMounted, reactive } from 'vue';
+import { QTableProps } from 'quasar';
 
 interface ILogEntry {
   time: string;
@@ -60,50 +60,50 @@ interface ILogEntry {
   message: string;
 }
 
-const columns: QTableProps["columns"] = [
+const columns: QTableProps['columns'] = [
   {
-    name: "time",
-    label: "Time",
-    field: "time",
-    align: "left",
-    style: "width: 120px",
+    name: 'time',
+    label: 'Time',
+    field: 'time',
+    align: 'left',
+    style: 'width: 120px',
   },
   {
-    name: "topic",
-    label: "Topic",
-    field: "topic",
-    align: "center",
-    style: "width: 120px",
+    name: 'topic',
+    label: 'Topic',
+    field: 'topic',
+    align: 'center',
+    style: 'width: 120px',
   },
   {
-    name: "message",
-    label: "Message",
-    field: "message",
-    align: "left",
-    style: "width: 640px",
+    name: 'message',
+    label: 'Message',
+    field: 'message',
+    align: 'left',
+    style: 'width: 640px',
   },
 ];
 
 const state = reactive({
-  topicSelection: ["app", "sol", "sim", "mon"] as string[],
+  topicSelection: ['app', 'sol', 'sim', 'mon'] as string[],
   rows: [] as ILogEntry[],
 });
 onMounted(() => {
   state.rows = [
     {
-      time: "2020-01-01T00:00:00Z",
-      topic: "topic1",
-      message: "message1",
+      time: '2020-01-01T00:00:00Z',
+      topic: 'topic1',
+      message: 'message1',
     },
     {
-      time: "2020-01-01T00:00:00Z",
-      topic: "topic2",
-      message: "message2",
+      time: '2020-01-01T00:00:00Z',
+      topic: 'topic2',
+      message: 'message2',
     },
     {
-      time: "2020-01-01T00:00:00Z",
-      topic: "topic3",
-      message: "message3",
+      time: '2020-01-01T00:00:00Z',
+      topic: 'topic3',
+      message: 'message3',
     },
   ];
 });

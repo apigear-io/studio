@@ -5,19 +5,19 @@
     </q-page-container>
     <q-footer class="bg-grey-10">
       <div class="row">
-        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" no-caps />
+        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" />
         <q-space />
-        <q-btn flat size="md" label="v 2020.3" no-caps />
+        <q-btn flat size="md" label="v 2020.3" />
       </div>
     </q-footer>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "BlankLayout",
+  name: 'BlankLayout',
 
   components: {},
 
