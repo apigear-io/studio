@@ -1,17 +1,17 @@
 <template>
-  <q-page padding>
-    <q-toolbar class="bg-primary">
-      <q-btn flat round dense icon="folder_open" />
-      <q-toolbar-title> Import Project </q-toolbar-title>
-    </q-toolbar>
-    <div class="row justify-center q-pa-xl">
-      <q-card class="q-ma-lg col-6">
+  <q-dialog>
+    <q-card style="width: 640px; max-width: 80vw">
+      <q-toolbar class="bg-primary">
+        <q-btn flat round dense icon="folder_open" />
+        <q-toolbar-title> Import Project </q-toolbar-title>
+      </q-toolbar>
+      <q-card class="q-ma-lg">
         <q-card-section>
           <q-input
             v-model="state.dir"
             type="text"
-            label="Target directory"
-            hint="select a local directory to import the project"
+            label="Import directory"
+            hint="select a local directory as target for the import"
           >
             <template v-slot:after>
               <q-btn
@@ -31,20 +31,15 @@
             label="Project URL"
             hint="Git URL for the project to import"
           >
-            <template v-slot:after>
-              <q-btn round dense flat icon="folder_open" />
-            </template>
           </q-input>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn dense flat color="primary" @click="importProject()">
-            Import
-          </q-btn>
-          <q-btn dense flat color="primary" to="/"> Cancel </q-btn>
+          <q-btn flat color="primary" @click="importProject()"> Import </q-btn>
+          <q-btn flat color="primary" v-close-popup> Cancel </q-btn>
         </q-card-actions>
       </q-card>
-    </div>
-  </q-page>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">

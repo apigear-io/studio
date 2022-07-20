@@ -26,7 +26,7 @@ func main() {
 		Width:            1280,
 		Height:           800,
 		Assets:           assets,
-		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 255},
+		BackgroundColour: &options.RGBA{R: 0, G: 0, B: 0, A: 255},
 		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
@@ -35,9 +35,11 @@ func main() {
 			TitleBar: mac.TitleBarDefault(),
 			About: &mac.AboutInfo{
 				Title:   "ApiGear Studio",
-				Message: "(c) 2020 ApiGear",
+				Message: "(c) 2022 ApiGear",
 				Icon:    icon,
 			},
+			WindowIsTranslucent:  false,
+			WebviewIsTransparent: true,
 		},
 	})
 

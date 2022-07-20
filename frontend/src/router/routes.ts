@@ -6,10 +6,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/BlankLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/WelcomePage.vue') },
-      {
-        path: '/import',
-        component: () => import('pages/ImportProjectPage.vue'),
-      },
     ],
   },
   {

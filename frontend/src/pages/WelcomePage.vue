@@ -117,12 +117,20 @@ import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../stores/project-store';
 import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
+import ImportProjectDialog from '../components/ImportProjectDialog.vue';
+
 const more = [
   {
     icon: 'info',
     title: 'About',
     description: 'About ApiGear Studio',
     link: 'http://apigear.io',
+  },
+  {
+    icon: 'book',
+    title: 'Documentation',
+    description: 'ApiGear Manual',
+    link: 'http://docs.apigear.io',
   },
 ];
 
@@ -162,7 +170,10 @@ async function openProject() {
 }
 
 function importProject() {
-  router.push('/import');
+  $q.dialog({
+    component: ImportProjectDialog,
+  });
+  // router.push('/import');
 }
 
 async function openRecentProject(item: string) {
