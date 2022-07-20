@@ -94,9 +94,11 @@
 
     <q-footer class="bg-grey-10 shadow-4">
       <div class="row">
-        <q-btn flat size="md" label="(c) 2020 ApiGear Studio" />
+        <q-btn flat size="md" label="(c) 2022 ApiGear Studio" />
         <q-space />
         <q-btn flat size="md" label="v 2020.3" @click="openAppInfo()" />
+        <q-space />
+        <q-btn flat size="md" label="Discussions" @click="openDiscussions()" />
       </div>
     </q-footer>
   </q-layout>
@@ -108,7 +110,7 @@ import { onMounted } from 'vue';
 import { NewDocument } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
-import AppInfoPanel from '../components/AppInfoPanel.vue';
+import AppInfoDialog from '../components/AppInfoDialog.vue';
 
 const modes = [
   {
@@ -166,7 +168,7 @@ onMounted(store.sync);
 const openAppInfo = () => {
   $q.dialog({
     title: 'App Info',
-    component: AppInfoPanel,
+    component: AppInfoDialog,
   });
 };
 
@@ -180,7 +182,7 @@ function copyProjectPath() {
   });
 }
 
-function openHelp() {
+const openHelp = () => {
   try {
     BrowserOpenURL('https://docs.apigear.io/');
   } catch (e) {
@@ -190,7 +192,19 @@ function openHelp() {
       icon: 'error',
     });
   }
-}
+};
+
+const openDiscussions = () => {
+  try {
+    BrowserOpenURL('https://github.com/orgs/apigear-io/discussions');
+  } catch (e) {
+    $q.notify({
+      message: e,
+      color: 'negative',
+      icon: 'error',
+    });
+  }
+};
 
 function onNewDocument(docType) {
   $q.dialog({
