@@ -6,20 +6,19 @@ On all pages the product logo and version is displayed.
 
 Actions:
 
-- Logo goes to welcome page
-- Version information displays update dialog
+x Version information: displays update dialog
 
 When current project is set the project name is displayed and the following actions are available:
 
 Actions:
 
-- New solution document
-- New module document
-- New simulation document
-- Switch project
-- Sync project
-- Copy project path
-- Open help
+- New solution document: opens new document dialog and creates new solution document
+- New module document: opens new document dialog and creates new module document
+- New simulation document: opens new document dialog and creates new simulation document
+- Switch project: opens dashboard page with all projects
+- Sync project: re-reads current project from disk
+- Copy project path: copies current project path to clipboard
+- Open help: opens product help in browser
 
 
 ## Welcome Page
@@ -30,7 +29,7 @@ It shows to get started with the product and where to find more information
 Actions: 
 - Create project - opens project creation dialog and creates new project with demo content
 - Open project - opens project selection dialog and opens existing project
-x Import project - opens project import dialog and imports existing project from a git url
+- Import project - opens project import dialog and imports existing project from a git url
 - Open recent project - opens recent project from list of recent projects
 - Remove recent project - removes recent project from list of recent projects
 - Open product landing page - opens product landing page in the browser
