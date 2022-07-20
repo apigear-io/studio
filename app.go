@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/apigear-io/cli/pkg/config"
+	"github.com/apigear-io/cli/pkg/git"
 	"github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/apigear-io/cli/pkg/tpl"
@@ -47,7 +48,7 @@ func (a *App) OpenProject() (*ProjectInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = a.openProject(&ProjectInfo{Path: dir})
+	_, err = a.openProject(dir)
 	if err != nil {
 		return nil, err
 	}
@@ -55,9 +56,9 @@ func (a *App) OpenProject() (*ProjectInfo, error) {
 }
 
 // OpenRecentProject opens a project with the given source
-func (a *App) OpenRecentProject(source string) (*ProjectInfo, error) {
-	log.Infof("Open Recent Project %s", source)
-	project, err := a.openProject(&ProjectInfo{Path: source})
+func (a *App) OpenRecentProject(dir string) (*ProjectInfo, error) {
+	log.Infof("Open Recent Project %s", dir)
+	project, err := a.openProject(dir)
 	if err != nil {
 		return nil, err
 	}
@@ -70,12 +71,12 @@ func (a *App) CreateProject() (*ProjectInfo, error) {
 		Title:                "Open Folder",
 		CanCreateDirectories: true,
 	}
-	source, err := runtime.OpenDirectoryDialog(a.ctx, opts)
+	dir, err := runtime.OpenDirectoryDialog(a.ctx, opts)
 	if err != nil {
 		return nil, err
 	}
-	prj.InitProject(source)
-	proj, err := a.openProject(&ProjectInfo{Path: source})
+	prj.InitProject(dir)
+	proj, err := a.openProject(dir)
 	if err != nil {
 		return nil, err
 	}
@@ -83,9 +84,13 @@ func (a *App) CreateProject() (*ProjectInfo, error) {
 }
 
 // ImportProject imports a project from a local or remote source
-func (a *App) ImportProject(source string) ProjectInfo {
-	log.Infof("Import Project %s", source)
-	return ProjectInfo{}
+func (a *App) ImportProject(repoUrl string, targetDir string) (*ProjectInfo, error) {
+	log.Infof("Import project to %s from %s", targetDir, repoUrl)
+	proj, err := prj.ImportProject(repoUrl, targetDir)
+	if err != nil {
+		return nil, fmt.Errorf("failed to import project: %s", err)
+	}
+	return a.openProject(proj.Path)
 }
 
 // ShareProject returns a shareable link for the given project
@@ -122,9 +127,12 @@ func (a App) WriteSettings(settings AppSettings) {
 // NewDocument creates a new document in the current project
 func (a App) NewDocument(docType string, name string) (string, error) {
 	log.Infof("New Document %s %s", name, docType)
-	prjDir := a.currentProject.Path
-	target, err := prj.CreateProjectDocument(prjDir, docType, name)
-	a.openProject(&ProjectInfo{Path: prjDir})
+	if a.currentProject == nil {
+		return "", fmt.Errorf("no project open")
+	}
+	dir := a.currentProject.Path
+	target, err := prj.CreateProjectDocument(dir, docType, name)
+	a.openProject(dir)
 	return target, err
 }
 
@@ -145,15 +153,19 @@ func (a App) OpenSourceInEditor(source string) error {
 }
 
 func (a *App) RefreshCurrentProject() (*ProjectInfo, error) {
-	return a.openProject(a.currentProject)
-}
-
-func (a *App) openProject(p *ProjectInfo) (*ProjectInfo, error) {
-	if p == nil {
-		a.currentProject = nil
+	if a.currentProject == nil {
 		return nil, nil
 	}
-	p, err := doReadProject(p.Path)
+	return a.openProject(a.currentProject.Path)
+}
+
+func (a *App) openProject(dir string) (*ProjectInfo, error) {
+	// check if dir exists
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		a.currentProject = nil
+		return nil, fmt.Errorf("project directory does not exist: %s", dir)
+	}
+	p, err := doReadProject(dir)
 	if err != nil {
 		a.currentProject = nil
 		return nil, fmt.Errorf("Failed to read project: %s", err)
@@ -224,7 +236,7 @@ func (a App) GetTemplates() ([]TemplateInfo, error) {
 
 func (a App) InstallTemplateFromSource(source string) (*TemplateInfo, error) {
 	log.Infof("Install Template From Source %s", source)
-	name, err := tpl.RepositoryNameFromGitUrl(source)
+	name, err := git.RepositoryNameFromGitUrl(source)
 	if err != nil {
 		return nil, err
 	}
@@ -241,4 +253,16 @@ func (a App) InstallTemplateFromSource(source string) (*TemplateInfo, error) {
 func (a App) RemoveTemplate(name string) error {
 	log.Infof("Remove Template %s", name)
 	return tpl.RemoveTemplate(name)
+}
+
+func (a App) SelectDirectory() (string, error) {
+	opts := runtime.OpenDialogOptions{
+		Title:                "Open Folder",
+		CanCreateDirectories: true,
+	}
+	dir, err := runtime.OpenDirectoryDialog(a.ctx, opts)
+	if err != nil {
+		return "", err
+	}
+	return dir, nil
 }

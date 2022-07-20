@@ -51,19 +51,14 @@
           <q-card-section>
             <q-list>
               <q-item-label header>Recent</q-item-label>
-              <q-item
-                clickable
-                v-ripple
-                active
-                v-for="item in store.recent"
-                :key="item"
-                @click="openRecentProject(item)"
-              >
+              <q-item active v-for="item in store.recent" :key="item">
                 <q-item-section avatar>
                   <q-icon name="folder_open" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>{{ item }}</q-item-label>
+                  <q-btn align="left" flat @click="openRecentProject(item)">{{
+                    item
+                  }}</q-btn>
                 </q-item-section>
                 <q-item-section side>
                   <q-btn
@@ -90,7 +85,7 @@
                 active
                 v-for="item in more"
                 :key="item.title"
-                @click="openUrl(item.link)"
+                @click.stop="openUrl(item.link)"
               >
                 <q-item-section avatar>
                   <q-icon :name="item.icon" />

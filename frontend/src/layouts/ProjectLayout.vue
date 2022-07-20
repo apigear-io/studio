@@ -96,7 +96,7 @@
       <div class="row">
         <q-btn flat size="md" label="(c) 2020 ApiGear Studio" />
         <q-space />
-        <q-btn flat size="md" label="v 2020.3" />
+        <q-btn flat size="md" label="v 2020.3" @click="openAppInfo()" />
       </div>
     </q-footer>
   </q-layout>
@@ -108,6 +108,7 @@ import { onMounted } from 'vue';
 import { NewDocument } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
+import AppInfoPanel from '../components/AppInfoPanel.vue';
 
 const modes = [
   {
@@ -161,6 +162,13 @@ async function onSync() {
 const store = useProjectStore();
 
 onMounted(store.sync);
+
+const openAppInfo = () => {
+  $q.dialog({
+    title: 'App Info',
+    component: AppInfoPanel,
+  });
+};
 
 function copyProjectPath() {
   navigator.clipboard.writeText(store.project.path);
