@@ -27,7 +27,6 @@
             <q-item-section side>
               <q-btn-group flat>
                 <q-btn
-                  size="sm"
                   class="text-primary"
                   label="Edit"
                   icon="edit_note"

@@ -20,7 +20,7 @@
               <q-item-label caption lines="2">{{ item.path }}</q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-btn-group class="text-primary">
+              <q-btn-group class="text-primary" flat>
                 <q-btn
                   class="text-primary"
                   label="Run"
