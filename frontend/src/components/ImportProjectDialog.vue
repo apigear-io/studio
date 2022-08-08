@@ -7,31 +7,14 @@
       </q-toolbar>
       <q-card class="q-ma-lg">
         <q-card-section>
-          <q-input
-            v-model="state.dir"
-            type="text"
-            label="Import directory"
-            hint="select a local directory as target for the import"
-          >
+          <q-input v-model="state.dir" type="text" label="Import directory" hint="select a local directory as target for the import">
             <template v-slot:after>
-              <q-btn
-                round
-                dense
-                flat
-                icon="folder_open"
-                @click="onSelectTarget()"
-              />
+              <q-btn round dense flat icon="folder_open" @click="onSelectTarget()" />
             </template>
           </q-input>
         </q-card-section>
         <q-card-section>
-          <q-input
-            v-model="state.repo"
-            type="text"
-            label="Project URL"
-            hint="Git URL for the project to import"
-          >
-          </q-input>
+          <q-input v-model="state.repo" type="text" label="Project URL" hint="Git URL for the project to import"> </q-input>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat color="primary" @click="importProject()"> Import </q-btn>

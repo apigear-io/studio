@@ -21,28 +21,12 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group class="text-primary" flat>
-                <q-btn
-                  class="text-primary"
-                  label="Run"
-                  icon="directions_run"
-                  @click="runDocument(item)"
-                />
-                <q-btn
-                  class="text-primary"
-                  label="Edit"
-                  icon="edit"
-                  @click.stop="editDocument(item)"
-                />
+                <q-btn class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)" />
+                <q-btn class="text-primary" label="Edit" icon="edit" @click.stop="editDocument(item)" />
                 <q-btn class="text-primary" icon="more_vert">
                   <q-menu fit>
                     <q-list style="min-width: 240px" class="q-pa-md">
-                      <q-item
-                        clickable
-                        v-close-popup
-                        @click="copyPath(item)"
-                        dense
-                        class="text-primary"
-                      >
+                      <q-item clickable v-close-popup @click="copyPath(item)" dense class="text-primary">
                         <q-item-section avatar>
                           <q-icon name="file_copy" />
                         </q-item-section>

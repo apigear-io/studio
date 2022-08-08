@@ -5,19 +5,9 @@
         <q-icon name="api" color="red-7" size="md" />
         <q-toolbar-title>ApiGear Studio</q-toolbar-title>
         <q-space />
-        <q-btn-dropdown
-          flat
-          class="text-primary"
-          label="New Document"
-          dropdown-icon="add_box"
-        >
+        <q-btn-dropdown flat class="text-primary" label="New Document" dropdown-icon="add_box">
           <q-list class="q-pa-md">
-            <q-item
-              clickable
-              v-close-popup
-              @click="onNewDocument('module')"
-              class="text-primary"
-            >
+            <q-item clickable v-close-popup @click="onNewDocument('module')" class="text-primary">
               <q-item-section avatar>
                 <q-icon name="api" />
               </q-item-section>
@@ -25,12 +15,7 @@
                 <q-item-label>Module</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item
-              clickable
-              v-close-popup
-              @click="onNewDocument('solution')"
-              class="text-primary"
-            >
+            <q-item clickable v-close-popup @click="onNewDocument('solution')" class="text-primary">
               <q-item-section avatar>
                 <q-icon name="chair" />
               </q-item-section>
@@ -38,12 +23,7 @@
                 <q-item-label>Solution</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item
-              clickable
-              v-close-popup
-              @click="onNewDocument('scenario')"
-              class="text-primary"
-            >
+            <q-item clickable v-close-popup @click="onNewDocument('scenario')" class="text-primary">
               <q-item-section avatar>
                 <q-icon name="av_timer" />
               </q-item-section>
@@ -75,15 +55,7 @@
       <div class="row q-dark-page shadow-4">
         <div class="col-2 q-py-md shadow-4 accent shadow-4">
           <q-tabs vertical>
-            <q-route-tab
-              v-for="mode in modes"
-              :key="mode.icon"
-              :icon="mode.icon"
-              :label="mode.title"
-              :to="mode.to"
-              active-class="text-primary"
-              exact
-            ></q-route-tab>
+            <q-route-tab v-for="mode in modes" :key="mode.icon" :icon="mode.icon" :label="mode.title" :to="mode.to" active-class="text-primary" exact></q-route-tab>
           </q-tabs>
         </div>
         <div class="col-10">

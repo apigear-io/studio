@@ -6,27 +6,12 @@
           <q-btn flat icon="data_object" />
           <q-toolbar-title>Monitor</q-toolbar-title>
           <q-space />
-          <q-toggle
-            size="sm"
-            v-model="state.isListening"
-            label="Scroll"
-            style="min-width: 120px"
-          />
+          <q-toggle size="sm" v-model="state.isListening" label="Scroll" style="min-width: 120px" />
           <q-btn flat icon="block" label="Clear" style="min-width: 120px" />
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table
-          table-class="text-positive"
-          table-header-class="text-primary"
-          title="Monitor Messages"
-          :rows="mon.monEventItems"
-          :columns="columns"
-          row-key="id"
-          dense
-          flat
-          :pagination="state.initialPagination"
-        />
+        <q-table table-class="text-positive" table-header-class="text-primary" title="Monitor Messages" :rows="mon.monEventItems" :columns="columns" row-key="id" dense flat :pagination="state.initialPagination" />
       </q-card-section>
     </q-card>
   </q-page>

@@ -10,13 +10,7 @@
       </q-card-section>
       <q-card-section>
         <q-list separator padding>
-          <q-item
-            v-ripple
-            clickable
-            v-for="item in store.documents"
-            :key="item.path"
-            @click="openDocument(item)"
-          >
+          <q-item v-ripple clickable v-for="item in store.documents" :key="item.path" @click="openDocument(item)">
             <q-item-section avatar>
               <q-icon :name="icon(item.type)" />
             </q-item-section>
@@ -26,12 +20,7 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group flat>
-                <q-btn
-                  class="text-primary"
-                  label="Edit"
-                  icon="edit_note"
-                  @click.stop="editDocument(item)"
-                />
+                <q-btn class="text-primary" label="Edit" icon="edit_note" @click.stop="editDocument(item)" />
               </q-btn-group>
             </q-item-section>
           </q-item>

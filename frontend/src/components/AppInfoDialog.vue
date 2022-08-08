@@ -2,9 +2,7 @@
   <q-dialog>
     <q-card style="width: 480px; max-width: 60vw">
       <q-toolbar class="bg-primary text-white rounded-borders">
-        <q-toolbar-title>
-          ApiGear Studio {{ state.info.version }}
-        </q-toolbar-title>
+        <q-toolbar-title> ApiGear Studio {{ state.info.version }} </q-toolbar-title>
         <q-btn flat round dense icon="close" v-close-popup />
       </q-toolbar>
       <q-card-section>
@@ -14,9 +12,7 @@
               <q-avatar text-color="white" icon="cloud" />
             </q-item-section>
             <q-item-section>
-              <q-item-label
-                >Great! You are using the latest version</q-item-label
-              >
+              <q-item-label>Great! You are using the latest version</q-item-label>
             </q-item-section>
           </q-item>
           <q-item v-else>

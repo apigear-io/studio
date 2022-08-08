@@ -6,45 +6,14 @@
           <q-btn flat icon="view_list" />
           <q-toolbar-title>Logs</q-toolbar-title>
           <q-space />
-          <q-toggle
-            color="positive"
-            label="Solution"
-            v-model="state.topicSelection"
-            val="sol"
-            icon="filter_alt"
-          />
-          <q-toggle
-            color="positive"
-            label="Simulation"
-            v-model="state.topicSelection"
-            val="sim"
-            icon="filter_alt"
-          />
-          <q-toggle
-            color="positive"
-            label="Monitor"
-            v-model="state.topicSelection"
-            val="mon"
-            icon="filter_alt"
-          />
-          <q-toggle
-            color="positive"
-            label="Application"
-            v-model="state.topicSelection"
-            val="app"
-            icon="filter_alt"
-          />
+          <q-toggle color="positive" label="Solution" v-model="state.topicSelection" val="sol" icon="filter_alt" />
+          <q-toggle color="positive" label="Simulation" v-model="state.topicSelection" val="sim" icon="filter_alt" />
+          <q-toggle color="positive" label="Monitor" v-model="state.topicSelection" val="mon" icon="filter_alt" />
+          <q-toggle color="positive" label="Application" v-model="state.topicSelection" val="app" icon="filter_alt" />
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table
-          title="Log Messages"
-          :rows="state.rows"
-          :columns="columns"
-          row-key="time"
-          dense
-          flat
-        />
+        <q-table title="Log Messages" :rows="state.rows" :columns="columns" row-key="time" dense flat />
       </q-card-section>
     </q-card>
   </q-page>

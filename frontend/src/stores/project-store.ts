@@ -16,12 +16,9 @@ export const useProjectStore = defineStore('project', {
   }),
   getters: {
     documents: (state) => state.project?.documents,
-    modules: (state) =>
-      state.project?.documents.filter((doc) => doc.type === 'module'),
-    solutions: (state) =>
-      state.project?.documents.filter((doc) => doc.type === 'solution'),
-    scenarios: (state) =>
-      state.project?.documents.filter((doc) => doc.type === 'scenario'),
+    modules: (state) => state.project?.documents.filter((doc) => doc.type === 'module'),
+    solutions: (state) => state.project?.documents.filter((doc) => doc.type === 'solution'),
+    scenarios: (state) => state.project?.documents.filter((doc) => doc.type === 'scenario'),
   },
   actions: {
     init() {

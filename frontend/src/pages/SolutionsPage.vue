@@ -12,12 +12,7 @@
       </q-card-section>
       <q-card-section>
         <q-list separator padding>
-          <q-item
-            clickable
-            v-ripple
-            v-for="item in store.solutions"
-            :key="item.path"
-          >
+          <q-item clickable v-ripple v-for="item in store.solutions" :key="item.path">
             <q-item-section avatar>
               <q-icon :name="icon(item.type)" />
             </q-item-section>
@@ -27,28 +22,12 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group flat>
-                <q-btn
-                  class="text-primary"
-                  label="Run"
-                  icon="directions_run"
-                  @click="runDocument(item)"
-                />
-                <q-btn
-                  class="text-primary"
-                  label="Edit"
-                  icon="edit_note"
-                  @click.stop="editDocument(item)"
-                />
+                <q-btn class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)" />
+                <q-btn class="text-primary" label="Edit" icon="edit_note" @click.stop="editDocument(item)" />
                 <q-btn class="text-primary" icon="more_vert">
                   <q-menu fit>
                     <q-list style="min-width: 240px" class="q-pa-md">
-                      <q-item
-                        clickable
-                        v-close-popup
-                        @click="copyPath(item)"
-                        dense
-                        class="text-primary"
-                      >
+                      <q-item clickable v-close-popup @click="copyPath(item)" dense class="text-primary">
                         <q-item-section avatar>
                           <q-icon name="file_copy" />
                         </q-item-section>
@@ -56,13 +35,7 @@
                           <q-item-label>Copy Path</q-item-label>
                         </q-item-section>
                       </q-item>
-                      <q-item
-                        clickable
-                        v-close-popup
-                        @click="toggleAutoRun(item)"
-                        dense
-                        class="text-primary"
-                      >
+                      <q-item clickable v-close-popup @click="toggleAutoRun(item)" dense class="text-primary">
                         <q-item-section avatar>
                           <q-icon name="directions_run" />
                         </q-item-section>

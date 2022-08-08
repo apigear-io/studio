@@ -25,38 +25,15 @@
                   <q-toolbar-title> Connection Settings </q-toolbar-title>
                 </q-toolbar>
                 <q-toolbar inset>
-                  <div class="text-subtitle2">
-                    Network settings for monitoring and simulation
-                  </div>
+                  <div class="text-subtitle2">Network settings for monitoring and simulation</div>
                 </q-toolbar>
                 <q-card>
                   <q-card-section>
-                    <q-input
-                      standout
-                      v-model="state.serverPort"
-                      type="number"
-                      label="Server Port"
-                      hint="port for the server"
-                      debounce="500"
-                    />
+                    <q-input standout v-model="state.serverPort" type="number" label="Server Port" hint="port for the server" debounce="500" />
                     <q-card-section> </q-card-section>
-                    <q-input
-                      standout
-                      v-model="state.monitorAddress"
-                      type="text"
-                      label="Monitor Address"
-                      readonly
-                      debounce="500"
-                    />
+                    <q-input standout v-model="state.monitorAddress" type="text" label="Monitor Address" readonly debounce="500" />
                     <q-card-section> </q-card-section>
-                    <q-input
-                      standout
-                      v-model="state.simulationAddress"
-                      type="text"
-                      label="Simulation Address"
-                      readonly
-                      debounce="500"
-                    />
+                    <q-input standout v-model="state.simulationAddress" type="text" label="Simulation Address" readonly debounce="500" />
                   </q-card-section>
                 </q-card>
               </q-tab-panel>
@@ -66,29 +43,14 @@
                   <q-toolbar-title> Application Settings </q-toolbar-title>
                 </q-toolbar>
                 <q-toolbar inset>
-                  <div class="text-subtitle2">
-                    Network settings for monitoring and simulation
-                  </div>
+                  <div class="text-subtitle2">Network settings for monitoring and simulation</div>
                 </q-toolbar>
                 <q-card>
                   <q-card-section>
-                    <q-select
-                      standout
-                      v-model="state.updateValue"
-                      :options="updateOptions"
-                      option-value="value"
-                      label="Update Channel"
-                      filled
-                    />
+                    <q-select standout v-model="state.updateValue" :options="updateOptions" option-value="value" label="Update Channel" filled />
                   </q-card-section>
                   <q-card-section>
-                    <q-input
-                      standout
-                      v-model="state.editorCommand"
-                      type="text"
-                      label="Editor Command"
-                      debounce="500"
-                    />
+                    <q-input standout v-model="state.editorCommand" type="text" label="Editor Command" debounce="500" />
                   </q-card-section>
                 </q-card>
               </q-tab-panel>
@@ -101,12 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ReadSettings,
-  WriteSettings,
-  GetMonitorAddress,
-  GetSimulationAddress,
-} from '../wailsjs/go/main/App';
+import { ReadSettings, WriteSettings, GetMonitorAddress, GetSimulationAddress } from '../wailsjs/go/main/App';
 import { useQuasar } from 'quasar';
 import { onMounted, reactive, watchEffect } from 'vue';
 

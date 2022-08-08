@@ -8,11 +8,7 @@
           <q-space />
           <q-btn-group flat>
             <q-btn icon="refresh" label="Refresh" @click="onRefreshTemplates" />
-            <q-btn
-              icon="file_upload"
-              label="Import"
-              @click="onImportTemplate"
-            />
+            <q-btn icon="file_upload" label="Import" @click="onImportTemplate" />
           </q-btn-group>
         </q-toolbar>
       </q-card-section>
@@ -26,34 +22,16 @@
               <q-item-label>
                 <q-btn flat>{{ item.name }}</q-btn>
               </q-item-label>
-              <q-item-label caption lines="2">{{
-                item.description
-              }}</q-item-label>
+              <q-item-label caption lines="2">{{ item.description }}</q-item-label>
             </q-item-section>
             <q-item-section side>
               <q-btn-group flat>
-                <q-btn
-                  class="text-primary"
-                  label="Install"
-                  icon="directions_run"
-                  @click="onInstallTemplate(item)"
-                />
-                <q-btn
-                  class="text-primary"
-                  label="Info"
-                  icon="info"
-                  @click="onShowTemplateInfo(item)"
-                />
+                <q-btn class="text-primary" label="Install" icon="directions_run" @click="onInstallTemplate(item)" />
+                <q-btn class="text-primary" label="Info" icon="info" @click="onShowTemplateInfo(item)" />
                 <q-btn class="text-primary" icon="more_vert">
                   <q-menu fit>
                     <q-list style="min-width: 240px" class="q-pa-md">
-                      <q-item
-                        clickable
-                        v-close-popup
-                        @click="onCopyName(item)"
-                        dense
-                        class="text-primary"
-                      >
+                      <q-item clickable v-close-popup @click="onCopyName(item)" dense class="text-primary">
                         <q-item-section avatar>
                           <q-icon name="file_copy" />
                         </q-item-section>
@@ -61,13 +39,7 @@
                           <q-item-label>Copy Name</q-item-label>
                         </q-item-section>
                       </q-item>
-                      <q-item
-                        clickable
-                        v-close-popup
-                        @click="onRemoveTemplate(item)"
-                        dense
-                        class="text-primary"
-                      >
+                      <q-item clickable v-close-popup @click="onRemoveTemplate(item)" dense class="text-primary">
                         <q-item-section avatar>
                           <q-icon name="delete" />
                         </q-item-section>
@@ -90,11 +62,7 @@
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
 import { onMounted, reactive } from 'vue';
-import {
-  GetTemplates,
-  InstallTemplateFromSource,
-  RemoveTemplate,
-} from '../wailsjs/go/main/App';
+import { GetTemplates, InstallTemplateFromSource, RemoveTemplate } from '../wailsjs/go/main/App';
 import { main } from '../wailsjs/go/models';
 
 const $q = useQuasar();

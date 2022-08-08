@@ -18,9 +18,7 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Create Project</q-item-label>
-                  <q-item-label caption lines="2"
-                    >Initialize a new API project inside a folder</q-item-label
-                  >
+                  <q-item-label caption lines="2">Initialize a new API project inside a folder</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item clickable v-ripple @click="openProject()" active>
@@ -29,9 +27,7 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Open Project</q-item-label>
-                  <q-item-label caption lines="2"
-                    >Open an existing API project</q-item-label
-                  >
+                  <q-item-label caption lines="2">Open an existing API project</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item clickable v-ripple @click="importProject()" active>
@@ -40,10 +36,7 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Import Project</q-item-label>
-                  <q-item-label caption lines="2"
-                    >Import an existing API project from a local or remote
-                    source</q-item-label
-                  >
+                  <q-item-label caption lines="2">Import an existing API project from a local or remote source</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -56,18 +49,10 @@
                   <q-icon name="folder_open" />
                 </q-item-section>
                 <q-item-section>
-                  <q-btn align="left" flat @click="openRecentProject(item)">{{
-                    item
-                  }}</q-btn>
+                  <q-btn align="left" flat @click="openRecentProject(item)">{{ item }}</q-btn>
                 </q-item-section>
                 <q-item-section side>
-                  <q-btn
-                    size="sm"
-                    color="primary"
-                    flat
-                    icon="close"
-                    @click="onRemoveItem(item)"
-                  />
+                  <q-btn size="sm" color="primary" flat icon="close" @click="onRemoveItem(item)" />
                 </q-item-section>
               </q-item>
             </q-list>
@@ -79,22 +64,13 @@
           <q-card-section>
             <q-list>
               <q-item-label header>More ...</q-item-label>
-              <q-item
-                clickable
-                v-ripple
-                active
-                v-for="item in more"
-                :key="item.title"
-                @click.stop="openUrl(item.link)"
-              >
+              <q-item clickable v-ripple active v-for="item in more" :key="item.title" @click.stop="openUrl(item.link)">
                 <q-item-section avatar>
                   <q-icon :name="item.icon" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ item.title }}</q-item-label>
-                  <q-item-label caption lines="2">{{
-                    item.description
-                  }}</q-item-label>
+                  <q-item-label caption lines="2">{{ item.description }}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -107,12 +83,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import {
-  CreateProject,
-  RemoveRecentProject,
-  OpenProject,
-  OpenRecentProject,
-} from '../wailsjs/go/main/App';
+import { CreateProject, RemoveRecentProject, OpenProject, OpenRecentProject } from '../wailsjs/go/main/App';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../stores/project-store';

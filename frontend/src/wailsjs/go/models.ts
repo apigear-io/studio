@@ -1,5 +1,43 @@
 export namespace main {
 	
+	export class TemplateInfo {
+	    name: string;
+	    description: string;
+	    source: string;
+	    path: string;
+	    installed: boolean;
+	    available: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new TemplateInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.description = source["description"];
+	        this.source = source["source"];
+	        this.path = source["path"];
+	        this.installed = source["installed"];
+	        this.available = source["available"];
+	    }
+	}
+	export class AppSettings {
+	    server_port: number;
+	    update_channel: string;
+	    editor_command: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new AppSettings(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.server_port = source["server_port"];
+	        this.update_channel = source["update_channel"];
+	        this.editor_command = source["editor_command"];
+	    }
+	}
 	export class DocumentInfo {
 	    name: string;
 	    path: string;
@@ -49,44 +87,6 @@ export namespace main {
 		    }
 		    return a;
 		}
-	}
-	export class TemplateInfo {
-	    name: string;
-	    description: string;
-	    source: string;
-	    path: string;
-	    installed: boolean;
-	    available: boolean;
-	
-	    static createFrom(source: any = {}) {
-	        return new TemplateInfo(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.name = source["name"];
-	        this.description = source["description"];
-	        this.source = source["source"];
-	        this.path = source["path"];
-	        this.installed = source["installed"];
-	        this.available = source["available"];
-	    }
-	}
-	export class AppSettings {
-	    server_port: number;
-	    update_channel: string;
-	    editor_command: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new AppSettings(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.server_port = source["server_port"];
-	        this.update_channel = source["update_channel"];
-	        this.editor_command = source["editor_command"];
-	    }
 	}
 
 }
