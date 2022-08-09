@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { OpenSourceInEditor } from '../wailsjs/go/main/App';
+import { OpenSourceInEditor, RunSolution } from '../wailsjs/go/main/App';
 import { useQuasar } from 'quasar';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
@@ -74,11 +74,20 @@ function icon(docType: string) {
   }
 }
 
-function runDocument(item: main.DocumentInfo) {
+const runDocument = async (item: main.DocumentInfo) => {
   console.log('runDocument', item.path);
-}
+  try {
+    await RunSolution(item.path);
+  } catch (e) {
+    console.error(e);
+    $q.notify({
+      type: 'negative',
+      message: `Failed to run solution: ${String(e)}`,
+    });
+  }
+};
 
-async function editDocument(doc: main.DocumentInfo) {
+const editDocument = async (doc: main.DocumentInfo) => {
   console.log('editDocument', doc);
   try {
     $q.notify({
@@ -94,7 +103,7 @@ async function editDocument(doc: main.DocumentInfo) {
       icon: 'error',
     });
   }
-}
+};
 
 function toggleAutoRun(doc: main.DocumentInfo) {
   console.log('toggleAutoRun', doc);

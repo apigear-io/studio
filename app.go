@@ -9,8 +9,8 @@ import (
 
 	"github.com/apigear-io/cli/pkg/config"
 	"github.com/apigear-io/cli/pkg/git"
-	"github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/prj"
+	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/apigear-io/cli/pkg/tpl"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -57,7 +57,7 @@ func (a *App) OpenProject() (*ProjectInfo, error) {
 
 // OpenRecentProject opens a project with the given source
 func (a *App) OpenRecentProject(dir string) (*ProjectInfo, error) {
-	log.Infof("Open Recent Project %s", dir)
+	log.Infof("open recent project %s", dir)
 	project, err := a.openProject(dir)
 	if err != nil {
 		return nil, err
@@ -265,4 +265,21 @@ func (a App) SelectDirectory() (string, error) {
 		return "", err
 	}
 	return dir, nil
+}
+
+func (a App) RunSolution(source string) error {
+	log.Infof("run solution %s", source)
+	_, err := sol.RunSolutionFile(source)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a App) RestartApp() {
+	log.Infof("Restart App")
+	err := RestartSelf()
+	if err != nil {
+		log.Errorf("Failed to restart app: %s", err)
+	}
 }

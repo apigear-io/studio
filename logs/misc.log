@@ -1,0 +1,6 @@
+time="2022-07-21T23:53:18+02:00" level=info msg="start services" topic=app
+time="2022-07-21T23:53:18+02:00" level=info msg="start monitor service" topic=app
+time="2022-07-21T23:53:18+02:00" level=info msg="handle monitor request on /monitor/{source}" topic=app
+time="2022-07-21T23:53:18+02:00" level=info msg="start simulation service" topic=app
+time="2022-07-21T23:53:18+02:00" level=info msg="start server on :5555" topic=app
+time="2022-07-21T23:53:32+02:00" level=info msg="open recent project /Users/jryannel/work/demos/demo04" topic=app

@@ -1,10 +1,31 @@
 <template>
   <div class="row">
-    <q-btn flat size="md" label="(c) 2022 ApiGear Studio" @click="openHelp()" />
+    <q-btn
+      size="sm"
+      flat
+      icon="api"
+      label="ApiGear Studio"
+      color="blue-grey-4"
+      @click="openProductInfo()"
+    />
     <q-space />
-    <q-btn flat size="md" label="v 2020.3" @click="openAppInfo()" />
+    <q-btn
+      size="sm"
+      flat
+      icon="info"
+      label="v2020.3"
+      color="blue-grey-4"
+      @click="openAppInfo()"
+    />
     <q-space />
-    <q-btn flat size="md" label="Discussions" @click="openDiscussions()" />
+    <q-btn
+      size="sm"
+      flat
+      icon="forum"
+      label="Discussions"
+      color="blue-grey-4"
+      @click="openDiscussions()"
+    />
   </div>
 </template>
 
@@ -34,7 +55,7 @@ const openDiscussions = () => {
   }
 };
 
-const openHelp = () => {
+const openProductInfo = () => {
   try {
     BrowserOpenURL('https://apigear.io/');
   } catch (e) {

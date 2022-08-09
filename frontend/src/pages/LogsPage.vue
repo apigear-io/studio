@@ -13,21 +13,18 @@
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table title="Log Messages" :rows="state.rows" :columns="columns" row-key="time" dense flat />
+        <q-table title="Log Messages" :rows="logStore.list" :columns="columns" row-key="time" dense flat />
       </q-card-section>
     </q-card>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue';
+import { reactive } from 'vue';
 import { QTableProps } from 'quasar';
+import { useLogStore } from '../stores/log-store';
 
-interface ILogEntry {
-  time: string;
-  topic: string;
-  message: string;
-}
+const logStore = useLogStore();
 
 const columns: QTableProps['columns'] = [
   {
@@ -35,45 +32,32 @@ const columns: QTableProps['columns'] = [
     label: 'Time',
     field: 'time',
     align: 'left',
-    style: 'width: 120px',
+    style: 'width: 80px',
+  },
+  {
+    name: 'level',
+    label: 'Level',
+    field: 'level',
+    align: 'center',
+    style: 'width: 40px',
   },
   {
     name: 'topic',
     label: 'Topic',
     field: 'topic',
     align: 'center',
-    style: 'width: 120px',
+    style: 'width: 40px',
   },
   {
     name: 'message',
     label: 'Message',
     field: 'message',
     align: 'left',
-    style: 'width: 640px',
+    style: 'width: 320px',
   },
 ];
 
 const state = reactive({
   topicSelection: ['app', 'sol', 'sim', 'mon'] as string[],
-  rows: [] as ILogEntry[],
-});
-onMounted(() => {
-  state.rows = [
-    {
-      time: '2020-01-01T00:00:00Z',
-      topic: 'topic1',
-      message: 'message1',
-    },
-    {
-      time: '2020-01-01T00:00:00Z',
-      topic: 'topic2',
-      message: 'message2',
-    },
-    {
-      time: '2020-01-01T00:00:00Z',
-      topic: 'topic3',
-      message: 'message3',
-    },
-  ];
 });
 </script>

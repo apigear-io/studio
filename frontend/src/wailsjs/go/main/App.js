@@ -70,6 +70,14 @@ export function RemoveTemplate(arg1) {
   return window['go']['main']['App']['RemoveTemplate'](arg1);
 }
 
+export function RestartApp() {
+  return window['go']['main']['App']['RestartApp']();
+}
+
+export function RunSolution(arg1) {
+  return window['go']['main']['App']['RunSolution'](arg1);
+}
+
 export function SelectDirectory() {
   return window['go']['main']['App']['SelectDirectory']();
 }

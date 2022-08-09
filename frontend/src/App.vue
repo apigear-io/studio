@@ -6,7 +6,7 @@
 import { defineComponent } from 'vue';
 import { useMonitorStore } from './stores/monitor-store';
 import { useProjectStore } from './stores/project-store';
-
+import { useLogStore } from './stores/log-store';
 export default defineComponent({
   name: 'App',
   setup() {
@@ -15,6 +15,8 @@ export default defineComponent({
     monitor.init();
     const project = useProjectStore();
     project.init();
+    const logStore = useLogStore();
+    logStore.init();
     return {
       monitor,
       project,

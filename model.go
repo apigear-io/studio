@@ -16,7 +16,7 @@ type ProjectInfo struct {
 
 // AppSettings is the settings for the application exposed to the UI
 type AppSettings struct {
-	ServerPort    int    `json:"server_port"`
+	ServerPort    string `json:"server_port"`
 	UpdateChannel string `json:"update_channel"`
 	EditorCommand string `json:"editor_command"`
 }

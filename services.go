@@ -3,8 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/exec"
+	"syscall"
 
-	"github.com/apigear-io/cli/pkg/log"
+	rt "runtime"
+
+	logger "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
 	"github.com/apigear-io/cli/pkg/net/rpc"
@@ -18,10 +23,14 @@ var monitorStarted bool
 
 // TODO: rethink context used here, many we can just create new contexts with timeouts
 
-func StartServices(ctx context.Context, port int) error {
+func StartServices(ctx context.Context, port string) error {
 	log.Info("start services")
 	server = net.NewHTTPServer()
-	err := RegisterMonitorService(ctx)
+	err := RegisterLogService(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to start log service: %s", err)
+	}
+	err = RegisterMonitorService(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to start monitor service: %v", err)
 	}
@@ -29,7 +38,7 @@ func StartServices(ctx context.Context, port int) error {
 	if err != nil {
 		return fmt.Errorf("failed to start simulation service: %v", err)
 	}
-	err = RunServer(fmt.Sprintf(":%d", port))
+	err = RunServer(fmt.Sprintf(":%s", port))
 	if err != nil {
 		return fmt.Errorf("failed to start server: %v", err)
 	}
@@ -102,4 +111,39 @@ func GetSimulationAddress() (string, error) {
 		return "", fmt.Errorf("server not started")
 	}
 	return fmt.Sprintf("ws://%s/ws/", server.Address()), nil
+}
+
+func RegisterLogService(ctx context.Context) error {
+	emitter := logger.Emitter()
+	go func(emitter <-chan *logger.ReportEntry) {
+		// capture report events and send to app
+		for event := range emitter {
+			log.Debugf("send log entry: %v", event)
+			runtime.EventsEmit(ctx, "log", event)
+		}
+	}(emitter)
+	return nil
+}
+
+func RestartSelf() error {
+	self, err := os.Executable()
+	if err != nil {
+		return err
+	}
+	args := os.Args
+	env := os.Environ()
+	// Windows does not support exec syscall.
+	if rt.GOOS == "windows" {
+		cmd := exec.Command(self, args[1:]...)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		cmd.Env = env
+		err := cmd.Run()
+		if err == nil {
+			os.Exit(0)
+		}
+		return err
+	}
+	return syscall.Exec(self, args, env)
 }

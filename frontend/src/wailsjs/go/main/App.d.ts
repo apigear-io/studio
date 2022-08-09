@@ -36,6 +36,10 @@ export function RemoveRecentProject(arg1:string):void;
 
 export function RemoveTemplate(arg1:string):Promise<Error>;
 
+export function RestartApp():void;
+
+export function RunSolution(arg1:string):Promise<Error>;
+
 export function SelectDirectory():Promise<string>;
 
 export function ShareProject(arg1:main.ProjectInfo):Promise<string>;

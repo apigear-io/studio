@@ -38,13 +38,17 @@
           <q-btn icon="swap_horiz" :label="store.project.name" to="/">
             <q-tooltip>Switch projects</q-tooltip>
           </q-btn>
-          <q-btn icon="sync" @click="onSync()">
+          <q-btn icon="sync" label="Sync" @click="onSync()">
             <q-tooltip>Sync project folder</q-tooltip>
           </q-btn>
-          <q-btn icon="content_copy" @click="copyProjectPath()">
-            <q-tooltip>Copy project location to clipboard</q-tooltip>
+          <q-btn
+            icon="folder_open"
+            label="Open"
+            @click="openProjectDirectory()"
+          >
+            <q-tooltip>Open project folder</q-tooltip>
           </q-btn>
-          <q-btn icon="help" @click="openHelp">
+          <q-btn icon="help" label="Help" @click="openHelp">
             <q-tooltip>Help</q-tooltip>
           </q-btn>
         </q-btn-group>
@@ -131,24 +135,24 @@ const store = useProjectStore();
 
 onMounted(store.sync);
 
-function copyProjectPath() {
-  navigator.clipboard.writeText(store.project.path);
-  $q.notify({
-    message: `${store.project.path} copied to clipboard`,
-    color: 'positive',
-    icon: 'done',
-    timeout: 2000,
-  });
-}
+const openProjectDirectory = () => {
+  try {
+    BrowserOpenURL(store.project.path);
+  } catch (e) {
+    $q.notify({
+      type: 'negative',
+      text: 'Could not open project directory',
+    });
+  }
+};
 
 const openHelp = () => {
   try {
-    BrowserOpenURL('https://docs.apigear.io/');
+    BrowserOpenURL('https://apigear.io/');
   } catch (e) {
     $q.notify({
-      message: e,
-      color: 'negative',
-      icon: 'error',
+      type: 'negative',
+      text: 'Could not open help',
     });
   }
 };

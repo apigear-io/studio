@@ -23,7 +23,7 @@ export namespace main {
 	    }
 	}
 	export class AppSettings {
-	    server_port: number;
+	    server_port: string;
 	    update_channel: string;
 	    editor_command: string;
 	
