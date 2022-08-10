@@ -11,7 +11,7 @@
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table table-class="text-positive" table-header-class="text-primary" title="Monitor Messages" :rows="mon.monEventItems" :columns="columns" row-key="id" dense flat :pagination="state.initialPagination" />
+        <q-table table-class="text-positive" table-header-class="text-primary" title="Monitor Messages" :rows="mon.events" :columns="columns" row-key="id" dense flat :pagination="state.initialPagination" />
       </q-card-section>
     </q-card>
   </q-page>

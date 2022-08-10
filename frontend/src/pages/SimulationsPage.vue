@@ -6,7 +6,7 @@
           <q-btn flat icon="av_timer" />
           <q-toolbar-title>Simulation Scenarios</q-toolbar-title>
           <q-space />
-          <q-btn flat label="Messages" style="width: 120px" />
+          <q-btn flat label="Messages" style="width: 120px" to="/projects/simulations/messages" />
         </q-toolbar>
       </q-card-section>
       <q-card-section>
@@ -48,12 +48,13 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { OpenSourceInEditor } from '../wailsjs/go/main/App';
+import { useRouter } from 'vue-router';
+import { OpenSourceInEditor, RunSolution } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
 
 const store = useProjectStore();
-
+const router = useRouter();
 const $q = useQuasar();
 
 function icon(docType: string) {
@@ -69,6 +70,21 @@ function icon(docType: string) {
 
 function runDocument(doc: main.DocumentInfo) {
   console.log('runDocument', doc);
+  try {
+    RunSolution(doc.path);
+    router.push('/projects/simulations/messages');
+    $q.notify({
+      color: 'positive',
+      message: "Simulation scenario '" + doc.name + "' started",
+      icon: 'info',
+    });
+  } catch (err) {
+    $q.notify({
+      color: 'negative',
+      message: String(err),
+      icon: 'error',
+    });
+  }
 }
 
 async function editDocument(doc: main.DocumentInfo) {

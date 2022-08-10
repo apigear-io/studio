@@ -1,5 +1,5 @@
-make.exe --dry-run --always-make --keep-going --print-directory
-make: Entering directory 'c:/Users/juerg/dev/go-studio'
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/jryannel/work/apigear-go/go-studio'
 mkdir Icon.iconset
 sips -z 16 16     Icon1024.png --out Icon.iconset/icon_16x16.png
 sips -z 32 32     Icon1024.png --out Icon.iconset/icon_16x16@2x.png
@@ -13,5 +13,5 @@ sips -z 512 512   Icon1024.png --out Icon.iconset/icon_512x512.png
 cp Icon1024.png Icon.iconset/icon_512x512@2x.png
 iconutil -c icns Icon.iconset
 rm -R Icon.iconset
-make: Leaving directory 'c:/Users/juerg/dev/go-studio'
+make: Leaving directory `/Users/jryannel/work/apigear-go/go-studio'
  

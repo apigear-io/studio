@@ -24,7 +24,7 @@ var monitorStarted bool
 // TODO: rethink context used here, many we can just create new contexts with timeouts
 
 func StartServices(ctx context.Context, port string) error {
-	log.Info("start services")
+	log.Info("start background services")
 	server = net.NewHTTPServer()
 	err := RegisterLogService(ctx)
 	if err != nil {

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 import { EventsOn } from '../wailsjs/runtime/runtime';
 
-export interface IMonitorEvent {
+export interface ISimulationEvent {
   timestamp: number;
   source: string;
   type: string;
@@ -10,20 +10,20 @@ export interface IMonitorEvent {
   data: Record<string, unknown>;
 }
 
-export const useMonitorStore = defineStore('mon', {
+export const useSimulationStore = defineStore('sim', {
   state: () => ({
     limit: 500 as number,
-    events: [] as IMonitorEvent[],
+    events: [] as ISimulationEvent[],
   }),
   actions: {
     clear() {
       this.events = [];
     },
     init() {
-      console.log('start monitoring');
+      console.log('start simulation');
       this.events = [];
-      EventsOn('mon', (event) => {
-        console.log('mon event', event);
+      EventsOn('sim', (event) => {
+        console.log('sim event', event);
         this.events.unshift(event);
         // limit the number of events
         if (this.events.length > this.limit) {
