@@ -86,6 +86,10 @@ export function ShareProject(arg1) {
   return window['go']['main']['App']['ShareProject'](arg1);
 }
 
+export function WatchSolution(arg1, arg2) {
+  return window['go']['main']['App']['WatchSolution'](arg1, arg2);
+}
+
 export function WriteSettings(arg1) {
   return window['go']['main']['App']['WriteSettings'](arg1);
 }

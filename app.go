@@ -19,11 +19,14 @@ import (
 type App struct {
 	ctx            context.Context
 	currentProject *ProjectInfo
+	solRunner      *sol.Runner
 }
 
 // NewApp creates a new App application struct
 func NewApp() *App {
-	return &App{}
+	return &App{
+		solRunner: sol.NewRunner(),
+	}
 }
 
 // startup is called when the app starts. The context is saved
@@ -269,11 +272,32 @@ func (a App) SelectDirectory() (string, error) {
 
 func (a App) RunSolution(source string) error {
 	log.Infof("run solution %s", source)
-	_, err := sol.RunSolutionFile(source)
+	doc, err := sol.ReadSolutionDoc(source)
+	if err != nil {
+		return err
+	}
+	err = a.solRunner.RunDoc(source, doc)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
+	log.Infof("watch solution %s", source)
+	if enabled {
+		doc, err := sol.ReadSolutionDoc(source)
+		if err != nil {
+			return nil, err
+		}
+		_, err = a.solRunner.StartWatch(source, doc)
+		if err != nil {
+			log.Warnf("watch solution %s failed: %s", source, err)
+		}
+	} else {
+		a.solRunner.StopWatch(source)
+	}
+	return a.solRunner.TaskFiles(), nil
 }
 
 func (a App) RestartApp() {

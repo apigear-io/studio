@@ -13,7 +13,7 @@
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table title="Log Messages" :rows="logStore.list" :columns="columns" row-key="time" dense flat />
+        <q-table title="Log Messages" :rows="logStore.list" :columns="columns" row-key="time" dense flat :pagination="pagination" />
       </q-card-section>
     </q-card>
   </q-page>
@@ -57,6 +57,12 @@ const columns: QTableProps['columns'] = [
   },
 ];
 
+const pagination = {
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 15,
+};
 const state = reactive({
   topicSelection: ['app', 'sol', 'sim', 'mon'] as string[],
 });

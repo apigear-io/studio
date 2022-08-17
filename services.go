@@ -114,14 +114,9 @@ func GetSimulationAddress() (string, error) {
 }
 
 func RegisterLogService(ctx context.Context) error {
-	emitter := logger.Emitter()
-	go func(emitter <-chan *logger.ReportEntry) {
-		// capture report events and send to app
-		for event := range emitter {
-			log.Debugf("send log entry: %v", event)
-			runtime.EventsEmit(ctx, "log", event)
-		}
-	}(emitter)
+	logger.OnReport(func(report *logger.ReportEntry) {
+		runtime.EventsEmit(ctx, "log", report)
+	})
 	return nil
 }
 
