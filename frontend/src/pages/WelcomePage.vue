@@ -129,7 +129,7 @@ async function openProject() {
   try {
     await OpenProject();
     await store.sync();
-    router.push('/projects');
+    router.push('/projects/dashboard');
   } catch (e) {
     console.error(e);
     $q.notify({
@@ -150,13 +150,13 @@ function importProject() {
 async function openRecentProject(item: string) {
   await OpenRecentProject(item);
   await store.sync();
-  router.push('/projects');
+  router.push('/projects/dashboard');
 }
 async function createProject() {
   try {
     await CreateProject();
     await store.sync();
-    router.push('/projects');
+    router.push('/projects/dashboard');
   } catch (e: any) {
     $q.notify({
       message: String(e),

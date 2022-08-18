@@ -63,10 +63,10 @@ const openDocument = async (doc: main.DocumentInfo) => {
       router.push('/projects/modules/');
       break;
     case 'solution':
-      router.push('/projects/solutions');
+      router.push('/projects/solutions/');
       break;
     case 'scenario':
-      router.push('/projects/scenarios');
+      router.push('/projects/simulations/');
       break;
     default:
       $q.notify({

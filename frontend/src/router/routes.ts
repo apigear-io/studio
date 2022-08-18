@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
     path: '/projects',
     component: () => import('layouts/ProjectLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/DashboardPage.vue') },
+      { path: 'dashboard', component: () => import('pages/DashboardPage.vue') },
       { path: 'modules', component: () => import('src/pages/ModulesPage.vue') },
       { path: 'solutions', component: () => import('pages/SolutionsPage.vue') },
       { path: 'templates', component: () => import('pages/TemplatesPage.vue') },

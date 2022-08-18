@@ -6,7 +6,7 @@
           <q-btn flat icon="av_timer" />
           <q-toolbar-title>Simulation Scenarios</q-toolbar-title>
           <q-space />
-          <q-btn flat label="Messages" style="width: 120px" to="/projects/simulations/messages" />
+          <q-btn flat icon="av_timer" label="Events" style="width: 120px" to="/projects/simulations/messages" />
         </q-toolbar>
       </q-card-section>
       <q-card-section>
@@ -21,8 +21,9 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group class="text-primary" flat>
-                <q-btn class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)" />
-                <q-btn class="text-primary" label="Edit" icon="edit" @click.stop="editDocument(item)" />
+                <q-btn v-if="running.sources[item.path]" class="text-primary" label="Stop" icon="stop" @click="stopDocument(item)" />
+                <q-btn v-else class="text-primary" label="Play" icon="play_arrow" @click="runDocument(item)" />
+                <q-btn class="text-primary" label="Edit" icon="edit_note" @click.stop="editDocument(item)" />
                 <q-btn class="text-primary" icon="more_vert">
                   <q-menu fit>
                     <q-list style="min-width: 240px" class="q-pa-md">
@@ -48,13 +49,12 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
-import { OpenSourceInEditor, RunSolution } from '../wailsjs/go/main/App';
+import { OpenSourceInEditor, StartScenario, StopScenario } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
+import { reactive } from 'vue';
 
 const store = useProjectStore();
-const router = useRouter();
 const $q = useQuasar();
 
 function icon(docType: string) {
@@ -67,15 +67,19 @@ function icon(docType: string) {
       return 'av_timer';
   }
 }
+const running = reactive({
+  sources: {} as { [key: string]: boolean },
+});
 
-function runDocument(doc: main.DocumentInfo) {
+const runDocument = async (doc: main.DocumentInfo) => {
   console.log('runDocument', doc);
   try {
-    RunSolution(doc.path);
-    router.push('/projects/simulations/messages');
+    await StartScenario(doc.path);
+    running.sources[doc.path] = true;
+    // router.push('/projects/simulations/messages');
     $q.notify({
       color: 'positive',
-      message: "Simulation scenario '" + doc.name + "' started",
+      message: "Scenario '" + doc.name + "' started",
       icon: 'info',
     });
   } catch (err) {
@@ -85,7 +89,21 @@ function runDocument(doc: main.DocumentInfo) {
       icon: 'error',
     });
   }
-}
+};
+
+const stopDocument = async (doc: main.DocumentInfo) => {
+  console.log('stopDocument', doc);
+  try {
+    await StopScenario(doc.path);
+    running.sources[doc.path] = false;
+  } catch (err) {
+    $q.notify({
+      color: 'negative',
+      message: String(err),
+      icon: 'error',
+    });
+  }
+};
 
 async function editDocument(doc: main.DocumentInfo) {
   console.log('editDocument', doc);

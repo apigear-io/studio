@@ -4,7 +4,7 @@
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
           <q-btn flat icon="view_list" />
-          <q-toolbar-title>Logs</q-toolbar-title>
+          <q-toolbar-title>Log Events</q-toolbar-title>
           <q-space />
           <q-toggle color="positive" label="Solution" v-model="state.topicSelection" val="sol" icon="filter_alt" />
           <q-toggle color="positive" label="Simulation" v-model="state.topicSelection" val="sim" icon="filter_alt" />
@@ -13,7 +13,7 @@
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table title="Log Messages" :rows="logStore.list" :columns="columns" row-key="time" dense flat :pagination="pagination" />
+        <q-table :rows="logStore.list" :columns="columns" row-key="time" dense flat :pagination="pagination" />
       </q-card-section>
     </q-card>
   </q-page>

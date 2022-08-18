@@ -41,11 +41,7 @@
           <q-btn icon="sync" label="Sync" @click="onSync()">
             <q-tooltip>Sync project folder</q-tooltip>
           </q-btn>
-          <q-btn
-            icon="folder_open"
-            label="Open"
-            @click="openProjectDirectory()"
-          >
+          <q-btn icon="folder_open" label="Open" @click="openProjectDirectory()">
             <q-tooltip>Open project folder</q-tooltip>
           </q-btn>
           <q-btn icon="help" label="Help" @click="openHelp">
@@ -56,16 +52,16 @@
     </q-header>
 
     <q-page-container>
-      <div class="row q-dark-page shadow-4">
-        <div class="col-2 q-py-md shadow-4 accent shadow-4">
+      <q-splitter v-model="splitterModel" :limits="[120, Infinity]" unit="px">
+        <template v-slot:before>
           <q-tabs vertical>
-            <q-route-tab v-for="mode in modes" :key="mode.icon" :icon="mode.icon" :label="mode.title" :to="mode.to" active-class="text-primary" exact></q-route-tab>
+            <q-route-tab v-for="mode in modes" :key="mode.icon" :icon="mode.icon" :label="mode.title" :to="mode.to" active-class="text-primary"></q-route-tab>
           </q-tabs>
-        </div>
-        <div class="col-10">
+        </template>
+        <template v-slot:after>
           <router-view />
-        </div>
-      </div>
+        </template>
+      </q-splitter>
     </q-page-container>
 
     <q-footer class="bg-grey-10 shadow-4">
@@ -76,7 +72,7 @@
 
 <script setup>
 import { useQuasar } from 'quasar';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { NewDocument } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
@@ -86,7 +82,7 @@ const modes = [
   {
     title: 'Dashboard',
     icon: 'dashboard',
-    to: '/projects/',
+    to: '/projects/dashboard',
   },
   {
     title: 'Modules',
@@ -130,6 +126,8 @@ const $q = useQuasar();
 async function onSync() {
   await store.sync();
 }
+
+const splitterModel = ref(120);
 
 const store = useProjectStore();
 

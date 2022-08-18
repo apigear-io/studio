@@ -4,14 +4,14 @@
       <q-card-section>
         <q-toolbar class="bg-primary text-white">
           <q-btn flat icon="av_timer" />
-          <q-toolbar-title>Simulation Messages</q-toolbar-title>
+          <q-toolbar-title>Simulation Events</q-toolbar-title>
           <q-space />
           <q-toggle size="sm" v-model="state.isListening" label="Scroll" style="min-width: 120px" />
           <q-btn flat icon="block" label="Clear" style="min-width: 120px" />
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table table-class="text-positive" table-header-class="text-primary" title="Simulation Events" :rows="simu.events" :columns="columns" row-key="id" dense flat :pagination="state.initialPagination" />
+        <q-table table-class="text-positive" table-header-class="text-primary" :rows="simu.events" :columns="columns" row-key="id" dense flat :pagination="state.initialPagination" />
       </q-card-section>
     </q-card>
   </q-page>

@@ -14,12 +14,14 @@ import (
 	"github.com/apigear-io/cli/pkg/net"
 	"github.com/apigear-io/cli/pkg/net/rpc"
 	"github.com/apigear-io/cli/pkg/sim"
+	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 var server *net.Server
-var simulation *sim.Simulation
+var simulation = sim.NewSimulation()
 var monitorStarted bool
+var runner = sol.NewRunner()
 
 // TODO: rethink context used here, many we can just create new contexts with timeouts
 
@@ -91,7 +93,6 @@ func RegisterSimulationService() error {
 	if simulation != nil {
 		return fmt.Errorf("simulation already started")
 	}
-	simulation = sim.NewSimulation()
 	handler := net.NewSimuRpcHandler(simulation)
 	hub := rpc.NewHub(handler)
 	server.Router().HandleFunc("/ws/", hub.HandleWebsocketRequest)
@@ -141,4 +142,12 @@ func RestartSelf() error {
 		return err
 	}
 	return syscall.Exec(self, args, env)
+}
+
+func GetSimulation() *sim.Simulation {
+	return simulation
+}
+
+func GetRunner() *sol.Runner {
+	return runner
 }

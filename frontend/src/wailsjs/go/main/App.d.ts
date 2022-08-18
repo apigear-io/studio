@@ -44,6 +44,10 @@ export function SelectDirectory():Promise<string>;
 
 export function ShareProject(arg1:main.ProjectInfo):Promise<string>;
 
+export function StartScenario(arg1:string):Promise<Error>;
+
+export function StopScenario(arg1:string):Promise<Error>;
+
 export function WatchSolution(arg1:string,arg2:boolean):Promise<Array<string>>;
 
 export function WriteSettings(arg1:main.AppSettings):void;

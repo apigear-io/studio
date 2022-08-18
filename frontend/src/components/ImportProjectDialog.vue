@@ -59,7 +59,7 @@ async function importProject() {
       message: 'Project imported successfully',
     });
     await store.sync();
-    router.push('/projects');
+    router.push('/projects/dashboard');
   } catch (e: any) {
     $q.notify({
       message: String(e),

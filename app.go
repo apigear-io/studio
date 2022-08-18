@@ -10,6 +10,7 @@ import (
 	"github.com/apigear-io/cli/pkg/config"
 	"github.com/apigear-io/cli/pkg/git"
 	"github.com/apigear-io/cli/pkg/prj"
+	"github.com/apigear-io/cli/pkg/sim/actions"
 	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/apigear-io/cli/pkg/tpl"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -19,14 +20,11 @@ import (
 type App struct {
 	ctx            context.Context
 	currentProject *ProjectInfo
-	solRunner      *sol.Runner
 }
 
 // NewApp creates a new App application struct
 func NewApp() *App {
-	return &App{
-		solRunner: sol.NewRunner(),
-	}
+	return &App{}
 }
 
 // startup is called when the app starts. The context is saved
@@ -276,7 +274,8 @@ func (a App) RunSolution(source string) error {
 	if err != nil {
 		return err
 	}
-	err = a.solRunner.RunDoc(source, doc)
+	r := GetRunner()
+	err = r.RunDoc(source, doc)
 	if err != nil {
 		return err
 	}
@@ -285,19 +284,20 @@ func (a App) RunSolution(source string) error {
 
 func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 	log.Infof("watch solution %s", source)
+	r := GetRunner()
 	if enabled {
 		doc, err := sol.ReadSolutionDoc(source)
 		if err != nil {
 			return nil, err
 		}
-		_, err = a.solRunner.StartWatch(source, doc)
+		_, err = r.StartWatch(source, doc)
 		if err != nil {
 			log.Warnf("watch solution %s failed: %s", source, err)
 		}
 	} else {
-		a.solRunner.StopWatch(source)
+		r.StopWatch(source)
 	}
-	return a.solRunner.TaskFiles(), nil
+	return r.TaskFiles(), nil
 }
 
 func (a App) RestartApp() {
@@ -306,4 +306,24 @@ func (a App) RestartApp() {
 	if err != nil {
 		log.Errorf("Failed to restart app: %s", err)
 	}
+}
+
+func (a App) StartScenario(source string) error {
+	log.Debugln("start scenario %s", source)
+	s := GetSimulation()
+	doc, err := actions.ReadScenario(source)
+	if err != nil {
+		return err
+	}
+	err = s.LoadScenario(source, doc)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a App) StopScenario(source string) error {
+	log.Debugln("stop scenario %s", source)
+	s := GetSimulation()
+	return s.UnloadScenario(source)
 }
