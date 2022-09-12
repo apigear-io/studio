@@ -12,9 +12,9 @@ import (
 	logger "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
-	"github.com/apigear-io/cli/pkg/net/rpc"
 	"github.com/apigear-io/cli/pkg/sim"
 	"github.com/apigear-io/cli/pkg/sol"
+	"github.com/apigear-io/wsrpc/rpc"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -22,6 +22,12 @@ var server *net.Server
 var simulation = sim.NewSimulation()
 var monitorStarted bool
 var runner = sol.NewRunner()
+var serviceCancel context.CancelFunc
+var serviceCtx context.Context
+
+func init() {
+	serviceCtx, serviceCancel = context.WithCancel(context.Background())
+}
 
 // TODO: rethink context used here, many we can just create new contexts with timeouts
 
@@ -45,6 +51,22 @@ func StartServices(ctx context.Context, port string) error {
 		return fmt.Errorf("failed to start server: %v", err)
 	}
 	return nil
+}
+
+func StopServices() {
+	log.Info("stop background services")
+	if server != nil {
+		server.Stop()
+	}
+	if simulation != nil {
+		simulation.Stop()
+	}
+	if runner != nil {
+		runner.Clear()
+	}
+	if serviceCancel != nil {
+		serviceCancel()
+	}
 }
 
 func RunServer(addr string) error {
@@ -94,8 +116,14 @@ func RegisterSimulationService() error {
 		return fmt.Errorf("simulation already started")
 	}
 	handler := net.NewSimuRpcHandler(simulation)
-	hub := rpc.NewHub(handler)
-	server.Router().HandleFunc("/ws/", hub.HandleWebsocketRequest)
+	hub := rpc.NewHub(serviceCtx)
+	go func() {
+		for req := range hub.Requests() {
+			// ends with closing of requests
+			handler.HandleMessage(req)
+		}
+	}()
+	server.Router().HandleFunc("/ws/", hub.ServeHTTP)
 	log.Debugf("handle ws rpc server on %s/ws/", server.Address())
 	return nil
 }

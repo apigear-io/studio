@@ -12,8 +12,8 @@
           <q-toggle color="positive" label="Application" v-model="state.topicSelection" val="app" icon="filter_alt" />
         </q-toolbar>
       </q-card-section>
-      <q-card-section>
-        <q-table :rows="logStore.list" :columns="columns" row-key="time" dense flat :pagination="pagination" />
+      <q-card-section class="fit">
+        <q-table :rows="logStore.list" :columns="columns" row-key="time" dense flat :pagination="pagination" class="fit" />
       </q-card-section>
     </q-card>
   </q-page>

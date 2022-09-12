@@ -18,12 +18,11 @@
             </q-item-section>
             <q-item-section>
               <q-item-label>{{ item.name }}</q-item-label>
-              <q-item-label caption lines="2">{{ item.path }} {{ watched.files[item.path] === true ? '- auto run' : '' }}</q-item-label>
+              <q-item-label caption lines="2">{{ item.path }} <q-badge v-if="watched.files[item.path]" color="positive">auto</q-badge> </q-item-label>
             </q-item-section>
             <q-item-section side>
               <q-btn-group flat>
-                <q-btn v-if="watched.files[item.path]" class="text-primary" label="Run" icon="autorenew" @click="runDocument(item)" />
-                <q-btn v-else class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)" />
+                <q-btn class="text-primary" label="Run" icon="directions_run" @click="runDocument(item)" />
                 <q-btn class="text-primary" label="Edit" icon="edit_note" @click.stop="editDocument(item)" />
                 <q-btn class="text-primary" icon="more_vert">
                   <q-menu fit>
@@ -41,7 +40,8 @@
                           <q-icon name="autorenew" />
                         </q-item-section>
                         <q-item-section>
-                          <q-item-label>Toggle Auto Run</q-item-label>
+                          <q-item-label v-if="watched.files[item.path]">Stop Auto Run</q-item-label>
+                          <q-item-label v-else>Start Auto Run</q-item-label>
                         </q-item-section>
                       </q-item>
                     </q-list>
@@ -54,9 +54,15 @@
       </q-card-section>
     </q-card>
     <q-dialog v-model="showLogs" position="bottom" auto-close>
-      <q-card style="width: 640px; max-width: 80vw; height: 360px; max-height: 50vw">
-        <q-card-section>
-          <q-table title="Generator Report" :rows="logs.genLogs" :columns="columns" row-key="time" dense flat />
+      <q-card style="width: 800px; max-width: 80vw; max-height: 60vh" class="fit">
+        <q-card-section class="fit">
+          <q-table :rows="logs.genLogs" :columns="columns" row-key="time" dense flat :pagination="pagination" class="fit">
+            <template v-slot:body-cell="props">
+              <q-td :props="props" :class="rowClass(props.row)">
+                {{ props.value }}
+              </q-td>
+            </template>
+          </q-table>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Close" color="primary" @click="closeDialog" />
@@ -73,7 +79,7 @@ import { useQuasar, QTableProps } from 'quasar';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
 import { onUnmounted, reactive, ref } from 'vue';
-import { useLogStore } from '../stores/log-store';
+import { useLogStore, ILogEvent } from '../stores/log-store';
 const store = useProjectStore();
 const logs = useLogStore();
 const $q = useQuasar();
@@ -81,9 +87,16 @@ const $q = useQuasar();
 const showLogs = ref(false);
 
 const columns: QTableProps['columns'] = [
-  { name: 'time', label: 'Time', field: 'time', align: 'left' },
+  { name: 'level', label: 'Level', field: 'level', align: 'left' },
   { name: 'message', label: 'Messages', field: 'message', align: 'left' },
 ];
+
+const pagination = {
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 15,
+};
 
 function icon(docType: string) {
   switch (docType) {
@@ -93,6 +106,17 @@ function icon(docType: string) {
       return 'chair';
     case 'scenario':
       return 'av_timer';
+  }
+}
+
+function rowClass(item: ILogEvent): string {
+  switch (item.level) {
+    case 'warning':
+      return 'text-warning';
+    case 'error':
+      return 'text-negative';
+    default:
+      return '';
   }
 }
 
@@ -107,13 +131,10 @@ const runDocument = async (item: main.DocumentInfo) => {
     showLogs.value = true;
     logs.startRecordGenLogs(); // should be clear, not stop, we should always log the latest messages
     await RunSolution(item.path);
+    showLogs.value = true;
   } catch (e) {
-    showLogs.value = false;
+    showLogs.value = true;
     console.error(e);
-    $q.notify({
-      type: 'negative',
-      message: `Failed to run solution: ${String(e)}`,
-    });
   }
 };
 
@@ -122,15 +143,13 @@ const editDocument = async (doc: main.DocumentInfo) => {
   try {
     $q.notify({
       message: `Opening ${doc.name} in editor`,
-      color: 'positive',
-      icon: 'info',
+      type: 'info',
     });
     await OpenSourceInEditor(doc.path);
   } catch {
     $q.notify({
       message: `Failed to open ${doc.name}`,
-      color: 'negative',
-      icon: 'error',
+      type: 'negative',
     });
   }
 };
@@ -148,13 +167,13 @@ const toggleAutoRun = async (doc: main.DocumentInfo) => {
   try {
     await WatchSolution(doc.path, !isWatched);
     watched.files[doc.path] = !isWatched;
+    showLogs.value = !isWatched;
     console.log('watched', watched.files);
   } catch (e) {
     console.error(e);
     $q.notify({
+      type: 'negative',
       message: `Failed to ${!isWatched ? 'enable' : 'disable'} auto run for ${doc.name}`,
-      color: 'negative',
-      icon: 'error',
     });
   }
 };

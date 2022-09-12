@@ -12,6 +12,7 @@ import (
 	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/apigear-io/cli/pkg/sim/actions"
 	"github.com/apigear-io/cli/pkg/sol"
+	"github.com/apigear-io/cli/pkg/spec"
 	"github.com/apigear-io/cli/pkg/tpl"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -35,6 +36,11 @@ func (a *App) startup(ctx context.Context) {
 	if err != nil {
 		log.Errorf("Failed to start services: %s", err)
 	}
+}
+
+func (a *App) shutdown(ctx context.Context) {
+	log.Infof("shutdown")
+	StopServices()
 }
 
 func (a App) RecentProjects() []string {
@@ -161,6 +167,11 @@ func (a *App) RefreshCurrentProject() (*ProjectInfo, error) {
 }
 
 func (a *App) openProject(dir string) (*ProjectInfo, error) {
+	// close all runners
+	r := GetRunner()
+	if r != nil {
+		r.Clear()
+	}
 	// check if dir exists
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		a.currentProject = nil
@@ -169,7 +180,7 @@ func (a *App) openProject(dir string) (*ProjectInfo, error) {
 	p, err := doReadProject(dir)
 	if err != nil {
 		a.currentProject = nil
-		return nil, fmt.Errorf("Failed to read project: %s", err)
+		return nil, fmt.Errorf("failed to read project: %w", err)
 	}
 	a.currentProject = p
 	config.AppendRecentEntry(p.Path)
@@ -283,7 +294,7 @@ func (a App) RunSolution(source string) error {
 }
 
 func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
-	log.Infof("watch solution %s", source)
+	log.Infof("watch solution %s: enabled: %t", source, enabled)
 	r := GetRunner()
 	if enabled {
 		doc, err := sol.ReadSolutionDoc(source)
@@ -311,6 +322,18 @@ func (a App) RestartApp() {
 func (a App) StartScenario(source string) error {
 	log.Debugln("start scenario %s", source)
 	s := GetSimulation()
+	result, err := spec.CheckFile(source)
+	if err != nil {
+		return err
+	}
+	if !result.Valid() {
+		var entries []string
+		for _, err := range result.Errors() {
+			entries = append(entries, err.String())
+		}
+		return fmt.Errorf("scenario file is invalid: %s", strings.Join(entries, " / "))
+	}
+
 	doc, err := actions.ReadScenario(source)
 	if err != nil {
 		return err
