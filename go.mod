@@ -3,15 +3,11 @@ module github.com/apigear-io/studio
 go 1.17
 
 require (
-	github.com/apigear-io/cli v0.7.9
-	github.com/apigear-io/wsrpc v0.1.2
+	github.com/apigear-io/cli v0.8.0
 	github.com/wailsapp/wails/v2 v2.0.0-rc.1.1
 )
 
-require (
-	github.com/apigear-io/log v0.2.0 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
-)
+require github.com/gorilla/websocket v1.5.0 // indirect
 
 require (
 	github.com/antlr/antlr4/runtime/Go/antlr v1.4.10 // indirect

@@ -12,9 +12,9 @@ import (
 	logger "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
+	"github.com/apigear-io/cli/pkg/net/rpc"
 	"github.com/apigear-io/cli/pkg/sim"
 	"github.com/apigear-io/cli/pkg/sol"
-	"github.com/apigear-io/wsrpc/rpc"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
