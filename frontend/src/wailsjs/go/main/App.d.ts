@@ -4,7 +4,7 @@ import {main} from '../models';
 
 export function CreateProject():Promise<main.ProjectInfo>;
 
-export function EmitProjectChanged():void;
+export function EmitProjectChanged():Promise<void>;
 
 export function GetMonitorAddress():Promise<string>;
 
@@ -14,7 +14,7 @@ export function GetTemplates():Promise<Array<main.TemplateInfo>>;
 
 export function ImportProject(arg1:string,arg2:string):Promise<main.ProjectInfo>;
 
-export function InstallTemplate(arg1:string):void;
+export function InstallTemplate(arg1:string):Promise<void>;
 
 export function InstallTemplateFromSource(arg1:string):Promise<main.TemplateInfo>;
 
@@ -32,11 +32,11 @@ export function RecentProjects():Promise<Array<string>>;
 
 export function RefreshCurrentProject():Promise<main.ProjectInfo>;
 
-export function RemoveRecentProject(arg1:string):void;
+export function RemoveRecentProject(arg1:string):Promise<void>;
 
 export function RemoveTemplate(arg1:string):Promise<Error>;
 
-export function RestartApp():void;
+export function RestartApp():Promise<void>;
 
 export function RunSolution(arg1:string):Promise<Error>;
 
@@ -50,4 +50,4 @@ export function StopScenario(arg1:string):Promise<Error>;
 
 export function WatchSolution(arg1:string,arg2:boolean):Promise<Array<string>>;
 
-export function WriteSettings(arg1:main.AppSettings):void;
+export function WriteSettings(arg1:main.AppSettings):Promise<void>;

@@ -320,7 +320,7 @@ func (a App) RestartApp() {
 }
 
 func (a App) StartScenario(source string) error {
-	log.Debugln("start scenario %s", source)
+	log.Debugf("start scenario %s", source)
 	s := GetSimulation()
 	result, err := spec.CheckFile(source)
 	if err != nil {
@@ -346,7 +346,7 @@ func (a App) StartScenario(source string) error {
 }
 
 func (a App) StopScenario(source string) error {
-	log.Debugln("stop scenario %s", source)
+	log.Debugf("stop scenario %s", source)
 	s := GetSimulation()
 	return s.UnloadScenario(source)
 }
