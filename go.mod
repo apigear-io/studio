@@ -3,7 +3,7 @@ module github.com/apigear-io/studio
 go 1.17
 
 require (
-	github.com/apigear-io/cli v0.0.0-00010101000000-000000000000
+	github.com/apigear-io/cli v0.7.9
 	github.com/apigear-io/wsrpc v0.1.2
 	github.com/wailsapp/wails/v2 v2.0.0-rc.1.1
 )
@@ -71,7 +71,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/apigear-io/cli => ../cli
-
-// replace github.com/wailsapp/wails/v2 v2.0.0-beta.38 => C:\Users\juerg\go\pkg\mod\github.com\wailsapp\wails\v2@v2.0.0-beta.38
