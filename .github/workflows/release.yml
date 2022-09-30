@@ -45,22 +45,25 @@ jobs:
       - name: build linux
         if: matrix.os == 'ubuntu-latest'
         run: wails build --platform linux/amd64
-      - name: upload
-        uses: actions/upload-artifact@v3
+      - name: changelog
+        uses: mikepenz/release-changelog-builder-action@v1
         with:
-          name: ApiGear Studio ${{runner.os}}
-          path: build/bin/apigear-studio
+          token: ${{ secrets.GITHUB_TOKEN }}
+          configuration_path: .github/release-drafter.yml
+          tag: ${{ github.ref }}
+          file: CHANGELOG.md
+          overwrite: true
       - name: release
         uses: softprops/action-gh-release@v1
         with:
           files: build/bin/apigear-studio
           draft: true
           prerelease: true
-          tag_name: ${{ github.ref }}
+          tag_name: ${{github.ref_name}}
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: ApiGear Studio ${{ github.ref }}
+          name: ApiGear Studio ${{github.ref_name}}
           body: |
-            ApiGear Studio ${{ github.ref }}
+            ${{steps.changelog.outputs.changelog}}
       
 
       
