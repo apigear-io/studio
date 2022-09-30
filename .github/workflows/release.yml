@@ -16,69 +16,25 @@ env:
 jobs:
   build:
     name: ${{ matrix.os }} ${{ matrix.go-version }}
-    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        build:
+          - { name: "ApiGear Studio", os: "ubuntu-latest", platform: "linux/amd64" }
+    runs-on: ${{ matrix.os }}
     steps:
       - name: patch git # needed to get access to our internal private repos
         run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
-      - name: setup go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19.x
-      - name: setup nodejs
-        uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      - name: setup webkit
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev
-        shell: bash
-      - name: setup wails
-        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
       - name: checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: build linux
-        if: matrix.os == 'ubuntu-latest'
-        run: wails build --platform linux/amd64
-      - name: build linux
-        if: matrix.os == 'ubuntu-latest'
-        run: wails build --platform windows/amd64
-      - name: build macos
-        if: matrix.os == 'ubuntu-latest'
-        run: wails build --platform macos/universal
-      - name: changelog
-        uses: mikepenz/release-changelog-builder-action@v1
+      - name: build
+        uses: dAppServer/wails-build-action@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          configuration: .github/release-drafter.yml
-          tag: ${{ github.ref }}
-          file: CHANGELOG.md
-          overwrite: true
-      - name: upload
-        uses: actions/upload-artifact@v2
-        with:
-          name: release
-          path: |
-            build/
-      - name: release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            build/bin/apigear-studio
-            build/bin/apigear-studio.exe
-            build/bin/ApiGear-Studio.app
-          draft: true
-          prerelease: true
-          tag_name: ${{github.ref_name}}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          name: ApiGear Studio ${{github.ref_name}}
-          body: |
-            ${{steps.changelog.outputs.changelog}}
-      
-
-      
+          build-name: ${{ matrix.build.name }}
+          build-platform: ${{ matrix.build.platform }}
+          node-version: 16.x
+          go-version: 1.19.x
