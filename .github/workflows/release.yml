@@ -29,8 +29,6 @@ jobs:
           - os: windows-latest
             name: apigear-studio.exe
     steps:
-      - name: patch git # needed to get access to our internal private repos
-        run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
       - name: setup go
         uses: actions/setup-go@v3
         with:
@@ -45,9 +43,12 @@ jobs:
         shell: bash
       - name: setup wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+      - name: patch git # needed to get access to our internal private repos
+        run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
       - name: checkout
         uses: actions/checkout@v3
         with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
           fetch-depth: 0
       - name: build linux
         if: runner.os == 'Linux'
