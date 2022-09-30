@@ -30,4 +30,4 @@ jobs:
           key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
           restore-keys: ${{ runner.os }}-go-${{ matrix.go-version }}-
       - run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
-      - run: go test ./...
+      - run: go test ./... --tags bindings
