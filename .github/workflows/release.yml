@@ -59,6 +59,12 @@ jobs:
           tag: ${{ github.ref }}
           file: CHANGELOG.md
           overwrite: true
+      - name: upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: release
+          path: |
+            build/
       - name: release
         uses: softprops/action-gh-release@v1
         with:
