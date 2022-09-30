@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 // DocumentInfo represents a document's metadata.
 type DocumentInfo struct {
 	Name string `json:"name"`
@@ -29,4 +31,11 @@ type TemplateInfo struct {
 	Path        string `json:"path"`
 	Installed   bool   `json:"installed"`
 	Available   bool   `json:"available"`
+}
+
+type ReleaseInfo struct {
+	Version      string    `json:"version"`
+	PublishedAt  time.Time `json:"published_at"`
+	ReleaseNotes string    `json:"release_notes"`
+	URL          string    `json:"url"`
 }

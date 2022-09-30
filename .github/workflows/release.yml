@@ -1,0 +1,56 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "*"
+
+# See https://github.com/mvdan/github-actions-golang/blob/master/README.md#how-do-i-install-private-modules
+
+env:
+  GITHUB_AUTH_TOKEN: ${{ secrets.WOLFGANG_REPO_PACKAGE_READ }}
+  GOPRIVATE: "github.com/apigear-io/*"
+  GH_ACCESS_TOKEN: ${{ secrets.APIGEAR_REPOS }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    name: ${{ matrix.os }} ${{ matrix.go-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            go-version: 1.19.x
+            build_tags: "production,desktop"
+    steps:
+      - name: patch git
+        run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
+      - name: setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.19.0'
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.x
+      - name: setup webkit
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev
+      - name: setup wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: run tests
+        run: go test ./...      
+      - name: build linux amd64
+        run: wails build --tags ${{ matrix.build_tags }} --platform linux/amd64
+      - name: build windows amd64
+        run: wails build --tags ${{ matrix.build_tags }} --platform windows/amd64
+      - name: build darwin amd64
+        run: wails build --tags ${{ matrix.build_tags }} --platform darwin/amd64
+      - name: build darwin arm54
+        run: wails build --tags ${{ matrix.build_tags }} --platform darwin/arm64

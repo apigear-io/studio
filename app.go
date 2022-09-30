@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/apigear-io/cli/pkg/config"
-	"github.com/apigear-io/cli/pkg/git"
+	"github.com/apigear-io/cli/pkg/helper"
 	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/apigear-io/cli/pkg/sim/actions"
 	"github.com/apigear-io/cli/pkg/sol"
@@ -34,12 +34,12 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	err := StartServices(ctx, config.GetServerPort())
 	if err != nil {
-		log.Errorf("Failed to start services: %s", err)
+		log.Error().Msgf("Failed to start services: %s", err)
 	}
 }
 
 func (a *App) shutdown(ctx context.Context) {
-	log.Infof("shutdown")
+	log.Info().Msgf("shutdown")
 	StopServices()
 }
 
@@ -64,7 +64,7 @@ func (a *App) OpenProject() (*ProjectInfo, error) {
 
 // OpenRecentProject opens a project with the given source
 func (a *App) OpenRecentProject(dir string) (*ProjectInfo, error) {
-	log.Infof("open recent project %s", dir)
+	log.Info().Msgf("open recent project %s", dir)
 	project, err := a.openProject(dir)
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func (a *App) CreateProject() (*ProjectInfo, error) {
 
 // ImportProject imports a project from a local or remote source
 func (a *App) ImportProject(repoUrl string, targetDir string) (*ProjectInfo, error) {
-	log.Infof("Import project to %s from %s", targetDir, repoUrl)
+	log.Info().Msgf("Import project to %s from %s", targetDir, repoUrl)
 	proj, err := prj.ImportProject(repoUrl, targetDir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to import project: %s", err)
@@ -102,13 +102,13 @@ func (a *App) ImportProject(repoUrl string, targetDir string) (*ProjectInfo, err
 
 // ShareProject returns a shareable link for the given project
 func (a *App) ShareProject(project ProjectInfo) string {
-	log.Infof("Share Project %s", project.Path)
+	log.Info().Msgf("Share Project %s", project.Path)
 	return "https://example.com"
 }
 
 // InstallTemplate installs a template either from local or remote source
 func (a *App) InstallTemplate(source string) {
-	log.Infof("Install Template %s", source)
+	log.Info().Msgf("Install Template %s", source)
 }
 
 func (a App) ReadSettings() AppSettings {
@@ -123,7 +123,7 @@ func (a App) ReadSettings() AppSettings {
 }
 
 func (a App) WriteSettings(settings AppSettings) {
-	log.Infof("Write Settings %+v", settings)
+	log.Info().Msgf("Write Settings %+v", settings)
 	config.Set(config.KeyServerPort, settings.ServerPort)
 	config.Set(config.KeyUpdateChannel, settings.UpdateChannel)
 	config.Set(config.KeyEditorCommand, settings.EditorCommand)
@@ -133,7 +133,7 @@ func (a App) WriteSettings(settings AppSettings) {
 
 // NewDocument creates a new document in the current project
 func (a App) NewDocument(docType string, name string) (string, error) {
-	log.Infof("New Document %s %s", name, docType)
+	log.Info().Msgf("New Document %s %s", name, docType)
 	if a.currentProject == nil {
 		return "", fmt.Errorf("no project open")
 	}
@@ -155,7 +155,7 @@ func (a App) RemoveRecentProject(source string) {
 	config.RemoveRecentEntry(source)
 }
 func (a App) OpenSourceInEditor(source string) error {
-	log.Infof("Open Project In Editor %s", source)
+	log.Info().Msgf("Open Project In Editor %s", source)
 	return prj.OpenEditor(source)
 }
 
@@ -192,7 +192,7 @@ func doReadProject(source string) (*ProjectInfo, error) {
 		Path: source,
 		Name: filepath.Base(source),
 	}
-	entries, err := os.ReadDir(filepath.Join(source, "apigear"))
+	entries, err := os.ReadDir(helper.Join(source, "apigear"))
 	if err != nil {
 		return nil, err
 	}
@@ -203,7 +203,7 @@ func doReadProject(source string) (*ProjectInfo, error) {
 		}
 		docs = append(docs, DocumentInfo{
 			Name: entry.Name(),
-			Path: filepath.Join(source, "apigear", entry.Name()),
+			Path: helper.Join(source, "apigear", entry.Name()),
 			Type: guessDocumentType(entry.Name()),
 		})
 	}
@@ -238,7 +238,7 @@ func (a App) GetTemplates() ([]TemplateInfo, error) {
 	for i, tpl := range in {
 		out[i] = TemplateInfo{
 			Name:   tpl.Name,
-			Source: tpl.URL,
+			Source: tpl.Git,
 			Path:   tpl.Path,
 		}
 	}
@@ -247,23 +247,19 @@ func (a App) GetTemplates() ([]TemplateInfo, error) {
 }
 
 func (a App) InstallTemplateFromSource(source string) (*TemplateInfo, error) {
-	log.Infof("Install Template From Source %s", source)
-	name, err := git.RepositoryNameFromGitUrl(source)
-	if err != nil {
-		return nil, err
-	}
-	err = tpl.InstallTemplate(name, source)
+	log.Info().Msgf("Install Template From Source %s", source)
+	vcs, err := tpl.ImportTemplate(source)
 	if err != nil {
 		return nil, err
 	}
 	return &TemplateInfo{
-		Name:   name,
+		Name:   vcs.FullName,
 		Source: source,
 	}, nil
 }
 
 func (a App) RemoveTemplate(name string) error {
-	log.Infof("Remove Template %s", name)
+	log.Info().Msgf("Remove Template %s", name)
 	return tpl.RemoveTemplate(name)
 }
 
@@ -280,7 +276,7 @@ func (a App) SelectDirectory() (string, error) {
 }
 
 func (a App) RunSolution(source string) error {
-	log.Infof("run solution %s", source)
+	log.Info().Msgf("run solution %s", source)
 	doc, err := sol.ReadSolutionDoc(source)
 	if err != nil {
 		return err
@@ -294,7 +290,7 @@ func (a App) RunSolution(source string) error {
 }
 
 func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
-	log.Infof("watch solution %s: enabled: %t", source, enabled)
+	log.Info().Msgf("watch solution %s: enabled: %t", source, enabled)
 	r := GetRunner()
 	if enabled {
 		doc, err := sol.ReadSolutionDoc(source)
@@ -303,7 +299,7 @@ func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 		}
 		_, err = r.StartWatch(source, doc)
 		if err != nil {
-			log.Warnf("watch solution %s failed: %s", source, err)
+			log.Warn().Msgf("watch solution %s failed: %s", source, err)
 		}
 	} else {
 		r.StopWatch(source)
@@ -312,15 +308,15 @@ func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 }
 
 func (a App) RestartApp() {
-	log.Infof("Restart App")
+	log.Info().Msgf("Restart App")
 	err := RestartSelf()
 	if err != nil {
-		log.Errorf("Failed to restart app: %s", err)
+		log.Error().Msgf("Failed to restart app: %s", err)
 	}
 }
 
 func (a App) StartScenario(source string) error {
-	log.Debugf("start scenario %s", source)
+	log.Debug().Msgf("start scenario %s", source)
 	s := GetSimulation()
 	result, err := spec.CheckFile(source)
 	if err != nil {
@@ -346,7 +342,17 @@ func (a App) StartScenario(source string) error {
 }
 
 func (a App) StopScenario(source string) error {
-	log.Debugf("stop scenario %s", source)
+	log.Debug().Msgf("stop scenario %s", source)
 	s := GetSimulation()
 	return s.UnloadScenario(source)
+}
+
+func (a App) CheckUpdate() (*ReleaseInfo, error) {
+	log.Debug().Msgf("check update")
+	return CheckAppUpdate()
+}
+
+func (a App) UpdateProgram(version string) error {
+	log.Debug().Msgf("update program")
+	return UpdateApp(version)
 }

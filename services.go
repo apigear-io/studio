@@ -9,12 +9,15 @@ import (
 
 	rt "runtime"
 
+	"github.com/apigear-io/cli/pkg/config"
 	logger "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
 	"github.com/apigear-io/cli/pkg/net/rpc"
 	"github.com/apigear-io/cli/pkg/sim"
 	"github.com/apigear-io/cli/pkg/sol"
+	"github.com/apigear-io/cli/pkg/up"
+	"github.com/creativeprojects/go-selfupdate"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -24,15 +27,24 @@ var monitorStarted bool
 var runner = sol.NewRunner()
 var serviceCancel context.CancelFunc
 var serviceCtx context.Context
+var updater *up.Updater
+var latestRelease *selfupdate.Release
 
 func init() {
 	serviceCtx, serviceCancel = context.WithCancel(context.Background())
+	u, err := up.NewUpdater("apigear-io/studio-releases", config.Get(config.KeyVersion))
+	if err != nil {
+		log.Error().Msgf("failed to create updater: %v", err)
+	} else {
+		updater = u
+	}
+
 }
 
 // TODO: rethink context used here, many we can just create new contexts with timeouts
 
 func StartServices(ctx context.Context, port string) error {
-	log.Info("start background services")
+	log.Info().Msg("start background services")
 	server = net.NewHTTPServer()
 	err := RegisterLogService(ctx)
 	if err != nil {
@@ -50,11 +62,18 @@ func StartServices(ctx context.Context, port string) error {
 	if err != nil {
 		return fmt.Errorf("failed to start server: %v", err)
 	}
+	r, err := updater.Check()
+	if err != nil {
+		return fmt.Errorf("failed to check for updates: %v", err)
+	}
+	if r != nil {
+		latestRelease = r
+	}
 	return nil
 }
 
 func StopServices() {
-	log.Info("stop background services")
+	log.Info().Msg("stop background services")
 	if server != nil {
 		server.Stop()
 	}
@@ -70,16 +89,16 @@ func StopServices() {
 }
 
 func RunServer(addr string) error {
-	log.Infof("start server on %s", addr)
+	log.Info().Msgf("start server on %s", addr)
 	err := server.Start(addr)
 	if err != nil {
-		log.Errorf("failed to start server: %v", err)
+		log.Error().Msgf("failed to start server: %v", err)
 	}
 	return nil
 }
 
 func RestartServer(ctx context.Context, addr string) error {
-	log.Infof("restart server on %s", addr)
+	log.Info().Msgf("restart server on %s", addr)
 	if server == nil {
 		return fmt.Errorf("server not started")
 	}
@@ -87,7 +106,7 @@ func RestartServer(ctx context.Context, addr string) error {
 }
 
 func RegisterMonitorService(ctx context.Context) error {
-	log.Info("start monitor service")
+	log.Info().Msg("start monitor service")
 	if server == nil {
 		return fmt.Errorf("server not started")
 	}
@@ -96,11 +115,11 @@ func RegisterMonitorService(ctx context.Context) error {
 	}
 	monitorStarted = true
 	server.Router().Post("/monitor/{source}/", net.HandleMonitorRequest)
-	log.Infof("handle monitor request on %s/monitor/{source}", server.Address())
+	log.Info().Msgf("handle monitor request on %s/monitor/{source}", server.Address())
 	go func(emitter chan *mon.Event) {
 		// capture mon events and send to app
 		for event := range emitter {
-			log.Debugf("send monitor event: %v", event)
+			log.Debug().Msgf("send monitor event: %v", event)
 			runtime.EventsEmit(ctx, "mon", event)
 		}
 	}(mon.Emitter())
@@ -108,7 +127,7 @@ func RegisterMonitorService(ctx context.Context) error {
 }
 
 func RegisterSimulationService() error {
-	log.Info("start simulation service")
+	log.Info().Msg("start simulation service")
 	if server == nil {
 		return fmt.Errorf("server not started")
 	}
@@ -124,7 +143,7 @@ func RegisterSimulationService() error {
 		}
 	}()
 	server.Router().HandleFunc("/ws/", hub.ServeHTTP)
-	log.Debugf("handle ws rpc server on %s/ws/", server.Address())
+	log.Debug().Msgf("handle ws rpc server on %s/ws/", server.Address())
 	return nil
 }
 
@@ -143,7 +162,7 @@ func GetSimulationAddress() (string, error) {
 }
 
 func RegisterLogService(ctx context.Context) error {
-	logger.OnReport(func(report *logger.ReportEntry) {
+	logger.OnReport(func(report *logger.ReportEvent) {
 		runtime.EventsEmit(ctx, "log", report)
 	})
 	return nil
@@ -178,4 +197,42 @@ func GetSimulation() *sim.Simulation {
 
 func GetRunner() *sol.Runner {
 	return runner
+}
+
+func CheckAppUpdate() (*ReleaseInfo, error) {
+	if updater == nil {
+		return nil, fmt.Errorf("updater not initialized")
+	}
+	r, err := updater.Check()
+	if err != nil {
+		return nil, err
+	}
+	if r != nil {
+		log.Info().Msgf("found new release: %s", latestRelease.Version())
+		latestRelease = r
+	}
+	info, err := updater.Check()
+	if err != nil {
+		return nil, err
+	}
+	if info == nil {
+		return nil, nil
+	}
+	return &ReleaseInfo{
+		Version:      info.Version(),
+		PublishedAt:  info.PublishedAt,
+		ReleaseNotes: info.ReleaseNotes,
+		URL:          info.URL,
+	}, nil
+}
+
+func UpdateApp(version string) error {
+	if updater == nil {
+		return fmt.Errorf("updater not initialized")
+	}
+	err := updater.Update(latestRelease)
+	if err != nil {
+		return err
+	}
+	return RestartSelf()
 }
