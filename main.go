@@ -1,10 +1,7 @@
 package main
 
 import (
-	"embed"
-
 	"github.com/apigear-io/cli/pkg/config"
-	_ "github.com/apigear-io/cli/pkg/config"
 	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -17,10 +14,6 @@ const (
 )
 
 var (
-	//go:embed frontend/dist/spa
-	assets embed.FS
-	//go:embed appicon.png
-	icon []byte
 	// build information
 	version = "0.0.0"
 	commit  = "none"
