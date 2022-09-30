@@ -20,7 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         build:
-          - { name: "ApiGear Studio", os: "ubuntu-latest", platform: "linux/amd64" }
+          - { name: "apigear-studio", os: "ubuntu-latest", platform: "linux/amd64" }
+          - { name: "ApiGear-Studio.app", os: "ubuntu-latest", platform: "darwin/amd64" }
+          - { name: "apigear-studio.exe", os: "ubuntu-latest", platform: "windows/amd64" }
     runs-on: ${{ matrix.build.os }}
     steps:
       - name: patch git # needed to get access to our internal private repos
