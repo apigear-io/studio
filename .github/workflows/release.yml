@@ -43,8 +43,10 @@ jobs:
         shell: bash
       - name: setup wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+        shell: bash
       - name: patch git # needed to get access to our internal private repos
         run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
+        shell: bash
       - name: checkout
         uses: actions/checkout@v3
         with:
@@ -52,12 +54,15 @@ jobs:
       - name: build linux
         if: runner.os == 'Linux'
         run: wails build --platform linux/amd64
-      - name: build linux
+        shell: bash
+      - name: build windows
         if: runner.os == 'Windows'
         run: wails build --platform windows/amd64
+        shell: bash
       - name: build macos
         if: runner.os == 'macOS'
         run: wails build --platform darwin/universal
+        shell: bash
       - name: changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v1
