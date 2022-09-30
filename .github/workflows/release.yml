@@ -21,7 +21,7 @@ jobs:
       matrix:
         build:
           - { name: "ApiGear Studio", os: "ubuntu-latest", platform: "linux/amd64" }
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.build.os }}
     steps:
       - name: patch git # needed to get access to our internal private repos
         run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
@@ -34,5 +34,5 @@ jobs:
         with:
           build-name: ${{ matrix.build.name }}
           build-platform: ${{ matrix.build.platform }}
-          node-version: 16.x
-          go-version: 1.19.x
+          node-version: '16.x'
+          go-version: '1.19.x'
