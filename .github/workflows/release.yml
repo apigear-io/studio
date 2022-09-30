@@ -44,15 +44,15 @@ jobs:
       - name: setup wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
         shell: bash
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: patch git # needed to get access to our internal private repos
         env:
           TOKEN: ${{ secrets.APIGEAR_REPOS }}
         run: git config --global url."https://jryannel:${TOKEN}@github.com".insteadOf "https://github.com"
         shell: bash
-      - name: checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: build linux
         if: runner.os == 'Linux'
         run: wails build --platform linux/amd64
