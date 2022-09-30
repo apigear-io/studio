@@ -65,7 +65,7 @@ jobs:
           files: |
             build/bin/apigear-studio
             build/bin/apigear-studio.exe
-            build/bin/apigear-studio.app
+            build/bin/ApiGear-Studio.app
           draft: true
           prerelease: true
           tag_name: ${{github.ref_name}}
