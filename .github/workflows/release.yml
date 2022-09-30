@@ -45,7 +45,9 @@ jobs:
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
         shell: bash
       - name: patch git # needed to get access to our internal private repos
-        run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
+        env:
+          TOKEN: ${{ secrets.APIGEAR_REPOS }}
+        run: git config --global url."https://jryannel:${TOKEN}@github.com".insteadOf "https://github.com"
         shell: bash
       - name: checkout
         uses: actions/checkout@v3
