@@ -45,6 +45,22 @@ jobs:
       - name: build linux
         if: matrix.os == 'ubuntu-latest'
         run: wails build --platform linux/amd64
+      - name: upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: ApiGear Studio ${{runner.os}}
+          path: build/bin/apigear-studio
+      - name: release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/bin/apigear-studio
+          draft: true
+          prerelease: true
+          tag_name: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: ApiGear Studio ${{ github.ref }}
+          body: |
+            ApiGear Studio ${{ github.ref }}
       
 
       
