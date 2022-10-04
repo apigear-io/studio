@@ -24,12 +24,15 @@ jobs:
         include:
           - os: ubuntu-latest
             name: apigear-studio
+            arch: x86_64
             artifact: apigear-studio-${{github.ref_name}}-${{runner.os}}-x86_64.zip
           - os: macos-latest
             name: ApiGear-Studio.app
+            arch: universal
             artifact: apigear-studio-${{github.ref_name}}-${{runner.os}}-universal.zip
           - os: windows-latest
             name: apigear-studio.exe
+            arch: x86_64
             artifact: apigear-studio-${{github.ref_name}}-${{runner.os}}-x86_64.zip
     steps:
       - name: setup go
@@ -83,7 +86,7 @@ jobs:
           type: 'zip'
           directory: build
           path: bin
-          filename: ${{ matrix.artifact }}          
+          filename: ${{ matrix.artifact }}-${{github.ref_name}}-${{runner.os}}-${{matrix.arch}}
       - name: upload
         uses: actions/upload-artifact@v2
         with:
