@@ -24,10 +24,13 @@ jobs:
         include:
           - os: ubuntu-latest
             name: apigear-studio
+            artifact: apigear-studio-${{github.ref_name}}-${{runner.os}}-x86_64.zip
           - os: macos-latest
             name: ApiGear-Studio.app
+            artifact: apigear-studio-${{github.ref_name}}-${{runner.os}}-universal.zip
           - os: windows-latest
             name: apigear-studio.exe
+            artifact: apigear-studio-${{github.ref_name}}-${{runner.os}}-x86_64.zip
     steps:
       - name: setup go
         uses: actions/setup-go@v3
@@ -74,10 +77,17 @@ jobs:
           tag: ${{ github.ref }}
           file: CHANGELOG.md
           overwrite: true
+      - name: archive
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          directory: build
+          path: bin
+          filename: ${{ matrix.artifact }}          
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          name: apigear-studio $${{ runner.os }}
+          name: apigear-studio ${{ runner.os }}
           path: |
             */bin/
             *\bin\*
@@ -85,9 +95,9 @@ jobs:
       - name: release
         uses: softprops/action-gh-release@v1
         with:
-          name: ApiGear Studio $${{ runner.os }}
+          name: ApiGear Studio ${{ runner.os }}
           files: |
             */bin/
             *\bin\*
           body: |
-            ${{steps.changelog.outputs.changelog}}
+            ${{ steps.changelog.outputs.changelog }}
