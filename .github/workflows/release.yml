@@ -13,6 +13,7 @@ env:
 
 jobs:
   build:
+    name: build os=${{ matrix.os }} go=${{ matrix.go-version }} node=${{ matrix.node-version }}
     strategy:
       fail-fast: true
       matrix:
@@ -65,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{matrix.artifact}}
-          path: ${{matrix.target}}
+          path: ${{matrix.artifact}}
           retention-days: 5
   release:
     runs-on: ubuntu-latest
