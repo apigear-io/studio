@@ -66,7 +66,8 @@ jobs:
           path: bin 
           filename: ${{matrix.artifact}}
       - name: show dir
-        run: ls -lR
+        run: ls -lR build
+        shell: bash
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -86,6 +87,7 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v3
       - name: show dir
         run: ls -lR
+        shell: bash
       - name: create release
         uses: ncipollo/release-action@v1
         with:
