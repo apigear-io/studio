@@ -25,10 +25,10 @@ jobs:
             artifact: apigear-studio-${{github.ref_name}}-linux-amd64.zip
             platform: linux/amd64
           - os: macos-latest
-            target: apigear-studio-${{github.ref_name}}-macos-universal.zip
+            artifact: apigear-studio-${{github.ref_name}}-macos-universal.zip
             platform: darwin/universal
           - os: windows-latest
-            target: apigear-studio-${{github.ref_name}}-windows-amd64.zip
+            artifact: apigear-studio-${{github.ref_name}}-windows-amd64.zip
             platform: windows/amd64
     runs-on: ${{matrix.os}}
     steps:
