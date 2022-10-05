@@ -91,7 +91,7 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v3
         with:
           owner: jryannel
-          token: ${{ GH_ACCESS_TOKEN }}
+          token: ${{ secrets.APIGEAR_REPOS }}
       - name: show dir
         run: ls -lR
         shell: bash
