@@ -56,8 +56,6 @@ jobs:
         shell: bash
       - name: wails build
         run: wails build --platform ${{matrix.platform}}
-      - name: show dir
-        run: ls -lR
       - name: archive
         uses: thedoctor0/zip-release@main
         with:
@@ -72,7 +70,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{matrix.artifact}}
-          path: ${{matrix.artifact}}
+          path: build/${{matrix.artifact}}
           retention-days: 5
   release:
     runs-on: ubuntu-latest
