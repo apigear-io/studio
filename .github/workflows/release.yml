@@ -78,6 +78,11 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: patch git # needed to get access to our internal private repos
+        env:
+          TOKEN: ${{ secrets.APIGEAR_REPOS }}
+        run: git config --global url."https://jryannel:${TOKEN}@github.com".insteadOf "https://github.com"
+        shell: bash
       - name: download all artifacts
         uses: actions/download-artifact@v3
       - name: changelog
