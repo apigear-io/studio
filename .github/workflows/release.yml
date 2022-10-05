@@ -23,10 +23,13 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact: apigear-studio-${{github.ref_name}}-linux-amd64.zip
+            platform: linux/amd64
           - os: macos-latest
             target: apigear-studio-${{github.ref_name}}-macos-universal.zip
+            platform: darwin/universal
           - os: windows-latest
             target: apigear-studio-${{github.ref_name}}-windows-amd64.zip
+            platform: windows/amd64
     runs-on: ${{matrix.os}}
     steps:
       - name: setup go
@@ -52,7 +55,9 @@ jobs:
         run: git config --global url."https://jryannel:${TOKEN}@github.com".insteadOf "https://github.com"
         shell: bash
       - name: wails build
-        run: wails build --platform windows/amd64
+        run: wails build --platform ${{matrix.platform}}
+      - name: show dir
+        run: ls -lR
       - name: archive
         uses: thedoctor0/zip-release@main
         with:
