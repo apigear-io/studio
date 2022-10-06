@@ -49,6 +49,7 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
+import { useGtm } from '@gtm-support/vue-gtm';
 import { OpenSourceInEditor, StartScenario, StopScenario } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
@@ -56,7 +57,7 @@ import { reactive } from 'vue';
 
 const store = useProjectStore();
 const $q = useQuasar();
-
+const $gtm = useGtm();
 function icon(docType: string) {
   switch (docType) {
     case 'module':
@@ -72,6 +73,11 @@ const running = reactive({
 });
 
 const runDocument = async (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({
+    event: 'run_document',
+    category: 'simulations',
+    action: 'run_document',
+  });
   console.log('runDocument', doc);
   try {
     await StartScenario(doc.path);
@@ -92,6 +98,11 @@ const runDocument = async (doc: main.DocumentInfo) => {
 };
 
 const stopDocument = async (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({
+    event: 'stop_document',
+    category: 'simulations',
+    action: 'stop_document',
+  });
   console.log('stopDocument', doc);
   try {
     await StopScenario(doc.path);
@@ -106,6 +117,11 @@ const stopDocument = async (doc: main.DocumentInfo) => {
 };
 
 async function editDocument(doc: main.DocumentInfo) {
+  $gtm?.trackEvent({
+    event: 'edit_document',
+    category: 'simulations',
+    action: 'edit_document',
+  });
   console.log('editDocument', doc);
   try {
     $q.notify({
@@ -124,6 +140,11 @@ async function editDocument(doc: main.DocumentInfo) {
 }
 
 const copyPath = (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({
+    event: 'copy_path',
+    category: 'simulations',
+    action: 'copy_path',
+  });
   navigator.clipboard.writeText(doc.path);
 };
 </script>

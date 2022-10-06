@@ -89,6 +89,9 @@ import { useRouter } from 'vue-router';
 import { useProjectStore } from '../stores/project-store';
 import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
 import ImportProjectDialog from '../components/ImportProjectDialog.vue';
+import { useGtm } from '@gtm-support/vue-gtm';
+
+const $gtm = useGtm();
 
 const more = [
   {
@@ -112,6 +115,11 @@ const router = useRouter();
 onMounted(store.sync);
 
 async function onRemoveItem(item: string) {
+  $gtm?.trackEvent({
+    event: 'remove-recent-project',
+    category: 'welcome',
+    action: 'remove-recent-project',
+  });
   try {
     await RemoveRecentProject(item);
     await store.sync();
@@ -126,6 +134,11 @@ async function onRemoveItem(item: string) {
 }
 
 async function openProject() {
+  $gtm?.trackEvent({
+    event: 'open-project',
+    category: 'welcome',
+    action: 'open-project',
+  });
   try {
     await OpenProject();
     await store.sync();
@@ -141,6 +154,11 @@ async function openProject() {
 }
 
 function importProject() {
+  $gtm?.trackEvent({
+    event: 'import-project',
+    category: 'welcome',
+    action: 'import-project',
+  });
   $q.dialog({
     component: ImportProjectDialog,
   });
@@ -148,11 +166,21 @@ function importProject() {
 }
 
 async function openRecentProject(item: string) {
+  $gtm?.trackEvent({
+    event: 'open-recent-project',
+    category: 'welcome',
+    action: 'open-recent-project',
+  });
   await OpenRecentProject(item);
   await store.sync();
   router.push('/projects/dashboard');
 }
 async function createProject() {
+  $gtm?.trackEvent({
+    event: 'create-project',
+    category: 'welcome',
+    action: 'create-project',
+  });
   try {
     await CreateProject();
     await store.sync();
@@ -166,6 +194,11 @@ async function createProject() {
   }
 }
 async function openUrl(url: string) {
+  $gtm?.trackEvent({
+    event: 'open-url',
+    category: 'welcome',
+    action: 'open-url',
+  });
   try {
     BrowserOpenURL(url);
   } catch (e: any) {

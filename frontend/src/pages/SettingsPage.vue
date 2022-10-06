@@ -64,9 +64,11 @@
 <script setup lang="ts">
 import { ReadSettings, WriteSettings, GetMonitorAddress, GetSimulationAddress, RestartApp } from '../wailsjs/go/main/App';
 import { useQuasar } from 'quasar';
+import { useGtm } from '@gtm-support/vue-gtm';
 import { onMounted, ref, watch } from 'vue';
 
 const $q = useQuasar();
+const $gtm = useGtm();
 
 const updateOptions = ['stable', 'beta', 'dev'];
 
@@ -80,12 +82,18 @@ const applyChanges = async () => {
       cancel: true,
       persistent: true,
     }).onOk(() => {
+      $gtm?.trackEvent({ event: 'restart', category: 'settings' });
       RestartApp();
     });
   }
 };
 
 const saveSettings = async () => {
+  $gtm?.trackEvent({
+    event: 'save_settings',
+    category: 'settings',
+    action: 'save_settings',
+  });
   const settings = {
     server_port: serverPort.value,
     update_channel: updateValue.value,
