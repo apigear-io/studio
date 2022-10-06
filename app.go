@@ -34,12 +34,12 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	err := StartServices(ctx, config.GetServerPort())
 	if err != nil {
-		log.Errorf("Failed to start services: %s", err)
+		log.Error().Msgf("Failed to start services: %s", err)
 	}
 }
 
 func (a *App) shutdown(ctx context.Context) {
-	log.Infof("shutdown")
+	log.Info().Msg("shutdown")
 	StopServices()
 }
 

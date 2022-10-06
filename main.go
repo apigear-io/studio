@@ -3,7 +3,7 @@ package main
 import (
 	"embed"
 
-	"github.com/apigear-io/cli/pkg/config"
+	_ "github.com/apigear-io/cli/pkg/config"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
@@ -19,7 +19,6 @@ var icon []byte
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
-	config.InitConfig()
 
 	// Create application with options
 	err := wails.Run(&options.App{

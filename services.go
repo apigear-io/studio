@@ -143,8 +143,8 @@ func GetSimulationAddress() (string, error) {
 }
 
 func RegisterLogService(ctx context.Context) error {
-	logger.OnReport(func(report *logger.ReportEntry) {
-		runtime.EventsEmit(ctx, "log", report)
+	logger.OnReport(func(event *logger.ReportEvent) {
+		runtime.EventsEmit(ctx, "log", event)
 	})
 	return nil
 }
