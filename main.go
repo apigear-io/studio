@@ -21,6 +21,7 @@ var (
 )
 
 func main() {
+	config.InitConfig()
 	config.Set(config.KeyVersion, version)
 	config.Set(config.KeyCommit, commit)
 	config.Set(config.KeyDate, date)

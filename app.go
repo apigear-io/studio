@@ -9,7 +9,6 @@ import (
 
 	"github.com/apigear-io/cli/pkg/config"
 	"github.com/apigear-io/cli/pkg/helper"
-	"github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/apigear-io/cli/pkg/sim/actions"
 	"github.com/apigear-io/cli/pkg/sol"
