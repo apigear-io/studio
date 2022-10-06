@@ -46,11 +46,13 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
+import { useGtm } from '@gtm-support/vue-gtm';
 import { OpenSourceInEditor } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
 const store = useProjectStore();
 const $q = useQuasar();
+const $gtm = useGtm();
 
 function icon(docType: string) {
   switch (docType) {
@@ -68,6 +70,11 @@ const copyPath = (doc: main.DocumentInfo) => {
 };
 
 const editDocument = async (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({
+    event: 'edit_document',
+    category: 'modules',
+    action: 'edit_document',
+  });
   console.log('editDocument', doc);
   try {
     $q.notify({
@@ -86,6 +93,11 @@ const editDocument = async (doc: main.DocumentInfo) => {
 };
 
 const openDocument = (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({
+    event: 'open_document',
+    category: 'modules',
+    action: 'open_document',
+  });
   console.log('openDocument', doc);
 };
 </script>

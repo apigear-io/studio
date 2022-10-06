@@ -1,22 +1,32 @@
 package main
 
 import (
-	"embed"
-
-	_ "github.com/apigear-io/cli/pkg/config"
+	"github.com/apigear-io/cli/pkg/config"
+	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
-//go:embed frontend/dist/spa
-var assets embed.FS
+const (
+	DSN = "https://4957208c21894938999efd9742a596e0@o170438.ingest.sentry.io/4503901330866176"
+)
 
-//go:embed appicon.png
-var icon []byte
+var (
+	// build information
+	version = "0.0.0"
+	commit  = "none"
+	date    = "unknown"
+)
 
 func main() {
+	config.Set(config.KeyVersion, version)
+	config.Set(config.KeyCommit, commit)
+	config.Set(config.KeyDate, date)
+
+	zlog.SentryInit(DSN)
+	zlog.SentryCaptureArgs()
 	// Create an instance of the app structure
 	app := NewApp()
 
@@ -61,5 +71,6 @@ func main() {
 
 	if err != nil {
 		println("Error:", err)
+		zlog.SentryCaptureError(err)
 	}
 }

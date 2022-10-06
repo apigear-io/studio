@@ -60,12 +60,14 @@
 </template>
 
 <script setup lang="ts">
+import { useGtm } from '@gtm-support/vue-gtm';
 import { useQuasar } from 'quasar';
 import { onMounted, reactive } from 'vue';
 import { GetTemplates, InstallTemplateFromSource, RemoveTemplate } from '../wailsjs/go/main/App';
 import { main } from '../wailsjs/go/models';
 
 const $q = useQuasar();
+const $gtm = useGtm();
 const state = reactive({
   templates: [] as main.TemplateInfo[],
 });
@@ -87,6 +89,11 @@ const sync = async () => {
 onMounted(sync);
 
 const onShowTemplateInfo = (template: main.TemplateInfo) => {
+  $gtm?.trackEvent({
+    event: 'show_template_info',
+    category: 'templates',
+    action: 'show_template_info',
+  });
   $q.dialog({
     title: template.name,
     message: template.path,
@@ -94,6 +101,11 @@ const onShowTemplateInfo = (template: main.TemplateInfo) => {
 };
 
 const onRemoveTemplate = (template: main.TemplateInfo) => {
+  $gtm?.trackEvent({
+    event: 'remove_template',
+    category: 'templates',
+    action: 'remove_template',
+  });
   $q.dialog({
     title: 'Remove Template',
     message: `Are you sure you want to remove ${template.name}?`,
@@ -117,6 +129,11 @@ const onRemoveTemplate = (template: main.TemplateInfo) => {
 };
 
 const onImportTemplate = () => {
+  $gtm?.trackEvent({
+    event: 'import_template',
+    category: 'templates',
+    action: 'import_template',
+  });
   console.log('import template');
   $q.dialog({
     title: 'Import Template',
@@ -152,10 +169,20 @@ const onRefreshTemplates = async () => {
 };
 
 const onInstallTemplate = (item: main.TemplateInfo) => {
+  $gtm?.trackEvent({
+    event: 'install_template',
+    category: 'templates',
+    action: 'install_template',
+  });
   console.log('install template', item);
 };
 
 const onCopyName = (item: main.TemplateInfo) => {
+  $gtm?.trackEvent({
+    event: 'copy_name',
+    category: 'templates',
+    action: 'copy_name',
+  });
   console.log('copy name', item);
 };
 </script>

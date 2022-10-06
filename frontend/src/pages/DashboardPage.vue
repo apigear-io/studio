@@ -36,9 +36,11 @@ import { OpenSourceInEditor } from '../wailsjs/go/main/App';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
+import { useGtm } from '@gtm-support/vue-gtm';
 const router = useRouter();
 const $q = useQuasar();
 const store = useProjectStore();
+const $gtm = useGtm();
 
 function icon(docType: string) {
   switch (docType) {
@@ -52,6 +54,11 @@ function icon(docType: string) {
 }
 
 const openDocument = async (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({
+    event: 'open_document',
+    category: 'dashboard',
+    action: 'open_document',
+  });
   console.log('openDocument', doc);
   $q.notify({
     message: `Opening ${doc.name}`,
@@ -78,6 +85,11 @@ const openDocument = async (doc: main.DocumentInfo) => {
 };
 async function editDocument(doc: main.DocumentInfo) {
   console.log('editDocument', doc);
+  $gtm?.trackEvent({
+    event: 'edit_document',
+    category: 'dashboard',
+    action: 'edit_document',
+  });
   try {
     $q.notify({
       message: `Opening ${doc.name} in editor`,

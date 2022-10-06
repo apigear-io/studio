@@ -75,7 +75,7 @@
 <script setup lang="ts">
 import { OpenSourceInEditor, RunSolution, WatchSolution } from '../wailsjs/go/main/App';
 import { useQuasar, QTableProps } from 'quasar';
-
+import { useGtm } from '@gtm-support/vue-gtm';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
 import { onUnmounted, reactive, ref } from 'vue';
@@ -83,7 +83,7 @@ import { useLogStore, ILogEvent } from '../stores/log-store';
 const store = useProjectStore();
 const logs = useLogStore();
 const $q = useQuasar();
-
+const $gtm = useGtm();
 const showLogs = ref(false);
 
 const columns: QTableProps['columns'] = [
@@ -126,6 +126,7 @@ onUnmounted(() => {
 });
 
 const runDocument = async (item: main.DocumentInfo) => {
+  $gtm?.trackEvent({ event: 'run_document', category: 'solutions', action: 'run_document' });
   console.log('runDocument', item.path);
   try {
     showLogs.value = true;
@@ -139,6 +140,7 @@ const runDocument = async (item: main.DocumentInfo) => {
 };
 
 const editDocument = async (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({ event: 'edit_document', category: 'solutions', action: 'edit_document' });
   console.log('editDocument', doc);
   try {
     $q.notify({
@@ -162,6 +164,7 @@ function closeDialog() {
 const watched = reactive({ files: {} as { [key: string]: boolean } });
 
 const toggleAutoRun = async (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({ event: 'toggle_auto_run', category: 'solutions', action: 'toggle_auto_run' });
   const isWatched = watched.files[doc.path] || false;
   console.log('toggle watch: ', doc.path, isWatched, !isWatched);
   try {
@@ -179,6 +182,7 @@ const toggleAutoRun = async (doc: main.DocumentInfo) => {
 };
 
 const copyPath = (doc: main.DocumentInfo) => {
+  $gtm?.trackEvent({ event: 'copy_path', category: 'solutions', action: 'copy_path' });
   navigator.clipboard.writeText(doc.path);
 };
 </script>

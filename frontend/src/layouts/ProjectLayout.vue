@@ -72,11 +72,14 @@
 
 <script setup>
 import { useQuasar } from 'quasar';
+import { useGtm } from '@gtm-support/vue-gtm';
 import { onMounted, ref } from 'vue';
 import { NewDocument } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
 import AppFooter from '../components/AppFooter.vue';
+
+const $gtm = useGtm();
 
 const modes = [
   {
@@ -134,6 +137,7 @@ const store = useProjectStore();
 onMounted(store.sync);
 
 const openProjectDirectory = () => {
+  $gtm.trackEvent({ event: 'open-project-directory', category: 'project', action: 'open-project-directory' });
   try {
     BrowserOpenURL(store.project.path);
   } catch (e) {
@@ -145,6 +149,7 @@ const openProjectDirectory = () => {
 };
 
 const openHelp = () => {
+  $gtm.trackEvent({ event: 'open-help', category: 'project', action: 'open-help' });
   try {
     BrowserOpenURL('https://apigear.io/');
   } catch (e) {
@@ -156,6 +161,7 @@ const openHelp = () => {
 };
 
 function onNewDocument(docType) {
+  $gtm.trackEvent({ event: 'new-document', category: 'project', action: 'new-document' });
   $q.dialog({
     title: `New ${docType}`,
     message: `Enter ${docType} name`,

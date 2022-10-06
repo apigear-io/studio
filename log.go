@@ -1,5 +1,5 @@
 package main
 
-import logger "github.com/apigear-io/cli/pkg/log"
+import zlog "github.com/apigear-io/cli/pkg/log"
 
-var log = logger.Topic("app")
+var log = zlog.Topic("app")

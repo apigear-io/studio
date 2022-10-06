@@ -1,0 +1,33 @@
+# run on all pushes (but not push tags)
+# see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#running-your-workflow-only-when-a-push-to-specific-branches-occurs
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+
+name: tests
+# tests for all push and pull requests
+# tests only on linux, for release we test on linux and macos, windows
+
+env:
+  GOPRIVATE: "github.com/apigear-io/*"
+  GH_ACCESS_TOKEN: ${{ secrets.APIGEAR_REPOS }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.19.x"
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: ${{ runner.os }}-go-${{ matrix.go-version }}-
+      - run: git config --global url."https://${GH_ACCESS_TOKEN}:x-oauth-basic@github.com".insteadOf "https://github.com"
+      - run: go test ./... --tags bindings
