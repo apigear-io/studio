@@ -9,6 +9,7 @@ import (
 
 	"github.com/apigear-io/cli/pkg/config"
 	"github.com/apigear-io/cli/pkg/helper"
+	"github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/apigear-io/cli/pkg/sim/actions"
 	"github.com/apigear-io/cli/pkg/sol"
@@ -48,6 +49,7 @@ func (a App) RecentProjects() []string {
 }
 
 func (a *App) OpenProject() (*ProjectInfo, error) {
+	log.Info().Msg("Open Project")
 	opts := runtime.OpenDialogOptions{
 		Title: "Open Project",
 	}

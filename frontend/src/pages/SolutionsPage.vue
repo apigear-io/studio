@@ -56,7 +56,7 @@
     <q-dialog v-model="showLogs" position="bottom" auto-close>
       <q-card style="width: 800px; max-width: 80vw; max-height: 60vh" class="fit">
         <q-card-section class="fit">
-          <q-table :rows="logs.genLogs" :columns="columns" row-key="time" dense flat :pagination="pagination" class="fit">
+          <q-table :rows="logs.list" :columns="columns" row-key="time" dense flat :pagination="pagination" class="fit">
             <template v-slot:body-cell="props">
               <q-td :props="props" :class="rowClass(props.row)">
                 {{ props.value }}
@@ -111,6 +111,8 @@ function icon(docType: string) {
 
 function rowClass(item: ILogEvent): string {
   switch (item.level) {
+    case 'info':
+      return 'text-info';
     case 'warning':
       return 'text-warning';
     case 'error':
@@ -120,6 +122,7 @@ function rowClass(item: ILogEvent): string {
   }
 }
 
+
 onUnmounted(() => {
   showLogs.value = false;
   logs.stopRecordGenLogs();
@@ -128,6 +131,7 @@ onUnmounted(() => {
 const runDocument = async (item: main.DocumentInfo) => {
   $gtm?.trackEvent({ event: 'run_document', category: 'solutions', action: 'run_document' });
   console.log('runDocument', item.path);
+  logs.clear();
   try {
     showLogs.value = true;
     logs.startRecordGenLogs(); // should be clear, not stop, we should always log the latest messages
@@ -157,7 +161,6 @@ const editDocument = async (doc: main.DocumentInfo) => {
 };
 
 function closeDialog() {
-  logs.stopRecordGenLogs();
   showLogs.value = false;
 }
 

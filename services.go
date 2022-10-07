@@ -10,6 +10,7 @@ import (
 	rt "runtime"
 
 	"github.com/apigear-io/cli/pkg/config"
+	"github.com/apigear-io/cli/pkg/log"
 	logger "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
@@ -132,7 +133,7 @@ func RegisterSimulationService() error {
 		return fmt.Errorf("server not started")
 	}
 	if simulation != nil {
-		return fmt.Errorf("simulation already started")
+		return nil
 	}
 	handler := net.NewSimuRpcHandler(simulation)
 	hub := rpc.NewHub(serviceCtx)
@@ -162,8 +163,9 @@ func GetSimulationAddress() (string, error) {
 }
 
 func RegisterLogService(ctx context.Context) error {
-	logger.OnReport(func(event *logger.ReportEvent) {
-		runtime.EventsEmit(ctx, "log", event)
+	log.Info().Msg("start log service")
+	logger.OnReportBytes(func(s string) {
+		runtime.EventsEmit(ctx, "log", s)
 	})
 	return nil
 }

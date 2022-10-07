@@ -3,7 +3,7 @@ module github.com/apigear-io/studio
 go 1.18
 
 require (
-	github.com/apigear-io/cli v0.12.0
+	github.com/apigear-io/cli v0.12.3
 	github.com/creativeprojects/go-selfupdate v0.6.1
 	github.com/wailsapp/wails/v2 v2.0.0
 )
