@@ -85,7 +85,7 @@ const editDocument = async (doc: main.DocumentInfo) => {
     await OpenSourceInEditor(doc.path);
   } catch {
     $q.notify({
-      message: `Failed to open ${doc.name}`,
+      message: `open ${doc.name}`,
       color: 'negative',
       icon: 'error',
     });

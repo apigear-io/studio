@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/apigear-io/cli/pkg/config"
-	"github.com/apigear-io/cli/pkg/log"
 	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -71,7 +70,7 @@ func main() {
 	})
 
 	if err != nil {
-		log.Error().Msgf("Failed to start application: %s", err.Error())
+		log.Error().Msgf("start application: %s", err.Error())
 		zlog.SentryCaptureError(err)
 	}
 }

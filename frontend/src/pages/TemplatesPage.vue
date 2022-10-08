@@ -81,7 +81,7 @@ const sync = async () => {
     $q.notify({
       color: 'negative',
       textColor: 'white',
-      message: 'Failed to load templates',
+      message: 'load templates',
     });
   }
 };
@@ -122,7 +122,7 @@ const onRemoveTemplate = (template: main.TemplateInfo) => {
       $q.notify({
         type: 'negative',
         textColor: 'white',
-        message: 'Failed to remove template',
+        message: 'remove template',
       });
     }
   });
@@ -157,7 +157,7 @@ const onImportTemplate = () => {
       $q.notify({
         color: 'negative',
         textColor: 'white',
-        message: `Failed to import template: ${String(e)}`,
+        message: `import template: ${String(e)}`,
       });
     }
   });

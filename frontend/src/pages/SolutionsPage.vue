@@ -53,14 +53,21 @@
         </q-list>
       </q-card-section>
     </q-card>
-    <q-dialog v-model="showLogs" position="bottom" auto-close>
+    <q-dialog v-model="showLogs" position="bottom">
       <q-card style="width: 800px; max-width: 80vw; max-height: 60vh" class="fit">
         <q-card-section class="fit">
-          <q-table :rows="logs.list" :columns="columns" row-key="time" dense flat :pagination="pagination" class="fit">
-            <template v-slot:body-cell="props">
-              <q-td :props="props" :class="rowClass(props.row)">
-                {{ props.value }}
-              </q-td>
+          <q-table :rows="logs.list" :columns="columns" row-key="time" dense flat :pagination="pagination" class="fit" :filter-method="filter">
+            <template v-slot:body="props">
+              <q-tr :props="props" @click="props.expand = !props.expand">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="rowClass(props.row)">
+                  {{ col.value }}
+                </q-td>
+              </q-tr>
+              <q-tr v-show="props.expand">
+                <q-td colspan="100%" class="text-caption">
+                  <vue-json-pretty :data="props.row" />
+                </q-td>
+              </q-tr>
             </template>
           </q-table>
         </q-card-section>
@@ -80,14 +87,23 @@ import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
 import { onUnmounted, reactive, ref } from 'vue';
 import { useLogStore, ILogEvent } from '../stores/log-store';
+import VueJsonPretty from 'vue-json-pretty';
+import 'vue-json-pretty/lib/styles.css';
+
 const store = useProjectStore();
 const logs = useLogStore();
 const $q = useQuasar();
 const $gtm = useGtm();
 const showLogs = ref(false);
 
+const topics = ['app', 'gen', 'sol'];
+const filter = function (rows: readonly any[]): readonly any[] {
+  return rows.filter((row) => row.level != 'info' || topics.includes(row.topic));
+};
+
 const columns: QTableProps['columns'] = [
   { name: 'level', label: 'Level', field: 'level', align: 'left' },
+  { name: 'topic', label: 'Topic', field: 'topic', align: 'left' },
   { name: 'message', label: 'Messages', field: 'message', align: 'left' },
 ];
 
@@ -121,7 +137,6 @@ function rowClass(item: ILogEvent): string {
       return '';
   }
 }
-
 
 onUnmounted(() => {
   showLogs.value = false;

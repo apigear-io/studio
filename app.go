@@ -9,7 +9,6 @@ import (
 
 	"github.com/apigear-io/cli/pkg/config"
 	"github.com/apigear-io/cli/pkg/helper"
-	"github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/apigear-io/cli/pkg/sim/actions"
 	"github.com/apigear-io/cli/pkg/sol"
@@ -35,7 +34,7 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	err := StartServices(ctx, config.GetServerPort())
 	if err != nil {
-		log.Error().Msgf("Failed to start services: %s", err)
+		log.Error().Msgf("start services: %s", err)
 	}
 }
 
@@ -55,6 +54,7 @@ func (a *App) OpenProject() (*ProjectInfo, error) {
 	}
 	dir, err := runtime.OpenDirectoryDialog(a.ctx, opts)
 	if err != nil {
+		log.Error().Err(err).Msgf("open project: %s", err)
 		return nil, err
 	}
 	_, err = a.openProject(dir)
@@ -69,6 +69,7 @@ func (a *App) OpenRecentProject(dir string) (*ProjectInfo, error) {
 	log.Info().Msgf("open recent project %s", dir)
 	project, err := a.openProject(dir)
 	if err != nil {
+		log.Error().Err(err).Msgf("open recent: %s", err)
 		return nil, err
 	}
 	return project, nil
@@ -82,11 +83,13 @@ func (a *App) CreateProject() (*ProjectInfo, error) {
 	}
 	dir, err := runtime.OpenDirectoryDialog(a.ctx, opts)
 	if err != nil {
+		log.Error().Err(err).Msgf("open project: %s", err)
 		return nil, err
 	}
 	prj.InitProject(dir)
 	proj, err := a.openProject(dir)
 	if err != nil {
+		log.Error().Err(err).Msgf("open project: %s", err)
 		return nil, err
 	}
 	return proj, nil
@@ -97,7 +100,8 @@ func (a *App) ImportProject(repoUrl string, targetDir string) (*ProjectInfo, err
 	log.Info().Msgf("Import project to %s from %s", targetDir, repoUrl)
 	proj, err := prj.ImportProject(repoUrl, targetDir)
 	if err != nil {
-		return nil, fmt.Errorf("failed to import project: %s", err)
+		log.Error().Err(err).Msgf("import project: %s", err)
+		return nil, fmt.Errorf("import project: %s", err)
 	}
 	return a.openProject(proj.Path)
 }
@@ -137,20 +141,35 @@ func (a App) WriteSettings(settings AppSettings) {
 func (a App) NewDocument(docType string, name string) (string, error) {
 	log.Info().Msgf("New Document %s %s", name, docType)
 	if a.currentProject == nil {
-		return "", fmt.Errorf("no project open")
+		log.Error().Msgf("no open project to add new document")
+		return "", fmt.Errorf("no open project to add new document")
 	}
 	dir := a.currentProject.Path
 	target, err := prj.CreateProjectDocument(dir, docType, name)
 	a.openProject(dir)
+	if err != nil {
+		log.Error().Err(err).Msgf("create document: %s", err)
+		return "", err
+	}
 	return target, err
 }
 
 func (a App) GetMonitorAddress() (string, error) {
-	return GetMonitorAddress()
+	s, err := GetMonitorAddress()
+	if err != nil {
+		log.Error().Err(err).Msgf("get monitor address: %s", err)
+		return "", err
+	}
+	return s, err
 }
 
 func (a App) GetSimulationAddress() (string, error) {
-	return GetSimulationAddress()
+	s, err := GetSimulationAddress()
+	if err != nil {
+		log.Error().Err(err).Msgf("get simulation address: %s", err)
+		return "", err
+	}
+	return s, err
 }
 
 func (a App) RemoveRecentProject(source string) {
@@ -165,7 +184,12 @@ func (a *App) RefreshCurrentProject() (*ProjectInfo, error) {
 	if a.currentProject == nil {
 		return nil, nil
 	}
-	return a.openProject(a.currentProject.Path)
+	p, err := a.openProject(a.currentProject.Path)
+	if err != nil {
+		log.Error().Err(err).Msgf("refresh project: %s", err)
+		return nil, err
+	}
+	return p, err
 }
 
 func (a *App) openProject(dir string) (*ProjectInfo, error) {
@@ -181,12 +205,13 @@ func (a *App) openProject(dir string) (*ProjectInfo, error) {
 	}
 	p, err := doReadProject(dir)
 	if err != nil {
+		log.Error().Err(err).Msgf("open project: %s", err)
 		a.currentProject = nil
-		return nil, fmt.Errorf("failed to read project: %w", err)
+		return nil, fmt.Errorf("read project: %w", err)
 	}
 	a.currentProject = p
 	config.AppendRecentEntry(p.Path)
-	return p, err
+	return p, nil
 }
 
 func doReadProject(source string) (*ProjectInfo, error) {
@@ -196,6 +221,7 @@ func doReadProject(source string) (*ProjectInfo, error) {
 	}
 	entries, err := os.ReadDir(helper.Join(source, "apigear"))
 	if err != nil {
+		log.Error().Err(err).Msgf("read project: %s", err)
 		return nil, err
 	}
 	var docs []DocumentInfo
@@ -233,6 +259,7 @@ func (a App) EmitProjectChanged() {
 func (a App) GetTemplates() ([]TemplateInfo, error) {
 	in, err := tpl.ListTemplates()
 	if err != nil {
+		log.Error().Err(err).Msgf("get templates: %s", err)
 		return nil, err
 	}
 	fmt.Println(len(in))
@@ -244,7 +271,6 @@ func (a App) GetTemplates() ([]TemplateInfo, error) {
 			Path:   tpl.Path,
 		}
 	}
-	fmt.Println(len(out))
 	return out, nil
 }
 
@@ -252,6 +278,7 @@ func (a App) InstallTemplateFromSource(source string) (*TemplateInfo, error) {
 	log.Info().Msgf("Install Template From Source %s", source)
 	vcs, err := tpl.ImportTemplate(source)
 	if err != nil {
+		log.Error().Err(err).Msgf("install template from source %s", source)
 		return nil, err
 	}
 	return &TemplateInfo{
@@ -262,7 +289,11 @@ func (a App) InstallTemplateFromSource(source string) (*TemplateInfo, error) {
 
 func (a App) RemoveTemplate(name string) error {
 	log.Info().Msgf("Remove Template %s", name)
-	return tpl.RemoveTemplate(name)
+	err := tpl.RemoveTemplate(name)
+	if err != nil {
+		log.Error().Err(err).Msgf("remove template %s", name)
+	}
+	return err
 }
 
 func (a App) SelectDirectory() (string, error) {
@@ -272,6 +303,7 @@ func (a App) SelectDirectory() (string, error) {
 	}
 	dir, err := runtime.OpenDirectoryDialog(a.ctx, opts)
 	if err != nil {
+		log.Error().Err(err).Msg("open directory dialog")
 		return "", err
 	}
 	return dir, nil
@@ -281,11 +313,13 @@ func (a App) RunSolution(source string) error {
 	log.Info().Msgf("run solution %s", source)
 	doc, err := sol.ReadSolutionDoc(source)
 	if err != nil {
+		log.Error().Err(err).Msgf("read: %s", err)
 		return err
 	}
 	r := GetRunner()
 	err = r.RunDoc(source, doc)
 	if err != nil {
+		log.Error().Err(err).Msgf("solution: %s", err)
 		return err
 	}
 	return nil
@@ -297,11 +331,12 @@ func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 	if enabled {
 		doc, err := sol.ReadSolutionDoc(source)
 		if err != nil {
+			log.Error().Msgf("watch solution: %s", err)
 			return nil, err
 		}
 		_, err = r.StartWatch(source, doc)
 		if err != nil {
-			log.Warn().Msgf("watch solution %s failed: %s", source, err)
+			log.Error().Msgf("watch solution: %s", err)
 		}
 	} else {
 		r.StopWatch(source)
@@ -313,7 +348,7 @@ func (a App) RestartApp() {
 	log.Info().Msgf("Restart App")
 	err := RestartSelf()
 	if err != nil {
-		log.Error().Msgf("Failed to restart app: %s", err)
+		log.Error().Err(err).Msgf("restart app: %s", err)
 	}
 }
 
@@ -322,6 +357,7 @@ func (a App) StartScenario(source string) error {
 	s := GetSimulation()
 	result, err := spec.CheckFile(source)
 	if err != nil {
+		log.Error().Err(err).Msgf("start scenario: %s", err)
 		return err
 	}
 	if !result.Valid() {
@@ -334,10 +370,12 @@ func (a App) StartScenario(source string) error {
 
 	doc, err := actions.ReadScenario(source)
 	if err != nil {
+		log.Error().Err(err).Msgf("start scenario: %s", err)
 		return err
 	}
 	err = s.LoadScenario(source, doc)
 	if err != nil {
+		log.Error().Err(err).Msgf("start scenario: %s", err)
 		return err
 	}
 	return nil
@@ -346,15 +384,29 @@ func (a App) StartScenario(source string) error {
 func (a App) StopScenario(source string) error {
 	log.Debug().Msgf("stop scenario %s", source)
 	s := GetSimulation()
-	return s.UnloadScenario(source)
+	err := s.UnloadScenario(source)
+	if err != nil {
+		log.Error().Err(err).Msgf("stop scenario: %s", err)
+	}
+	return err
 }
 
 func (a App) CheckUpdate() (*ReleaseInfo, error) {
 	log.Debug().Msgf("check update")
-	return CheckAppUpdate()
+	i, err := CheckAppUpdate()
+	if err != nil {
+		log.Error().Err(err).Msgf("check update: %s", err)
+		return nil, err
+	}
+	return i, nil
 }
 
 func (a App) UpdateProgram(version string) error {
 	log.Debug().Msgf("update program")
-	return UpdateApp(version)
+	err := UpdateApp(version)
+	if err != nil {
+		log.Error().Err(err).Msgf("update program: %s", err)
+		return err
+	}
+	return nil
 }

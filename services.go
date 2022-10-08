@@ -10,8 +10,7 @@ import (
 	rt "runtime"
 
 	"github.com/apigear-io/cli/pkg/config"
-	"github.com/apigear-io/cli/pkg/log"
-	logger "github.com/apigear-io/cli/pkg/log"
+	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
 	"github.com/apigear-io/cli/pkg/net/rpc"
@@ -35,7 +34,7 @@ func init() {
 	serviceCtx, serviceCancel = context.WithCancel(context.Background())
 	u, err := up.NewUpdater("apigear-io/studio-releases", config.Get(config.KeyVersion))
 	if err != nil {
-		log.Error().Msgf("failed to create updater: %v", err)
+		log.Error().Msgf("create updater: %v", err)
 	} else {
 		updater = u
 	}
@@ -49,23 +48,23 @@ func StartServices(ctx context.Context, port string) error {
 	server = net.NewHTTPServer()
 	err := RegisterLogService(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to start log service: %s", err)
+		return fmt.Errorf("start log service: %s", err)
 	}
 	err = RegisterMonitorService(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to start monitor service: %v", err)
+		return fmt.Errorf("start monitor service: %v", err)
 	}
 	err = RegisterSimulationService()
 	if err != nil {
-		return fmt.Errorf("failed to start simulation service: %v", err)
+		return fmt.Errorf("start simulation service: %v", err)
 	}
 	err = RunServer(fmt.Sprintf(":%s", port))
 	if err != nil {
-		return fmt.Errorf("failed to start server: %v", err)
+		return fmt.Errorf("start server: %v", err)
 	}
 	r, err := updater.Check()
 	if err != nil {
-		return fmt.Errorf("failed to check for updates: %v", err)
+		return fmt.Errorf("check for updates: %v", err)
 	}
 	if r != nil {
 		latestRelease = r
@@ -93,7 +92,7 @@ func RunServer(addr string) error {
 	log.Info().Msgf("start server on %s", addr)
 	err := server.Start(addr)
 	if err != nil {
-		log.Error().Msgf("failed to start server: %v", err)
+		log.Error().Msgf("start server: %v", err)
 	}
 	return nil
 }
@@ -164,7 +163,7 @@ func GetSimulationAddress() (string, error) {
 
 func RegisterLogService(ctx context.Context) error {
 	log.Info().Msg("start log service")
-	logger.OnReportBytes(func(s string) {
+	zlog.OnReportBytes(func(s string) {
 		runtime.EventsEmit(ctx, "log", s)
 	})
 	return nil
