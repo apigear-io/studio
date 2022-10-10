@@ -141,10 +141,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: |
-            "windows/apigear-studio-*.zip",
-            "windows/bin/*-installer.*"
-            "linux/apigear-studio-*.zip",
-            "macos/apigear-studio-*.zip",
+            windows/apigear-studio-${{github.ref_name}}-linux-amd64.zip
+            windows/bin/ApiGear-Studio-amd64-installer.exe,
           body: "release for apigear-studio ${{github.ref_name}}"          
           repo: "studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
