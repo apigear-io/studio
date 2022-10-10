@@ -134,17 +134,18 @@ jobs:
           TOKEN: ${{ secrets.APIGEAR_REPOS }}
         shell: bash
       - uses: actions/download-artifact@v3
-      - name: show dir
-        run: ls -lR
+      - run: ls -lR
         shell: bash
       - uses: softprops/action-gh-release@v1
         with:
-          files: |
-            ./windows/apigear-studio-${{github.ref_name}}-windows-amd64.zip
-            ./linux/apigear-studio-${{github.ref_name}}-linux-amd64.zip
-            ./windows/ApiGear-Studio-amd64-installer.exe
+          files: |          
+            ./windows/*.zip
+            ./windows/bin/*-installer.exe
+            ./linux/*.zip
           body: "release for apigear-studio ${{github.ref_name}}"          
           repository: "apigear-io/studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.APIGEAR_REPOS }}
 
 
