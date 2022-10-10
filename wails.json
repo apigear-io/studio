@@ -8,8 +8,8 @@
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "http://localhost:9000",
   "author": {
-    "name": "Jürgen Ryannel",
-    "email": "juergen.ryannel@icloud.com"
+    "name": "ApiGear",
+    "email": "info@apigear.io"
   },
   "info": {
     "companyName": "ApiGear",

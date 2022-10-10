@@ -20,8 +20,10 @@
 # Go workspace file
 go.work
 
-# Build dir
-build
 
 .vscode/
 .DS_Store
+
+build/windows/installer/
+build/windows/info.json
+build/windows/wails.exe.manifest
