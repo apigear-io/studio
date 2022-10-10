@@ -56,7 +56,7 @@
     <q-dialog v-model="showLogs" position="bottom">
       <q-card style="width: 800px; max-width: 80vw; max-height: 60vh" class="fit">
         <q-card-section class="fit">
-          <q-table :rows="logs.list" :columns="columns" row-key="time" dense flat :pagination="pagination" class="fit" :filter-method="filter">
+          <q-table :rows="logs.list" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" class="fit" :filter-method="filter">
             <template v-slot:body="props">
               <q-tr :props="props" @click="props.expand = !props.expand">
                 <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="rowClass(props.row)">

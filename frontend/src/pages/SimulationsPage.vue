@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-btn flat icon="av_timer" />
+          <q-avatar icon="av_timer"/>
           <q-toolbar-title>Simulation Scenarios</q-toolbar-title>
           <q-space />
           <q-btn flat icon="av_timer" label="Events" style="width: 120px" to="/projects/simulations/messages" />
