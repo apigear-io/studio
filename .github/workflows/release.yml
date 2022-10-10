@@ -83,5 +83,56 @@ jobs:
           name: ${{env.artifact}}
           path: build/${{env.artifact}}
           retention-days: 5
+  build-macos:
+    runs-on: macos-latest
+    env:
+      artifact: apigear-studio-${{github.ref_name}}-darwin-universal.zip
+      platform: darwin/universal
+    steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{env.go_version}}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{env.node_version}}
+      - run: go install github.com/wailsapp/wails/v2/cmd/wails@${{env.wails_version}}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: git config --global url."https://jryannel:${{env.token}}@github.com".insteadOf "https://github.com"
+        shell: bash
+        env:
+          token: ${{ secrets.APIGEAR_REPOS }}
+      - run: wails build --platform ${{env.platform}}
+      - uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          directory: build
+          path: bin 
+          filename: ${{env.artifact}}
+      - run: ls -lR build
+        shell: bash
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.artifact}}
+          path: build/${{env.artifact}}
+          retention-days: 5
+  release:
+    runs-on: ubuntu-latest
+    needs: [build-windows, build-linux, build-macos]
+    steps:
+      - run: git config --global url."https://jryannel:${TOKEN}@github.com".insteadOf "https://github.com"
+        env:
+          TOKEN: ${{ secrets.APIGEAR_REPOS }}
+        shell: bash
+      - uses: actions/download-artifact@v3
+      - name: show dir
+        run: ls -lR
+        shell: bash
+      - name: create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "apigear-studio-*.zip/apigear-studio-*.zip"
+          body: "release for apigear-studio ${{github.ref_name}}"
 
 
