@@ -141,7 +141,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: |
-            "**/apigear-studio-*.zip"
+            "**/apigear-studio-*.zip",
             "**/*-installer.*"
           body: "release for apigear-studio ${{github.ref_name}}"          
           repo: "studio-releases"
