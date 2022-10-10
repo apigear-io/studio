@@ -10,42 +10,42 @@ env:
   GOPRIVATE: "github.com/apigear-io/*"
   GH_ACCESS_TOKEN: ${{ secrets.APIGEAR_REPOS }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  WAILS_VERSION: latest
-  GO_VERSION: "1.19.x"
-  NODE_VERSION: "16.x"
+  wails_version: latest
+  go_version: "1.19.x"
+  node_version: "16.x"
 jobs:
   build-windows:
     runs-on: windows-latest
     env:
-      ARTIFACT: apigear-studio-${{github.ref_name}}-windows-amd64.zip
+      artifact: apigear-studio-${{github.ref_name}}-windows-amd64.zip
     steps:
       - uses: actions/setup-go@v3
         with:
-          go-version: ${{GO_VERSION}}
+          go-version: ${{env.go_version}}
       - uses: actions/setup-node@v2
         with:
-          node-version: ${{NODE_VERSION}}
-      - run: go install github.com/wailsapp/wails/v2/cmd/wails@${{WAILS_VERSION}}
+          node-version: ${{env.node_version}}
+      - run: go install github.com/wailsapp/wails/v2/cmd/wails@${{env.wails_version}}
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: git config --global url."https://jryannel:${TOKEN}@github.com".insteadOf "https://github.com"
+      - run: git config --global url."https://jryannel:${{env.token}}@github.com".insteadOf "https://github.com"
         shell: bash
         env:
-          TOKEN: ${{ secrets.APIGEAR_REPOS }}
+          token: ${{ secrets.APIGEAR_REPOS }}
       - run: wails build --platform windows/amd64
       - uses: thedoctor0/zip-release@main
         with:
           type: 'zip'
           directory: build
           path: bin 
-          filename: ${{ARTIFACT}}
+          filename: ${{env.artifact}}
       - run: ls -lR build
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ARTIFACT}}
-          path: build/${{ARTIFACT}}
+          name: ${{env.artifact}}
+          path: build/${{env.artifact}}
           retention-days: 5
 
 
