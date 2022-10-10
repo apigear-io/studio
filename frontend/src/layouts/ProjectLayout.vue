@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <q-header class="q-dark shadow-4">
       <q-toolbar>
-        <q-icon name="api" color="red-7" size="md" />
+        <q-icon name="img:icons/appicon-96x96.png" color="red-7" size="md" />
         <q-toolbar-title>ApiGear Studio</q-toolbar-title>
         <q-space />
         <q-btn-dropdown flat class="text-primary" label="New Document" dropdown-icon="add_box">

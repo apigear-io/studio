@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-btn flat icon="chair" />
+          <q-avatar icon="chair"/>
           <q-toolbar-title>SDK Solutions</q-toolbar-title>
           <q-space />
           <q-btn flat label="Summary" style="width: 120px" />

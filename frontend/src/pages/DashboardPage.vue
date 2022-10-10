@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-btn flat icon="dashboard" />
+          <q-avatar icon="dashboard"/>
           <q-toolbar-title>Dashboard</q-toolbar-title>
           <q-btn flat round dense icon="more_vert" />
         </q-toolbar>

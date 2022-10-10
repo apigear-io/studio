@@ -3,7 +3,7 @@
     <q-card flat>
       <q-card-section>
         <q-toolbar class="bg-primary text-white">
-          <q-btn flat icon="settings" />
+          <q-avatar icon="settings"/>
           <q-toolbar-title>Settings</q-toolbar-title>
           <q-space />
         </q-toolbar>

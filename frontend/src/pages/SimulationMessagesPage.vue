@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white">
-          <q-btn flat icon="av_timer" />
+          <q-avatar icon="av_timer"/>
           <q-toolbar-title>Simulation Events</q-toolbar-title>
           <q-space />
           <q-toggle size="sm" v-model="state.isListening" label="Scroll" style="min-width: 120px" />

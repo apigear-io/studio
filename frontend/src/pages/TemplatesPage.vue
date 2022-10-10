@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-btn flat icon="auto_fix_normal" />
+          <q-avatar icon="auto_fix_normal"/>
           <q-toolbar-title>SDK Templates</q-toolbar-title>
           <q-space />
           <q-btn-group flat>

@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-btn flat icon="data_object" />
+          <q-avatar icon="data_object"/>
           <q-toolbar-title>API Events</q-toolbar-title>
           <q-space />
           <q-toggle size="sm" v-model="state.isListening" label="Scroll" style="min-width: 120px" />

@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-btn flat icon="view_list" />
+          <q-avatar icon="view_list"/>
           <q-toolbar-title>Log Events</q-toolbar-title>
           <q-space />
         </q-toolbar>
