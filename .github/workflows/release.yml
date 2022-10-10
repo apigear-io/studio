@@ -137,14 +137,13 @@ jobs:
       - name: show dir
         run: ls -lR
         shell: bash
-      - name: create release
-        uses: ncipollo/release-action@v1
+      - uses: softprops/action-gh-release@v1
         with:
-          artifacts: |
-            "windows/*.zip"
-            "windows/bin/*-installer.exe"
+          files: |
+            windows/apigear-studio-${{github.ref_name}}-windows-amd64.zip
+            windows/ApiGear-Studio-amd64-installer.exe
           body: "release for apigear-studio ${{github.ref_name}}"          
-          repo: "studio-releases"
+          repository: "apigear-io/studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
 
 
