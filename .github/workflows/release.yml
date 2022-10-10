@@ -18,6 +18,7 @@ jobs:
     runs-on: windows-latest
     env:
       artifact: apigear-studio-${{github.ref_name}}-windows-amd64.zip
+      platform: windows/amd64
     steps:
       - uses: actions/setup-go@v3
         with:
@@ -33,7 +34,42 @@ jobs:
         shell: bash
         env:
           token: ${{ secrets.APIGEAR_REPOS }}
-      - run: wails build --platform windows/amd64
+      - run: wails build --platform ${{env.platform}}
+      - uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          directory: build
+          path: bin 
+          filename: ${{env.artifact}}
+      - run: ls -lR build
+        shell: bash
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.artifact}}
+          path: build/${{env.artifact}}
+          retention-days: 5
+  build-linux:
+    runs-on: ubuntu-latest
+    env:
+      artifact: apigear-studio-${{github.ref_name}}-linux-amd64.zip
+      platform: linux/amd64
+    steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{env.go_version}}
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{env.node_version}}
+      - run: go install github.com/wailsapp/wails/v2/cmd/wails@${{env.wails_version}}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev
+      - run: git config --global url."https://jryannel:${{env.token}}@github.com".insteadOf "https://github.com"
+        shell: bash
+        env:
+          token: ${{ secrets.APIGEAR_REPOS }}
+      - run: wails build --platform ${{env.platform}}
       - uses: thedoctor0/zip-release@main
         with:
           type: 'zip'
