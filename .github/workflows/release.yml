@@ -47,7 +47,7 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
-          name: windows-artifacts
+          name: windows
           path: |
             build/${{env.artifact}}
             build/bin/${{env.installer}}
@@ -84,7 +84,7 @@ jobs:
   #       shell: bash
   #     - uses: actions/upload-artifact@v3
   #       with:
-  #         name: linux-artifacts
+  #         name: linux
   #         path: build/${{env.artifact}}
   #         retention-days: 5
   # build-macos:
@@ -118,7 +118,7 @@ jobs:
   #       shell: bash
   #     - uses: actions/upload-artifact@v3
   #       with:
-  #         name: macos-artifacts
+  #         name: macos
   #         path: build/${{env.artifact}}
   #         retention-days: 5
   release:
@@ -141,8 +141,10 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: |
-            "*-artifacts/apigear-studio-*.zip",
-            "*-artifacts/bin/*-installer.*"
+            "windows/apigear-studio-*.zip",
+            "windows/bin/*-installer.*"
+            "linux/apigear-studio-*.zip",
+            "macos/apigear-studio-*.zip",
           body: "release for apigear-studio ${{github.ref_name}}"          
           repo: "studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
