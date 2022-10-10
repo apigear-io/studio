@@ -11,8 +11,8 @@ env:
   GH_ACCESS_TOKEN: ${{ secrets.APIGEAR_REPOS }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   WAILS_VERSION: latest
-  GO_VERSION: 1.19.x
-  NODE_VERSION: 16.x
+  GO_VERSION: "1.19.x"
+  NODE_VERSION: "16.x"
 jobs:
   build-windows:
     runs-on: windows-latest
