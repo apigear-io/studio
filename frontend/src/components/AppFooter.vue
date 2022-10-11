@@ -54,11 +54,11 @@ onMounted(async () => {
       });
     }
   } catch(err) {
-    $q.notify({
-      color: 'negative',
-      message: 'Failed to check for updates: ' + err,
-      icon: 'error',
-    });
+    // $q.notify({
+    //   color: 'negative',
+    //   message: 'Failed to check for updates: ' + err,
+    //   icon: 'error',
+    // });
   }
 });
 
