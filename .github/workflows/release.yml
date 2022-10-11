@@ -140,7 +140,7 @@ jobs:
       - uses: softprops/action-gh-release@v1
         with:
           files: |   
-            checksum.txt
+            ./checksum.txt
             ./artifact/*.zip
             ./artifact/bin/*-installer.exe
           body: "release for apigear-studio ${{github.ref_name}}"
