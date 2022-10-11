@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}@github.com".insteadOf "https://github.com"
+      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
       - run: wails build -nsis --platform ${{env.platform}} -ldflags="-X 'main.version=${{github.ref_name}}' -X 'main.commit=${{github.sha}}' -X 'main.date=${{github.event.head_commit.timestamp}}'"
       - uses: thedoctor0/zip-release@main
@@ -68,7 +68,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev
-      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}@github.com".insteadOf "https://github.com"
+      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
       - run: wails build --platform ${{env.platform}}
       - uses: thedoctor0/zip-release@main
@@ -124,7 +124,7 @@ jobs:
       contents: write
       packages: write
     steps:
-      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}@github.com".insteadOf "https://github.com"
+      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
       - uses: actions/download-artifact@v3
       - uses: jmgilman/actions-generate-checksum@v1
