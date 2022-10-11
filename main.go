@@ -24,6 +24,7 @@ func main() {
 	config.Set(config.KeyVersion, version)
 	config.Set(config.KeyCommit, commit)
 	config.Set(config.KeyDate, date)
+	log.Info().Msgf("Version: %s, Commit: %s, Date: %s", version, commit, date)
 
 	zlog.SentryInit(DSN)
 	zlog.SentryCaptureArgs()

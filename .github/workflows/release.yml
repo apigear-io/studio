@@ -37,7 +37,7 @@ jobs:
         shell: bash
         env:
           token: ${{ secrets.APIGEAR_REPOS }}
-      - run: wails build -nsis --platform ${{env.platform}}
+      - run: wails build -nsis --platform ${{env.platform}} -ldflags="-X 'main.version=${{github.ref_name}}' -X 'main.commit=${{github.sha}}' -X 'main.date=${{github.event.head_commit.timestamp}}'"
       - uses: thedoctor0/zip-release@main
         with:
           type: 'zip'
@@ -135,6 +135,7 @@ jobs:
       - uses: actions/download-artifact@v3
       - uses: jmgilman/actions-generate-checksum@v1
         with:
+          output: checksums.txt
           patterns: |
             artifact/*.zip
             artifact/bin/*-installer.exe
@@ -147,7 +148,7 @@ jobs:
       - uses: softprops/action-gh-release@v1
         with:
           files: |   
-            checksum.txt
+            checksums.txt
             artifact/*.zip
             artifact/bin/*-installer.exe
           body: ${{steps.changelog.outputs.changelog}}
