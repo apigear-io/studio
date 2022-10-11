@@ -89,7 +89,6 @@ jobs:
           retention-days: 5
   # build-macos:
   #   runs-on: macos-latest
-  #   if: github.ref == 'refs/heads/main'
   #   env:
   #     artifact: apigear-studio-${{github.ref_name}}-darwin-universal.zip
   #     platform: darwin/universal
