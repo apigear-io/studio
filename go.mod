@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/apigear-io/cli v0.13.3
 	github.com/creativeprojects/go-selfupdate v0.6.1
+	github.com/magefile/mage v1.14.0
 	github.com/wailsapp/wails/v2 v2.0.0
 )
 

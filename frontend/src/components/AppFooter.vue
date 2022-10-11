@@ -13,7 +13,7 @@
       size="sm"
       flat
       icon="info"
-      label="v2020.3"
+      :label="verInfo?.version"
       color="blue-grey-4"
       @click="openAppInfo()"
     />
@@ -29,12 +29,38 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useQuasar } from 'quasar';
 import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
 import AppInfoDialog from '../components/AppInfoDialog.vue';
-
+import { CheckUpdate, VersionInfo } from '../wailsjs/go/main/App';
+import { onMounted } from 'vue';
+import { main } from 'src/wailsjs/go/models';
 const $q = useQuasar();
+
+let relInfo: main.ReleaseInfo | null = null
+let verInfo: main.VersionInfo | null = null
+
+onMounted(async () => {
+  try {
+    verInfo = await VersionInfo()
+    relInfo = await CheckUpdate();
+    if (relInfo) {
+      openAppInfo();
+      $q.notify({
+        message: `New version ${relInfo.version} is available.`,
+        color: 'positive',
+        icon: 'info',
+      });
+    }
+  } catch(err) {
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to check for updates: ' + err,
+      icon: 'error',
+    });
+  }
+});
 
 const openAppInfo = () => {
   $q.dialog({
@@ -46,9 +72,9 @@ const openAppInfo = () => {
 const openDiscussions = () => {
   try {
     BrowserOpenURL('https://github.com/orgs/apigear-io/discussions');
-  } catch (e) {
+  } catch (err) {
     $q.notify({
-      message: e,
+      message: 'Failed to open discussions: ' + err,
       color: 'negative',
       icon: 'error',
     });
@@ -60,7 +86,7 @@ const openProductInfo = () => {
     BrowserOpenURL('https://apigear.io/');
   } catch (e) {
     $q.notify({
-      message: e,
+      message: String(e),
       color: 'negative',
       icon: 'error',
     });

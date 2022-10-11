@@ -35,10 +35,9 @@ func init() {
 	u, err := up.NewUpdater("apigear-io/studio-releases", config.Get(config.KeyVersion))
 	if err != nil {
 		log.Error().Msgf("create updater: %v", err)
-	} else {
-		updater = u
+		return
 	}
-
+	updater = u
 }
 
 // TODO: rethink context used here, many we can just create new contexts with timeouts

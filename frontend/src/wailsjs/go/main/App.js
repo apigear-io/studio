@@ -102,6 +102,10 @@ export function UpdateProgram(arg1) {
   return window['go']['main']['App']['UpdateProgram'](arg1);
 }
 
+export function VersionInfo() {
+  return window['go']['main']['App']['VersionInfo']();
+}
+
 export function WatchSolution(arg1, arg2) {
   return window['go']['main']['App']['WatchSolution'](arg1, arg2);
 }

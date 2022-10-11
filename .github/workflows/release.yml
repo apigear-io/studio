@@ -47,7 +47,6 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
-          name: windows
           path: |
             build/${{env.artifact}}
             build/bin/${{env.installer}}
@@ -84,7 +83,6 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
-          name: linux
           path: build/${{env.artifact}}
           retention-days: 5
   # build-macos:
@@ -118,7 +116,6 @@ jobs:
   #       shell: bash
   #     - uses: actions/upload-artifact@v3
   #       with:
-  #         name: macos
   #         path: build/${{env.artifact}}
   #         retention-days: 5
   release:
@@ -134,15 +131,19 @@ jobs:
           TOKEN: ${{ secrets.APIGEAR_REPOS }}
         shell: bash
       - uses: actions/download-artifact@v3
+      - uses: jmgilman/actions-generate-checksum@v1
+        with:
+          path: 'artifact/apigear-studio-*.zip'
+          algorithm: 'sha256'
       - run: ls -lR
         shell: bash
       - uses: softprops/action-gh-release@v1
         with:
-          files: |          
-            ./windows/*.zip
-            ./windows/bin/*-installer.exe
-            ./linux/*.zip
-          body: "release for apigear-studio ${{github.ref_name}}"          
+          files: |   
+            checksum.txt
+            ./artifact/*.zip
+            ./artifact/bin/*-installer.exe
+          body: "release for apigear-studio ${{github.ref_name}}"
           repository: "apigear-io/studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
         env:

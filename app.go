@@ -391,6 +391,17 @@ func (a App) StopScenario(source string) error {
 	return err
 }
 
+func (a App) VersionInfo() (VersionInfo, error) {
+	version := config.Get(config.KeyVersion)
+	commit := config.Get(config.KeyCommit)
+	date := config.Get(config.KeyDate)
+	return VersionInfo{
+		Version: version,
+		Commit:  commit,
+		Date:    date,
+	}, nil
+}
+
 func (a App) CheckUpdate() (*ReleaseInfo, error) {
 	log.Debug().Msgf("check update")
 	i, err := CheckAppUpdate()
