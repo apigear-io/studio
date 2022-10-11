@@ -3,11 +3,7 @@ module github.com/apigear-io/studio
 go 1.18
 
 require (
-<<<<<<< HEAD
-	github.com/apigear-io/cli v0.13.5
-=======
 	github.com/apigear-io/cli v0.13.11
->>>>>>> f6dd8736746e8d6ed9cdb513200e125420eca005
 	github.com/creativeprojects/go-selfupdate v0.6.1
 	github.com/magefile/mage v1.14.0
 	github.com/wailsapp/wails/v2 v2.0.0
