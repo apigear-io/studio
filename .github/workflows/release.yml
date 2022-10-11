@@ -33,11 +33,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: git config --global url."https://jryannel:${{env.token}}@github.com".insteadOf "https://github.com"
+      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
-        env:
-          token: ${{ secrets.APIGEAR_REPOS }}
-      - run: wails build -nsis --platform ${{env.platform}}
+      - run: wails build -nsis --platform ${{env.platform}} -ldflags="-X 'main.version=${{github.ref_name}}' -X 'main.commit=${{github.sha}}' -X 'main.date=${{github.event.head_commit.timestamp}}'"
       - uses: thedoctor0/zip-release@main
         with:
           type: 'zip'
@@ -70,10 +68,8 @@ jobs:
         with:
           fetch-depth: 0
       - run: sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev
-      - run: git config --global url."https://jryannel:${{env.token}}@github.com".insteadOf "https://github.com"
+      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
-        env:
-          token: ${{ secrets.APIGEAR_REPOS }}
       - run: wails build --platform ${{env.platform}}
       - uses: thedoctor0/zip-release@main
         with:
@@ -128,13 +124,12 @@ jobs:
       contents: write
       packages: write
     steps:
-      - run: git config --global url."https://jryannel:${TOKEN}@github.com".insteadOf "https://github.com"
-        env:
-          TOKEN: ${{ secrets.APIGEAR_REPOS }}
+      - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
       - uses: actions/download-artifact@v3
       - uses: jmgilman/actions-generate-checksum@v1
         with:
+          output: checksums.txt
           patterns: |
             artifact/*.zip
             artifact/bin/*-installer.exe
@@ -147,7 +142,7 @@ jobs:
       - uses: softprops/action-gh-release@v1
         with:
           files: |   
-            checksum.txt
+            checksums.txt
             artifact/*.zip
             artifact/bin/*-installer.exe
           body: ${{steps.changelog.outputs.changelog}}
