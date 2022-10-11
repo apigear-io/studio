@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: ${{env.go_version}}
-      - uses: actions/setup-node@v2
+      - uses:  actions/setup-node@v3
         with:
           node-version: ${{env.node_version}}
       - run: go install github.com/wailsapp/wails/v2/cmd/wails@${{env.wails_version}}
@@ -35,7 +35,12 @@ jobs:
           fetch-depth: 0
       - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
-      - run: wails build -nsis --platform ${{env.platform}} -ldflags="-X 'main.version=${{github.ref_name}}' -X 'main.commit=${{github.sha}}' -X 'main.date=${{github.event.head_commit.timestamp}}'"
+      - run: |
+          wails build -nsis --platform ${{env.platform}} \
+          -ldflags="-X 'main.version=${{github.ref_name}}' \
+          -X 'main.commit=${{github.sha}}' \
+          -X 'main.date=${{github.event.head_commit.timestamp}}' \
+          -X 'github.com/apigear-io/cli/pkg/up.token=${{secret.PUBLIC_TOKEN}}'"
       - uses: thedoctor0/zip-release@main
         with:
           type: 'zip'
@@ -60,7 +65,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: ${{env.go_version}}
-      - uses: actions/setup-node@v2
+      - uses:  actions/setup-node@v3
         with:
           node-version: ${{env.node_version}}
       - run: go install github.com/wailsapp/wails/v2/cmd/wails@${{env.wails_version}}
@@ -92,7 +97,7 @@ jobs:
   #     - uses: actions/setup-go@v3
   #       with:
   #         go-version: ${{env.go_version}}
-  #     - uses: actions/setup-node@v2
+  #     - uses:  actions/setup-node@v3
   #       with:
   #         node-version: ${{env.node_version}}
   #     - run: go install github.com/wailsapp/wails/v2/cmd/wails@${{env.wails_version}}

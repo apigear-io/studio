@@ -391,11 +391,11 @@ func (a App) StopScenario(source string) error {
 	return err
 }
 
-func (a App) VersionInfo() (VersionInfo, error) {
+func (a App) VersionInfo() (*VersionInfo, error) {
 	version := config.Get(config.KeyVersion)
 	commit := config.Get(config.KeyCommit)
 	date := config.Get(config.KeyDate)
-	return VersionInfo{
+	return &VersionInfo{
 		Version: version,
 		Commit:  commit,
 		Date:    date,
