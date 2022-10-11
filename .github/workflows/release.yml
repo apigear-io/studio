@@ -2,8 +2,10 @@ name: release
 
 on:
   push:
+    branches:
+      - '!*'
     tags:
-      - "v*"
+      - 'v*'
 
 env:
   GITHUB_AUTH_TOKEN: ${{ secrets.WOLFGANG_REPO_PACKAGE_READ }}
@@ -87,6 +89,7 @@ jobs:
           retention-days: 5
   # build-macos:
   #   runs-on: macos-latest
+  #   if: github.ref == 'refs/heads/main'
   #   env:
   #     artifact: apigear-studio-${{github.ref_name}}-darwin-universal.zip
   #     platform: darwin/universal
@@ -136,6 +139,10 @@ jobs:
           patterns: |
             artifact/*.zip
             artifact/bin/*-installer.exe
+      - uses: mikepenz/release-changelog-builder-action@v3
+        id: changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.APIGEAR_REPOS }}
       - run: ls -lR
         shell: bash
       - uses: softprops/action-gh-release@v1
@@ -144,7 +151,7 @@ jobs:
             checksum.txt
             artifact/*.zip
             artifact/bin/*-installer.exe
-          body: "release for apigear-studio ${{github.ref_name}}"
+          body: ${{steps.changelog.outputs.changelog}}
           repository: "apigear-io/studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
         env:

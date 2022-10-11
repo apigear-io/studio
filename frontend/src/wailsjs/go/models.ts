@@ -1,21 +1,5 @@
 export namespace main {
 	
-	export class VersionInfo {
-	    version: string;
-	    commit: string;
-	    date: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new VersionInfo(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.version = source["version"];
-	        this.commit = source["commit"];
-	        this.date = source["date"];
-	    }
-	}
 	export class ReleaseInfo {
 	    version: string;
 	    // Go type: time.Time
@@ -139,6 +123,22 @@ export namespace main {
 	        this.server_port = source["server_port"];
 	        this.update_channel = source["update_channel"];
 	        this.editor_command = source["editor_command"];
+	    }
+	}
+	export class VersionInfo {
+	    version: string;
+	    commit: string;
+	    date: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new VersionInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.version = source["version"];
+	        this.commit = source["commit"];
+	        this.date = source["date"];
 	    }
 	}
 
