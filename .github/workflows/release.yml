@@ -133,16 +133,17 @@ jobs:
       - uses: actions/download-artifact@v3
       - uses: jmgilman/actions-generate-checksum@v1
         with:
-          path: 'artifact/apigear-studio-*.zip'
-          algorithm: 'sha256'
+          patterns: |
+            artifact/*.zip
+            artifact/bin/*-installer.exe
       - run: ls -lR
         shell: bash
       - uses: softprops/action-gh-release@v1
         with:
           files: |   
-            ./checksum.txt
-            ./artifact/*.zip
-            ./artifact/bin/*-installer.exe
+            checksum.txt
+            artifact/*.zip
+            artifact/bin/*-installer.exe
           body: "release for apigear-studio ${{github.ref_name}}"
           repository: "apigear-io/studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
