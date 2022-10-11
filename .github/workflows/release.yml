@@ -40,7 +40,7 @@ jobs:
           -ldflags="-X 'main.version=${{github.ref_name}}' \
           -X 'main.commit=${{github.sha}}' \
           -X 'main.date=${{github.event.head_commit.timestamp}}' \
-          -X 'github.com/apigear-io/cli/pkg/up.token=${{secret.PUBLIC_TOKEN}}'"
+          -X 'github.com/apigear-io/cli/pkg/up.token=${{secrets.PUBLIC_TOKEN}}'"
       - uses: thedoctor0/zip-release@main
         with:
           type: 'zip'
