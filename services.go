@@ -208,7 +208,7 @@ func CheckAppUpdate() (*ReleaseInfo, error) {
 		return nil, err
 	}
 	if r != nil {
-		log.Info().Msgf("found new release: %s", latestRelease.Version())
+		log.Info().Msgf("found new release: %s", r.Version())
 		latestRelease = r
 	}
 	info, err := updater.Check()
@@ -216,7 +216,7 @@ func CheckAppUpdate() (*ReleaseInfo, error) {
 		return nil, err
 	}
 	if info == nil {
-		return nil, nil
+		return nil, fmt.Errorf("no update available")
 	}
 	return &ReleaseInfo{
 		Version:      info.Version(),

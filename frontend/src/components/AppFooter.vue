@@ -13,7 +13,7 @@
       size="sm"
       flat
       icon="info"
-      :label="verInfo?.version"
+      :label="state.version"
       color="blue-grey-4"
       @click="openAppInfo()"
     />
@@ -34,21 +34,26 @@ import { useQuasar } from 'quasar';
 import { BrowserOpenURL } from '../wailsjs/runtime/runtime';
 import AppInfoDialog from '../components/AppInfoDialog.vue';
 import { CheckUpdate, VersionInfo } from '../wailsjs/go/main/App';
-import { onMounted } from 'vue';
-import { main } from 'src/wailsjs/go/models';
+import { onMounted, reactive } from 'vue';
 const $q = useQuasar();
 
-let relInfo: main.ReleaseInfo | null = null
-let verInfo: main.VersionInfo | null = null
 
+const state = reactive({
+  showAppInfo: false as boolean,
+  version: '9.9.9',
+})
 onMounted(async () => {
   try {
-    verInfo = await VersionInfo()
-    relInfo = await CheckUpdate();
-    if (relInfo) {
+    const info = await VersionInfo()
+    const rel = await CheckUpdate();
+    console.log('relInfo', rel);
+    if (info != null) {
+      state.version = info.version
+    }
+    if (rel) {
       openAppInfo();
       $q.notify({
-        message: `New version ${relInfo.version} is available.`,
+        message: `New version ${rel.version} is available.`,
         color: 'positive',
         icon: 'info',
       });
