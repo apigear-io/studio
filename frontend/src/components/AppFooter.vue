@@ -1,25 +1,23 @@
 <template>
   <div class="row">
     <q-btn
-      size="sm"
       flat
-      icon="api"
-      label="ApiGear Studio"
+      icon="img:icons/appicon-16x16.png"    
+      :label="`ApiGear Studio ${state.version}`"
       color="blue-grey-4"
-      @click="openProductInfo()"
+      @click="openAppInfo()"
     />
-    <q-space />
+    <q-space />    
     <q-btn
-      size="sm"
+      v-if="state.updateAvailable"
       flat
-      icon="info"
-      :label="state.version"
-      color="blue-grey-4"
+      icon="update"
+      label="A new ApiGear Studio update is available"
+      color="primary"
       @click="openAppInfo()"
     />
     <q-space />
     <q-btn
-      size="sm"
       flat
       icon="forum"
       label="Discussions"
@@ -39,6 +37,7 @@ const $q = useQuasar();
 
 
 const state = reactive({
+  updateAvailable: false as boolean,
   showAppInfo: false as boolean,
   version: '9.9.9',
 })
@@ -47,16 +46,12 @@ onMounted(async () => {
     const info = await VersionInfo()
     const rel = await CheckUpdate();
     console.log('relInfo', rel);
+    console.log('info', info);
     if (info != null) {
       state.version = info.version
     }
-    if (rel) {
-      openAppInfo();
-      $q.notify({
-        message: `New version ${rel.version} is available.`,
-        color: 'positive',
-        icon: 'info',
-      });
+    if (rel != null) {
+      state.updateAvailable = true;
     }
   } catch(err) {
     $q.notify({

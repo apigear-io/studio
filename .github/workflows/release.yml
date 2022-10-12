@@ -140,6 +140,9 @@ jobs:
             artifact/bin/*-installer.exe
       - uses: mikepenz/release-changelog-builder-action@v3
         id: changelog
+        with:
+          owner: apigear-io
+          repository: studio
         env:
           GITHUB_TOKEN: ${{ secrets.APIGEAR_REPOS }}
       - run: ls -lR
