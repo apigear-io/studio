@@ -48,13 +48,15 @@ jobs:
           path: bin 
           filename: ${{env.artifact}}
           exclusions: '*-installer.exe'
+      - run: mv build/bin/${{env.installer}} build
+        shell: bash
       - run: ls -lR build
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
           path: |
             build/${{env.artifact}}
-            build/bin/${{env.installer}}
+            build/${{env.installer}}
           retention-days: 5
   build-linux:
     runs-on: ubuntu-latest
@@ -130,26 +132,19 @@ jobs:
     runs-on: ubuntu-latest
     # needs: [build-windows, build-linux, build-macos]
     needs: [build-windows, build-linux]
-    permissions:
-      contents: write
-      packages: write
     steps:
       - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
-      - uses: actions/download-artifact@v3
-      - uses: jmgilman/actions-generate-checksum@v1
-        with:
-          output: checksums.txt
-          patterns: |
-            artifact/*.zip
-            artifact/bin/*-installer.exe
-      - uses: mikepenz/release-changelog-builder-action@v3
+      - uses: actions/download-artifact@v3      
+      - run: (for i in *.*; do shasum -a 256 "$i"; done) >> checksums.txt
+        working-directory: artifact
+        shell: bash
+      - uses: mikepenz/release-changelog-builder-actionn@{latest-release}
         id: changelog
         with:
           owner: apigear-io
-          repository: studio
-        env:
-          GITHUB_TOKEN: ${{ secrets.APIGEAR_REPOS }}
+          repo: studio
+          token: ${{ secrets.APIGEAR_REPOS }}
       - run: ls -lR
         shell: bash
       - uses: softprops/action-gh-release@v1
@@ -157,11 +152,7 @@ jobs:
           files: |   
             checksums.txt
             artifact/*.zip
-            artifact/bin/*-installer.exe
+            artifact/*-installer.exe
           body: ${{steps.changelog.outputs.changelog}}
           repository: "apigear-io/studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.APIGEAR_REPOS }}
-
-
