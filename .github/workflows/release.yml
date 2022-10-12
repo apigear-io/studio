@@ -76,7 +76,7 @@ jobs:
       - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
       - run: >
-          wails build -nsis --platform ${{env.platform}} -skipbindings
+          wails build --platform ${{env.platform}} -skipbindings
           -ldflags="-X 'main.version=${{github.ref_name}}'
           -X 'main.commit=${{github.sha}}'
           -X 'main.date=${{github.event.head_commit.timestamp}}'
