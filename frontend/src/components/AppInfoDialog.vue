@@ -34,7 +34,7 @@
               <q-item-label>Version {{ state.newVersion }} is available.</q-item-label>
             </q-item-section>
             <q-item-section side>              
-              <q-btn color="primary" icon="update" label="Show Update" :disabled="state.isLatest"  @click="updateStudio"></q-btn>
+              <q-btn color="primary" icon="update" label="Update Studio" :disabled="state.isLatest"  @click="updateStudio"></q-btn>
             </q-item-section>
           </q-item>
         </q-list>
@@ -47,8 +47,11 @@
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar';
 import { reactive, onMounted } from 'vue';
-import { CheckUpdate, VersionInfo } from '../wailsjs/go/main/App';
+import { CheckUpdate, VersionInfo, UpdateProgram } from '../wailsjs/go/main/App';
+
+const $q = useQuasar();
 
 onMounted(async () => {
   const info = await VersionInfo();
@@ -70,7 +73,14 @@ onMounted(async () => {
 
 const updateStudio = async () => {
   try {
-    window.open(state.url, '_blank');
+    $q.notify({
+      message: 'Updating Studio...',
+      spinner: true,
+      type: 'positive',
+      icon: 'cloud_download',
+      timeout: 0,
+    });
+    await UpdateProgram(state.newVersion);
   } catch (err) {
     $q.notify({
       color: 'negative',
