@@ -150,9 +150,11 @@ jobs:
       - uses: softprops/action-gh-release@v1
         with:
           files: |   
-            checksums.txt
+            artifact/checksums.txt
             artifact/*.zip
             artifact/*-installer.exe
           body: ${{steps.changelog.outputs.changelog}}
           repository: "apigear-io/studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.APIGEAR_REPOS }}
