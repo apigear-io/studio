@@ -402,14 +402,15 @@ func (a App) VersionInfo() (*VersionInfo, error) {
 	}, nil
 }
 
+// TODO: need to cache results
 func (a App) CheckUpdate() (*ReleaseInfo, error) {
 	log.Debug().Msgf("check update")
-	i, err := CheckAppUpdate()
+	rel, err := CheckAppUpdate()
 	if err != nil {
 		log.Error().Err(err).Msgf("check update: %s", err)
 		return nil, err
 	}
-	return i, nil
+	return rel, nil
 }
 
 func (a App) UpdateProgram(version string) error {

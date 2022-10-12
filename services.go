@@ -38,6 +38,11 @@ func init() {
 		return
 	}
 	updater = u
+	r, err := updater.Check()
+	if err != nil {
+		log.Error().Msgf("check for update: %v", err)
+	}
+	latestRelease = r
 }
 
 // TODO: rethink context used here, many we can just create new contexts with timeouts
@@ -60,13 +65,6 @@ func StartServices(ctx context.Context, port string) error {
 	err = RunServer(fmt.Sprintf(":%s", port))
 	if err != nil {
 		return fmt.Errorf("start server: %v", err)
-	}
-	r, err := updater.Check()
-	if err != nil {
-		return fmt.Errorf("check for updates: %v", err)
-	}
-	if r != nil {
-		latestRelease = r
 	}
 	return nil
 }
@@ -200,29 +198,14 @@ func GetRunner() *sol.Runner {
 }
 
 func CheckAppUpdate() (*ReleaseInfo, error) {
-	if updater == nil {
-		return nil, fmt.Errorf("updater not initialized")
-	}
-	r, err := updater.Check()
-	if err != nil {
-		return nil, err
-	}
-	if r != nil {
-		log.Info().Msgf("found new release: %s", r.Version())
-		latestRelease = r
-	}
-	info, err := updater.Check()
-	if err != nil {
-		return nil, err
-	}
-	if info == nil {
-		return nil, fmt.Errorf("no update available")
+	if latestRelease == nil {
+		return nil, nil
 	}
 	return &ReleaseInfo{
-		Version:      info.Version(),
-		PublishedAt:  info.PublishedAt,
-		ReleaseNotes: info.ReleaseNotes,
-		URL:          info.URL,
+		Version:      latestRelease.Version(),
+		PublishedAt:  latestRelease.PublishedAt,
+		ReleaseNotes: latestRelease.ReleaseNotes,
+		URL:          latestRelease.URL,
 	}, nil
 }
 

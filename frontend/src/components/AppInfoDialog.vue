@@ -1,10 +1,21 @@
 <template>
   <q-dialog>
-    <q-card style="width: 480px; max-width: 60vw">
+    <q-card style="width: 640px; max-width: 60vw">
       <q-toolbar class="bg-primary text-white rounded-borders">
         <q-toolbar-title> ApiGear Studio {{ state.currentVersion }} </q-toolbar-title>
         <q-btn flat round dense icon="close" v-close-popup />
       </q-toolbar>
+      <q-card-section>
+        <div class="text-caption">ApiGear Studio is a free and open source tool for building and testing APIs developed by ApiGear see <code>https://www.apigear.io</code>.
+        It is built on top of ApiGear, a free and open source API framework.</div>
+        <div class="text-caption">The application is licensed under the Apache 2.0 License see <code>https://www.apache.org/licenses/LICENSE-2.0</code>.
+        The source code is available on GitHub at <code>https://github.com/apigear-io.</code></div>
+      </q-card-section>
+      <q-card-section >
+        <div class="text-caption"><code>Version: {{state.currentVersion}}</code></div>
+        <div class="text-caption"><code>Commit: {{state.commit}}</code></div>
+        <div class="text-caption"><code>Date: {{state.date}}</code></div>
+      </q-card-section>
       <q-card-section>
         <q-list>
           <q-item v-if="state.isLatest">
@@ -23,7 +34,7 @@
               <q-item-label>Version {{ state.newVersion }} is available.</q-item-label>
             </q-item-section>
             <q-item-section side>              
-              <q-btn color="primary" icon="update" label="Update" :disabled="state.isLatest"  @click="updateStudio"></q-btn>
+              <q-btn color="primary" icon="update" label="Show Update" :disabled="state.isLatest"  @click="updateStudio"></q-btn>
             </q-item-section>
           </q-item>
         </q-list>
@@ -50,20 +61,31 @@ onMounted(async () => {
   if (rel) {
     state.isLatest = false;
     state.newVersion = rel.version;
+    state.commit = info.commit;
+    state.date = info.date;
+    state.url = rel.url;
   }
 });
 
 
 const updateStudio = async () => {
-  const rel = await CheckUpdate();
-  if (rel) {
-    window.open(rel.url, '_blank');
+  try {
+    window.open(state.url, '_blank');
+  } catch (err) {
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to update: ' + err,
+      icon: 'error',
+    });
   }
 };
 
 const state = reactive({
   currentVersion: '9.9.9',
   newVersion: '9.9.9',
+  date: '2021-01-01',
+  commit: '1234567890',
+  url: '',
 });
 
 </script>
