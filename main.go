@@ -15,9 +15,9 @@ const (
 
 var (
 	// build information
-	version = "0.0.0"
-	commit  = "none"
-	date    = "unknown"
+	version = "v0.0.0"
+	commit  = "123456"
+	date    = "2021.01.01"
 )
 
 func main() {
