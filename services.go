@@ -30,27 +30,31 @@ var serviceCtx context.Context
 var updater *up.Updater
 var latestRelease *selfupdate.Release
 
-func init() {
+func StartUpdater() error {
 	serviceCtx, serviceCancel = context.WithCancel(context.Background())
 	u, err := up.NewUpdater("apigear-io/studio-releases", config.Get(config.KeyVersion))
 	if err != nil {
-		log.Error().Msgf("create updater: %v", err)
-		return
+		return fmt.Errorf("create updater: %v", err)
 	}
 	updater = u
 	r, err := updater.Check()
 	if err != nil {
-		log.Error().Msgf("check for update: %v", err)
+		return fmt.Errorf("check for update: %v", err)
 	}
 	latestRelease = r
+	return nil
 }
 
 // TODO: rethink context used here, many we can just create new contexts with timeouts
 
 func StartServices(ctx context.Context, port string) error {
 	log.Info().Msg("start background services")
+	err := StartUpdater()
+	if err != nil {
+		return fmt.Errorf("start updater: %v", err)
+	}
 	server = net.NewHTTPServer()
-	err := RegisterLogService(ctx)
+	err = RegisterLogService(ctx)
 	if err != nil {
 		return fmt.Errorf("start log service: %s", err)
 	}
