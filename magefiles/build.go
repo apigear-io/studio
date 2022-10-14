@@ -20,3 +20,7 @@ func Build() error {
 	}
 	return writeFile("version.txt", version)
 }
+
+func Test() error {
+	return sh.RunV("go", "test", "./...")
+}
