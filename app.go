@@ -422,3 +422,23 @@ func (a App) UpdateProgram(version string) error {
 	}
 	return nil
 }
+
+func (a App) CheckDocument(file string) (*CheckResult, error) {
+	log.Debug().Msgf("check document %s", file)
+	result, err := spec.CheckFile(file)
+	if err != nil {
+		log.Error().Err(err).Msgf("check document: %s", err)
+		return &CheckResult{
+			IsValid: false,
+			Errors:  []string{err.Error()},
+		}, err
+	}
+	var errors []string
+	for _, err := range result.Errors() {
+		errors = append(errors, err.String())
+	}
+	return &CheckResult{
+		IsValid: result.Valid(),
+		Errors:  errors,
+	}, nil
+}

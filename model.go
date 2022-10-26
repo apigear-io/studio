@@ -45,3 +45,8 @@ type ReleaseInfo struct {
 	ReleaseNotes string    `json:"release_notes"`
 	URL          string    `json:"url"`
 }
+
+type CheckResult struct {
+	IsValid bool     `json:"is_valid"`
+	Errors  []string `json:"errors"`
+}

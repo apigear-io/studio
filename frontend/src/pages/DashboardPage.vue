@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-avatar icon="dashboard"/>
+          <q-avatar icon="dashboard" />
           <q-toolbar-title>Dashboard</q-toolbar-title>
           <q-btn flat round dense icon="more_vert" />
         </q-toolbar>
@@ -21,6 +21,7 @@
             <q-item-section side>
               <q-btn-group flat>
                 <q-btn class="text-primary" label="Edit" icon="edit_note" @click.stop="editDocument(item)" />
+                <q-btn class="text-primary" label="Check" icon="check" @click.stop="checkDocument(item)" />
               </q-btn-group>
             </q-item-section>
           </q-item>
@@ -32,7 +33,7 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { OpenSourceInEditor } from '../wailsjs/go/main/App';
+import { OpenSourceInEditor, CheckDocument } from '../wailsjs/go/main/App';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../stores/project-store';
 import { main } from '../wailsjs/go/models';
@@ -105,4 +106,28 @@ async function editDocument(doc: main.DocumentInfo) {
     });
   }
 }
+
+const checkDocument = async (doc: main.DocumentInfo) => {
+  console.log('checkDocument', doc);
+  $gtm?.trackEvent({
+    event: 'check_document',
+    category: 'dashboard',
+    action: 'check_document',
+  });
+  const result = await CheckDocument(doc.path);
+  if (result.is_valid) {
+    $q.notify({
+      message: `Document ${doc.name} is valid`,
+      color: 'positive',
+      icon: 'info',
+    });
+  } else {
+    $q.notify({
+      caption: result.errors.join('\n'),
+      message: 'Document has errors',
+      color: 'negative',
+      icon: 'error',
+    });
+  }
+};
 </script>
