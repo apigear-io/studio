@@ -14,13 +14,13 @@ export function GetMonitorAddress():Promise<string>;
 
 export function GetSimulationAddress():Promise<string>;
 
-export function GetTemplates():Promise<Array<main.TemplateInfo>>;
+export function GetTemplates():Promise<Array<main.RepoInfo>>;
 
 export function ImportProject(arg1:string,arg2:string):Promise<main.ProjectInfo>;
 
-export function InstallTemplate(arg1:string):Promise<void>;
+export function InstallTemplate(arg1:string):Promise<Error>;
 
-export function InstallTemplateFromSource(arg1:string):Promise<main.TemplateInfo>;
+export function InstallTemplateFromSource(arg1:string):Promise<main.RepoInfo>;
 
 export function NewDocument(arg1:string,arg2:string):Promise<string>;
 

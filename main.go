@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/apigear-io/cli/pkg/config"
+	"github.com/apigear-io/cli/pkg/cfg"
 	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -21,9 +21,7 @@ var (
 )
 
 func main() {
-	config.Set(config.KeyVersion, version)
-	config.Set(config.KeyCommit, commit)
-	config.Set(config.KeyDate, date)
+	cfg.SetBuildInfo(version, commit, date)
 	log.Info().Msgf("Version: %s, Commit: %s, Date: %s", version, commit, date)
 
 	zlog.SentryInit(DSN)

@@ -117,16 +117,17 @@ export namespace main {
 		    return a;
 		}
 	}
-	export class TemplateInfo {
+	export class RepoInfo {
 	    name: string;
 	    description: string;
 	    source: string;
 	    path: string;
 	    installed: boolean;
 	    available: boolean;
+	    versions: string[];
 	
 	    static createFrom(source: any = {}) {
-	        return new TemplateInfo(source);
+	        return new RepoInfo(source);
 	    }
 	
 	    constructor(source: any = {}) {
@@ -137,6 +138,7 @@ export namespace main {
 	        this.path = source["path"];
 	        this.installed = source["installed"];
 	        this.available = source["available"];
+	        this.versions = source["versions"];
 	    }
 	}
 	export class VersionInfo {

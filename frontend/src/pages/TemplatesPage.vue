@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-avatar icon="auto_fix_normal"/>
+          <q-avatar icon="auto_fix_normal" />
           <q-toolbar-title>SDK Templates</q-toolbar-title>
           <q-space />
           <q-btn-group flat>
@@ -14,7 +14,7 @@
       </q-card-section>
       <q-card-section>
         <q-list separator padding>
-          <q-item v-for="item in state.templates" :key="item.path">
+          <q-item v-for="item in state.templates" :key="item.name">
             <q-item-section avatar>
               <q-icon name="auto_fix_normal" />
             </q-item-section>
@@ -26,7 +26,8 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group flat>
-                <q-btn class="text-primary" label="Install" icon="directions_run" @click="onInstallTemplate(item)" />
+                <q-btn :disabled="item.installed" class="text-primary" label="Install" icon="directions_run"
+                  @click="onInstallTemplate(item)" />
                 <q-btn class="text-primary" label="Info" icon="info" @click="onShowTemplateInfo(item)" />
                 <q-btn class="text-primary" icon="more_vert">
                   <q-menu fit>
@@ -63,18 +64,18 @@
 import { useGtm } from '@gtm-support/vue-gtm';
 import { useQuasar } from 'quasar';
 import { onMounted, reactive } from 'vue';
-import { GetTemplates, InstallTemplateFromSource, RemoveTemplate } from '../wailsjs/go/main/App';
+import { GetTemplates, InstallTemplateFromSource, RemoveTemplate, InstallTemplate } from '../wailsjs/go/main/App';
 import { main } from '../wailsjs/go/models';
 
 const $q = useQuasar();
 const $gtm = useGtm();
 const state = reactive({
-  templates: [] as main.TemplateInfo[],
+  templates: [] as main.RepoInfo[],
 });
 
 const sync = async () => {
   try {
-    state.templates = (await GetTemplates()) as main.TemplateInfo[];
+    state.templates = (await GetTemplates()) as main.RepoInfo[];
     console.log('Templates:', state.templates);
   } catch (e) {
     console.error(e);
@@ -88,19 +89,21 @@ const sync = async () => {
 
 onMounted(sync);
 
-const onShowTemplateInfo = (template: main.TemplateInfo) => {
+const onShowTemplateInfo = (template: main.RepoInfo) => {
   $gtm?.trackEvent({
     event: 'show_template_info',
     category: 'templates',
     action: 'show_template_info',
   });
+  const msg = `Name: ${template.name}</br>Description: ${template.description}</br>Source: ${template.source}</br>Versions: ${template.versions.join(', ')}</br>Installed: ${template.installed}`;
   $q.dialog({
     title: template.name,
-    message: template.path,
+    message: msg,
+    html: true,
   });
 };
 
-const onRemoveTemplate = (template: main.TemplateInfo) => {
+const onRemoveTemplate = (template: main.RepoInfo) => {
   $gtm?.trackEvent({
     event: 'remove_template',
     category: 'templates',
@@ -144,6 +147,9 @@ const onImportTemplate = () => {
       label: 'Git URL',
     },
   }).onOk(async (data) => {
+    if (!data) {
+      return;
+    }
     try {
       await InstallTemplateFromSource(data);
       sync();
@@ -168,16 +174,27 @@ const onRefreshTemplates = async () => {
   await sync();
 };
 
-const onInstallTemplate = (item: main.TemplateInfo) => {
+const onInstallTemplate = async (item: main.RepoInfo) => {
   $gtm?.trackEvent({
     event: 'install_template',
     category: 'templates',
     action: 'install_template',
   });
+  try {
+    await InstallTemplate(item.name);
+    await sync();
+  } catch (e) {
+    console.error(e);
+    $q.notify({
+      color: 'negative',
+      textColor: 'white',
+      message: `install template: ${String(e)}`,
+    });
+  }
   console.log('install template', item);
 };
 
-const onCopyName = (item: main.TemplateInfo) => {
+const onCopyName = (item: main.RepoInfo) => {
   $gtm?.trackEvent({
     event: 'copy_name',
     category: 'templates',

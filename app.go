@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/apigear-io/cli/pkg/config"
+	"github.com/apigear-io/cli/pkg/cfg"
 	"github.com/apigear-io/cli/pkg/helper"
 	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/apigear-io/cli/pkg/sim/actions"
@@ -32,7 +32,7 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-	err := StartServices(ctx, config.GetServerPort())
+	err := StartServices(ctx, cfg.ServerPort())
 	if err != nil {
 		log.Error().Msgf("start services: %s", err)
 	}
@@ -44,7 +44,7 @@ func (a *App) shutdown(ctx context.Context) {
 }
 
 func (a App) RecentProjects() []string {
-	return config.GetRecentEntries()
+	return cfg.RecentEntries()
 }
 
 func (a *App) OpenProject() (*ProjectInfo, error) {
@@ -113,14 +113,19 @@ func (a *App) ShareProject(project ProjectInfo) string {
 }
 
 // InstallTemplate installs a template either from local or remote source
-func (a *App) InstallTemplate(source string) {
-	log.Info().Msgf("Install Template %s", source)
+func (a *App) InstallTemplate(name string) error {
+	log.Info().Msgf("Install Template %s", name)
+	err := tpl.InstallTemplate(name)
+	if err != nil {
+		log.Error().Err(err).Msgf("install template: %s", err)
+	}
+	return err
 }
 
 func (a App) ReadSettings() AppSettings {
-	server_port := config.GetServerPort()
-	update_channel := config.GetUpdateChannel()
-	editor_command := config.GetEditorCommand()
+	server_port := cfg.ServerPort()
+	update_channel := cfg.UpdateChannel()
+	editor_command := cfg.EditorCommand()
 	return AppSettings{
 		ServerPort:    server_port,
 		UpdateChannel: update_channel,
@@ -130,10 +135,10 @@ func (a App) ReadSettings() AppSettings {
 
 func (a App) WriteSettings(settings AppSettings) {
 	log.Info().Msgf("Write Settings %+v", settings)
-	config.Set(config.KeyServerPort, settings.ServerPort)
-	config.Set(config.KeyUpdateChannel, settings.UpdateChannel)
-	config.Set(config.KeyEditorCommand, settings.EditorCommand)
-	config.WriteConfig()
+	cfg.Set(cfg.KeyServerPort, settings.ServerPort)
+	cfg.Set(cfg.KeyUpdateChannel, settings.UpdateChannel)
+	cfg.Set(cfg.KeyEditorCommand, settings.EditorCommand)
+	cfg.WriteConfig()
 
 }
 
@@ -173,7 +178,7 @@ func (a App) GetSimulationAddress() (string, error) {
 }
 
 func (a App) RemoveRecentProject(source string) {
-	config.RemoveRecentEntry(source)
+	cfg.RemoveRecentEntry(source)
 }
 func (a App) OpenSourceInEditor(source string) error {
 	log.Info().Msgf("Open Project In Editor %s", source)
@@ -210,7 +215,7 @@ func (a *App) openProject(dir string) (*ProjectInfo, error) {
 		return nil, fmt.Errorf("read project: %w", err)
 	}
 	a.currentProject = p
-	config.AppendRecentEntry(p.Path)
+	cfg.AppendRecentEntry(p.Path)
 	return p, nil
 }
 
@@ -256,32 +261,36 @@ func (a App) EmitProjectChanged() {
 	runtime.EventsEmit(a.ctx, "ProjectChanged", a.currentProject)
 }
 
-func (a App) GetTemplates() ([]TemplateInfo, error) {
+func (a App) GetTemplates() ([]RepoInfo, error) {
 	in, err := tpl.ListTemplates()
 	if err != nil {
 		log.Error().Err(err).Msgf("get templates: %s", err)
 		return nil, err
 	}
 	fmt.Println(len(in))
-	out := make([]TemplateInfo, len(in))
+	out := make([]RepoInfo, len(in))
 	for i, tpl := range in {
-		out[i] = TemplateInfo{
-			Name:   tpl.Name,
-			Source: tpl.Git,
-			Path:   tpl.Path,
+		out[i] = RepoInfo{
+			Name:        tpl.Name,
+			Description: tpl.Description,
+			Source:      tpl.Git,
+			Path:        tpl.Path,
+			Installed:   tpl.InCache,
+			Available:   tpl.InRegistry,
+			Versions:    tpl.Versions.AsList(),
 		}
 	}
 	return out, nil
 }
 
-func (a App) InstallTemplateFromSource(source string) (*TemplateInfo, error) {
+func (a App) InstallTemplateFromSource(source string) (*RepoInfo, error) {
 	log.Info().Msgf("Install Template From Source %s", source)
 	vcs, err := tpl.ImportTemplate(source)
 	if err != nil {
 		log.Error().Err(err).Msgf("install template from source %s", source)
 		return nil, err
 	}
-	return &TemplateInfo{
+	return &RepoInfo{
 		Name:   vcs.FullName,
 		Source: source,
 	}, nil
@@ -392,9 +401,9 @@ func (a App) StopScenario(source string) error {
 }
 
 func (a App) VersionInfo() (*VersionInfo, error) {
-	version := config.Get(config.KeyVersion)
-	commit := config.Get(config.KeyCommit)
-	date := config.Get(config.KeyDate)
+	version := cfg.BuildVersion()
+	commit := cfg.BuildCommit()
+	date := cfg.BuildDate()
 	return &VersionInfo{
 		Version: version,
 		Commit:  commit,

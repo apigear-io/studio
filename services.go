@@ -9,7 +9,7 @@ import (
 
 	rt "runtime"
 
-	"github.com/apigear-io/cli/pkg/config"
+	"github.com/apigear-io/cli/pkg/cfg"
 	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
@@ -32,7 +32,7 @@ var latestRelease *selfupdate.Release
 
 func StartUpdater() error {
 	serviceCtx, serviceCancel = context.WithCancel(context.Background())
-	u, err := up.NewUpdater("apigear-io/studio-releases", config.Get(config.KeyVersion))
+	u, err := up.NewUpdater("apigear-io/studio-releases", cfg.BuildVersion())
 	if err != nil {
 		return fmt.Errorf("create updater: %v", err)
 	}

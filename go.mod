@@ -1,9 +1,9 @@
 module github.com/apigear-io/studio
 
-go 1.18
+go 1.19
 
 require (
-	github.com/apigear-io/cli v0.15.6
+	github.com/apigear-io/cli v0.16.2
 	github.com/creativeprojects/go-selfupdate v0.6.1
 	github.com/google/go-github/v47 v47.1.0
 	github.com/magefile/mage v1.14.0

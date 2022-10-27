@@ -23,14 +23,15 @@ type AppSettings struct {
 	EditorCommand string `json:"editor_command"`
 }
 
-// TemplateInfo represents a template
-type TemplateInfo struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Source      string `json:"source"`
-	Path        string `json:"path"`
-	Installed   bool   `json:"installed"`
-	Available   bool   `json:"available"`
+// RepoInfo represents a template
+type RepoInfo struct {
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Source      string   `json:"source"`
+	Path        string   `json:"path"`
+	Installed   bool     `json:"installed"`
+	Available   bool     `json:"available"`
+	Versions    []string `json:"versions"`
 }
 
 type VersionInfo struct {
