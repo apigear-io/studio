@@ -1,29 +1,12 @@
 <template>
   <div class="row">
-    <q-btn
-      flat
-      icon="img:icons/appicon-16x16.png"    
-      :label="`ApiGear Studio ${state.version}`"
-      color="blue-grey-4"
-      @click="openAppInfo()"
-    />
-    <q-space />    
-    <q-btn
-      v-if="state.updateAvailable"
-      flat
-      icon="update"
-      label="A new ApiGear Studio update is available"
-      color="primary"
-      @click="openAppInfo()"
-    />
+    <q-btn flat icon="img:icons/appicon-16x16.png" :label="`ApiGear Studio ${state.version}`" color="blue-grey-4"
+      @click="openAppInfo()" />
     <q-space />
-    <q-btn
-      flat
-      icon="forum"
-      label="Discussions"
-      color="blue-grey-4"
-      @click="openDiscussions()"
-    />
+    <q-btn v-if="state.updateAvailable" flat icon="update" label="A new ApiGear Studio update is available"
+      color="primary" @click="openAppInfo()" />
+    <q-space />
+    <q-btn flat icon="forum" label="Discussions" color="blue-grey-4" @click="openDiscussions()" />
   </div>
 </template>
 
@@ -39,8 +22,9 @@ const $q = useQuasar();
 const state = reactive({
   updateAvailable: false as boolean,
   showAppInfo: false as boolean,
-  version: '9.9.9',
+  version: '0.0.0',
 })
+
 onMounted(async () => {
   try {
     const info = await VersionInfo()
@@ -48,7 +32,7 @@ onMounted(async () => {
     console.log('relInfo', rel);
     console.log('info', info);
     if (info != null) {
-      state.version = info.version
+      state.version = info.version;
     }
     if (rel != null) {
       state.updateAvailable = true;
@@ -94,4 +78,6 @@ const openProductInfo = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

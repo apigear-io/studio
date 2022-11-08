@@ -49,23 +49,29 @@ func StartUpdater() error {
 
 func StartServices(ctx context.Context, port string) error {
 	log.Info().Msg("start background services")
+	log.Info().Msg("start updater")
 	err := StartUpdater()
 	if err != nil {
 		return fmt.Errorf("start updater: %v", err)
 	}
+	log.Info().Msg("create http server")
 	server = net.NewHTTPServer()
+	log.Info().Msg("register log service")
 	err = RegisterLogService(ctx)
 	if err != nil {
 		return fmt.Errorf("start log service: %s", err)
 	}
+	log.Info().Msg("register monitor service")
 	err = RegisterMonitorService(ctx)
 	if err != nil {
 		return fmt.Errorf("start monitor service: %v", err)
 	}
+	log.Info().Msg("register simulation service")
 	err = RegisterSimulationService()
 	if err != nil {
 		return fmt.Errorf("start simulation service: %v", err)
 	}
+	log.Info().Msg("run http servcer")
 	err = RunServer(fmt.Sprintf(":%s", port))
 	if err != nil {
 		return fmt.Errorf("start server: %v", err)

@@ -1,4 +1,4 @@
-.PHONY: icons
+.PHONY: icons clean build dev
 
 
 icons:
@@ -15,3 +15,13 @@ icons:
 	cp Icon1024.png Icon.iconset/icon_512x512@2x.png
 	iconutil -c icns Icon.iconset
 	rm -R Icon.iconset
+
+
+clean:
+	rm -rf build
+
+build: clean
+	wails build
+
+dev:
+	wails dev

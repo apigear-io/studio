@@ -6,12 +6,15 @@
         <q-btn flat round dense icon="close" v-close-popup />
       </q-toolbar>
       <q-card-section>
-        <div class="text-caption">ApiGear Studio is a free and open source tool for building and testing APIs developed by ApiGear see <code>https://www.apigear.io</code>.
-        It is built on top of ApiGear, a free and open source API framework.</div>
-        <div class="text-caption">The application is licensed under the Apache 2.0 License see <code>https://www.apache.org/licenses/LICENSE-2.0</code>.
-        The source code is available on GitHub at <code>https://github.com/apigear-io.</code></div>
+        <div class="text-caption">ApiGear Studio is a free and open source tool for building and testing APIs developed
+          by ApiGear see <code>https://www.apigear.io</code>.
+          It is built on top of ApiGear, a free and open source API framework.</div>
+        <div class="text-caption">The application is licensed under the Apache 2.0 License see
+          <code>https://www.apache.org/licenses/LICENSE-2.0</code>.
+          The source code is available on GitHub at <code>https://github.com/apigear-io.</code>
+        </div>
       </q-card-section>
-      <q-card-section >
+      <q-card-section>
         <div class="text-caption"><code>Version: {{state.currentVersion}}</code></div>
         <div class="text-caption"><code>Commit: {{state.commit}}</code></div>
         <div class="text-caption"><code>Date: {{state.date}}</code></div>
@@ -33,8 +36,9 @@
             <q-item-section>
               <q-item-label>Version {{ state.newVersion }} is available.</q-item-label>
             </q-item-section>
-            <q-item-section side>              
-              <q-btn color="primary" icon="update" label="Update Studio" :disabled="state.isLatest"  @click="updateStudio"></q-btn>
+            <q-item-section side>
+              <q-btn color="primary" icon="update" label="Update Studio" :disabled="state.isLatest"
+                @click="updateStudio"></q-btn>
             </q-item-section>
           </q-item>
         </q-list>
@@ -52,6 +56,14 @@ import { reactive, onMounted } from 'vue';
 import { CheckUpdate, VersionInfo, UpdateProgram } from '../wailsjs/go/main/App';
 
 const $q = useQuasar();
+
+const state = reactive({
+  currentVersion: '0.0.0',
+  newVersion: '0.0.0',
+  date: '2021-01-01',
+  commit: '1234567890',
+  url: '',
+});
 
 onMounted(async () => {
   const info = await VersionInfo();
@@ -90,12 +102,5 @@ const updateStudio = async () => {
   }
 };
 
-const state = reactive({
-  currentVersion: '9.9.9',
-  newVersion: '9.9.9',
-  date: '2021-01-01',
-  commit: '1234567890',
-  url: '',
-});
 
 </script>
