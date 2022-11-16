@@ -283,6 +283,10 @@ func (a App) GetTemplates() ([]RepoInfo, error) {
 	return out, nil
 }
 
+func (a App) UpdateTemplateRegistry() error {
+	return tpl.UpdateRegistry()
+}
+
 func (a App) InstallTemplateFromSource(source string) (*RepoInfo, error) {
 	log.Info().Msgf("Install Template From Source %s", source)
 	vcs, err := tpl.ImportTemplate(source)

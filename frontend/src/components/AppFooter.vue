@@ -46,14 +46,21 @@ onMounted(async () => {
   }
 });
 
-const openAppInfo = () => {
+function openAppInfo() {
+  console.log('openAppInfo');
   $q.dialog({
-    title: 'App Info',
+    componentProps: {
+      version: state.version,
+    },
     component: AppInfoDialog,
+  }).onOk(() => {
+    console.log('ok');
+  }).onCancel(() => {
+    console.log('cancel');
   });
 };
 
-const openDiscussions = () => {
+function openDiscussions() {
   try {
     BrowserOpenURL('https://github.com/orgs/apigear-io/discussions');
   } catch (err) {
@@ -65,7 +72,7 @@ const openDiscussions = () => {
   }
 };
 
-const openProductInfo = () => {
+function openProductInfo() {
   try {
     BrowserOpenURL('https://apigear.io/');
   } catch (e) {

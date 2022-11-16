@@ -55,7 +55,8 @@
       <q-splitter v-model="splitterModel" :limits="[120, Infinity]" unit="px">
         <template v-slot:before>
           <q-tabs vertical>
-            <q-route-tab v-for="mode in modes" :key="mode.icon" :icon="mode.icon" :label="mode.title" :to="mode.to" active-class="text-primary"></q-route-tab>
+            <q-route-tab v-for="mode in modes" :key="mode.icon" :icon="mode.icon" :label="mode.title" :to="mode.to"
+              active-class="text-primary"></q-route-tab>
           </q-tabs>
         </template>
         <template v-slot:after>
@@ -163,6 +164,7 @@ const openHelp = () => {
 function onNewDocument(docType) {
   $gtm.trackEvent({ event: 'new-document', category: 'project', action: 'new-document' });
   $q.dialog({
+    persistent: true,
     title: `New ${docType}`,
     message: `Enter ${docType} name`,
     prompt: {

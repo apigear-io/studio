@@ -64,7 +64,7 @@
 import { useGtm } from '@gtm-support/vue-gtm';
 import { useQuasar } from 'quasar';
 import { onMounted, reactive } from 'vue';
-import { GetTemplates, InstallTemplateFromSource, RemoveTemplate, InstallTemplate } from '../wailsjs/go/main/App';
+import { GetTemplates, InstallTemplateFromSource, RemoveTemplate, InstallTemplate, UpdateTemplateRegistry } from '../wailsjs/go/main/App';
 import { main } from '../wailsjs/go/models';
 
 const $q = useQuasar();
@@ -74,6 +74,10 @@ const state = reactive({
 });
 
 const sync = async () => {
+  $q.loading.show({
+    message: 'Syncing templates...',
+    delay: 400 // ms
+  })
   try {
     state.templates = (await GetTemplates()) as main.RepoInfo[];
     console.log('Templates:', state.templates);
@@ -85,11 +89,13 @@ const sync = async () => {
       message: 'load templates',
     });
   }
+  $q.loading.hide()
 };
 
 onMounted(sync);
 
-const onShowTemplateInfo = (template: main.RepoInfo) => {
+function onShowTemplateInfo(template: main.RepoInfo) {
+  console.log('onShowTemplateInfo', template);
   $gtm?.trackEvent({
     event: 'show_template_info',
     category: 'templates',
@@ -100,6 +106,11 @@ const onShowTemplateInfo = (template: main.RepoInfo) => {
     title: template.name,
     message: msg,
     html: true,
+    persistent: true,
+  }).onOk(() => {
+    console.log('onOk');
+  }).onCancel(() => {
+    console.log('onCancel');
   });
 };
 
@@ -112,6 +123,8 @@ const onRemoveTemplate = (template: main.RepoInfo) => {
   $q.dialog({
     title: 'Remove Template',
     message: `Are you sure you want to remove ${template.name}?`,
+    persistent: true,
+    cancel: true,
   }).onOk(async () => {
     try {
       await RemoveTemplate(template.name);
@@ -141,6 +154,8 @@ const onImportTemplate = () => {
   $q.dialog({
     title: 'Import Template',
     message: 'Import a template from a git url',
+    persistent: true,
+    cancel: true,
     prompt: {
       model: '',
       type: 'text',
@@ -171,7 +186,17 @@ const onImportTemplate = () => {
 
 const onRefreshTemplates = async () => {
   console.log('refresh templates');
-  await sync();
+  try {
+    await UpdateTemplateRegistry();
+    await sync();
+  } catch (e) {
+    console.error(e);
+    $q.notify({
+      color: 'negative',
+      textColor: 'white',
+      message: 'refresh templates',
+    });
+  }
 };
 
 const onInstallTemplate = async (item: main.RepoInfo) => {

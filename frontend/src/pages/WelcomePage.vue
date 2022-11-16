@@ -36,7 +36,8 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Import Project</q-item-label>
-                  <q-item-label caption lines="2">Import an existing API project from a local or remote source</q-item-label>
+                  <q-item-label caption lines="2">Import an existing API project from a local or remote source
+                  </q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>

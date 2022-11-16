@@ -1,23 +1,47 @@
 <template>
-  <q-dialog>
-    <q-card style="width: 640px; max-width: 60vw">
+  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent>
+    <q-card style="width: 640px; max-width: 60vw" class="q-dialog-plugin">
       <q-toolbar class="bg-primary text-white rounded-borders">
         <q-toolbar-title> ApiGear Studio {{ state.currentVersion }} </q-toolbar-title>
         <q-btn flat round dense icon="close" v-close-popup />
       </q-toolbar>
       <q-card-section>
-        <div class="text-caption">ApiGear Studio is a free and open source tool for building and testing APIs developed
-          by ApiGear see <code>https://www.apigear.io</code>.
-          It is built on top of ApiGear, a free and open source API framework.</div>
-        <div class="text-caption">The application is licensed under the Apache 2.0 License see
-          <code>https://www.apache.org/licenses/LICENSE-2.0</code>.
-          The source code is available on GitHub at <code>https://github.com/apigear-io.</code>
-        </div>
+        ApiGear Studio helps you to manage Object APIs in an API driven project. It allows you to manage APIs,
+        create SDKs as also to monitor and simulate your local API.
       </q-card-section>
       <q-card-section>
-        <div class="text-caption"><code>Version: {{state.currentVersion}}</code></div>
-        <div class="text-caption"><code>Commit: {{state.commit}}</code></div>
-        <div class="text-caption"><code>Date: {{state.date}}</code></div>
+        It is built on top of ApiGear, a free and open source API framework. The source code is licensed under the MIT
+        license and available on GitHub.
+      </q-card-section>
+      <q-card-section>
+        <q-markup-table dense>
+          <tbody>
+            <tr>
+              <td>Homepage</td>
+              <td><a href="https://apigear.io">https://apigear.io</a></td>
+            </tr>
+            <tr>
+              <td>Github</td>
+              <td><a href="https://github.com/apigear-io">https://github.com/apigear-io</a></td>
+            </tr>
+            <tr>
+              <td>License</td>
+              <td><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a></td>
+            </tr>
+            <tr>
+              <td>Version</td>
+              <td>{{ state.currentVersion }}</td>
+            </tr>
+            <tr>
+              <td>Commit</td>
+              <td>{{state.commit}}</td>
+            </tr>
+            <tr>
+              <td>Build Date</td>
+              <td>{{state.date}}</td>
+            </tr>
+          </tbody>
+        </q-markup-table>
       </q-card-section>
       <q-card-section>
         <q-list>
@@ -44,18 +68,23 @@
         </q-list>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn label="Close" flat color="primary" v-close-popup />
+        <q-btn flat v-close-popup> Close </q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 
-<script setup>
-import { useQuasar } from 'quasar';
+<script setup lang="ts">
+import { useQuasar, useDialogPluginComponent } from 'quasar';
 import { reactive, onMounted } from 'vue';
 import { CheckUpdate, VersionInfo, UpdateProgram } from '../wailsjs/go/main/App';
 
+defineEmits([...useDialogPluginComponent.emits])
+
 const $q = useQuasar();
+
+const { dialogRef, onDialogHide } = useDialogPluginComponent()
+
 
 const state = reactive({
   currentVersion: '0.0.0',
@@ -63,24 +92,35 @@ const state = reactive({
   date: '2021-01-01',
   commit: '1234567890',
   url: '',
+  isLatest: true,
 });
 
 onMounted(async () => {
-  const info = await VersionInfo();
-  console.log(info);
-  const rel = await CheckUpdate();
-  console.log(rel);
-  if (info != null) {
-    state.currentVersion = info.version;
-  }
-  if (rel) {
-    state.isLatest = false;
-    state.newVersion = rel.version;
-    state.commit = info.commit;
-    state.date = info.date;
-    state.url = rel.url;
+  console.log('AppInfoDialog mounted');
+  try {
+    const info = await VersionInfo();
+    console.log('info:', info);
+    const rel = await CheckUpdate();
+    console.log('rel:', rel);
+    if (info) {
+      state.currentVersion = info.version;
+    }
+    if (rel) {
+      state.isLatest = false;
+      state.newVersion = rel.version;
+      state.commit = info.commit;
+      state.date = info.date;
+      state.url = rel.url;
+    }
+  } catch (err) {
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to check for app info: ' + err,
+      icon: 'error',
+    });
   }
 });
+
 
 
 const updateStudio = async () => {

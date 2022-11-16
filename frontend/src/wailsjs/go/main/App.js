@@ -106,6 +106,10 @@ export function UpdateProgram(arg1) {
   return window['go']['main']['App']['UpdateProgram'](arg1);
 }
 
+export function UpdateTemplateRegistry() {
+  return window['go']['main']['App']['UpdateTemplateRegistry']();
+}
+
 export function VersionInfo() {
   return window['go']['main']['App']['VersionInfo']();
 }
