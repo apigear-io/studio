@@ -121,7 +121,7 @@ jobs:
           wails build --platform ${{env.platform}} -skipbindings
           -ldflags="-X 'main.version=${{github.ref_name}}'
           -X 'main.commit=${{github.sha}}'
-          -X 'main.date=${{github.event.head_commit.timestamp}}'
+          -X 'main.date=${{github.event.head_commit.timestamp}}'"
       - uses: thedoctor0/zip-release@main
         with:
           type: "zip"
