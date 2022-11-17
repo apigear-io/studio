@@ -14,7 +14,7 @@ env:
   PUBLIC_TOKEN: ${{ secrets.PUBLIC_TOKEN }}
   REPO_TOKEN: ${{ secrets.APIGEAR_REPOS }}
 
-  wails_version: "v2.0"
+  wails_version: "v2.2"
   go_version: "1.19.x"
   node_version: "16.x"
 jobs:
@@ -41,15 +41,13 @@ jobs:
           wails build -nsis --platform ${{env.platform}} -skipbindings
           -ldflags="-X 'main.version=${{github.ref_name}}'
           -X 'main.commit=${{github.sha}}'
-          -X 'main.date=${{github.event.head_commit.timestamp}}'
-          -X 'github.com/apigear-io/cli/pkg/up.token=${{secrets.PUBLIC_TOKEN}}'"
+          -X 'main.date=${{github.event.head_commit.timestamp}}'"
       - uses: thedoctor0/zip-release@main
         with:
           type: "zip"
-          directory: build
-          path: bin
+          directory: build/bin
           filename: ${{env.artifact}}
-          exclusions: "*-installer.exe"
+          exclusions: "*-installer.exe ApiGear-Studio"
       - run: mv build/bin/${{env.installer}} build
         shell: bash
       - run: ls -lR build
@@ -83,16 +81,13 @@ jobs:
           wails build --platform ${{env.platform}} -skipbindings
           -ldflags="-X 'main.version=${{github.ref_name}}'
           -X 'main.commit=${{github.sha}}'
-          -X 'main.date=${{github.event.head_commit.timestamp}}'
-          -X 'github.com/apigear-io/cli/pkg/cfg.repoToken=${{secrets.REPO_TOKEN}}'
-          -X 'github.com/apigear-io/cli/pkg/cfg.publicToken=${{secrets.PUBLIC_TOKEN}}'"
-
+          -X 'main.date=${{github.event.head_commit.timestamp}}'"
       - uses: thedoctor0/zip-release@main
         with:
           type: "zip"
-          directory: build
-          path: bin
+          directory: build/bin
           filename: ${{env.artifact}}
+          exclusions: "ApiGear-Studio"
       - run: ls -lR build
         shell: bash
       - uses: actions/upload-artifact@v3
@@ -125,8 +120,7 @@ jobs:
       - uses: thedoctor0/zip-release@main
         with:
           type: "zip"
-          directory: build
-          path: bin
+          directory: build/bin
           filename: ${{env.artifact}}
       - run: ls -lR build
         shell: bash
