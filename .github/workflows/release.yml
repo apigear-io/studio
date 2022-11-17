@@ -48,15 +48,13 @@ jobs:
           directory: build/bin
           filename: ${{env.artifact}}
           exclusions: "*-installer.exe ApiGear-Studio"
-      - run: mv build/bin/${{env.installer}} build
-        shell: bash
       - run: ls -lR build
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
           path: |
-            build/${{env.artifact}}
-            build/${{env.installer}}
+            build/bin/${{env.artifact}}
+            build/bin/${{env.installer}}
           retention-days: 5
   build-linux:
     runs-on: ubuntu-latest
@@ -87,12 +85,11 @@ jobs:
           type: "zip"
           directory: build/bin
           filename: ${{env.artifact}}
-          exclusions: "ApiGear-Studio"
       - run: ls -lR build
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
-          path: build/${{env.artifact}}
+          path: build/bin/${{env.artifact}}
           retention-days: 5
   build-macos:
     runs-on: macos-latest
@@ -126,7 +123,7 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
-          path: build/${{env.artifact}}
+          path: build/bin/${{env.artifact}}
           retention-days: 5
   release:
     runs-on: ubuntu-latest
