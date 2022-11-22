@@ -1,5 +1,9 @@
 <template>
-  <router-view />
+  <q-layout>
+    <q-page-container class="q-dark">
+      <router-view />
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script lang="ts">

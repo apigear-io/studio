@@ -27,3 +27,5 @@ go.work
 build/windows/installer/
 build/windows/info.json
 build/windows/wails.exe.manifest
+build/bin/.apigear-studio.exe.new
+*.old
