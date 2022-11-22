@@ -2,6 +2,7 @@
 
 
 icons:
+
 	mkdir Icon.iconset
 	sips -z 16 16     Icon1024.png --out Icon.iconset/icon_16x16.png
 	sips -z 32 32     Icon1024.png --out Icon.iconset/icon_16x16@2x.png
@@ -20,8 +21,9 @@ icons:
 clean:
 	rm -rf build
 
-build: clean
-	wails build
+
+build:
+	wails build -debug -nsis --platform windows/amd64 -ldflags="-X 'main.version=v0.1.0' -X 'main.commit=12345' -X 'main.date=2022-11-22'"
 
 dev:
 	wails dev
