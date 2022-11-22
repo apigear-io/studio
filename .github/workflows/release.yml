@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 0
       - run: git config --global url."https://jryannel:${{secrets.APIGEAR_REPOS}}@github.com".insteadOf "https://github.com"
         shell: bash
-      - run: wails build --platform ${{env.platform}} -skipbindings -ldflags="-X 'main.version=${{github.ref_name}}' -X 'main.commit=${{github.sha}}' -X 'main.date=${{github.event.head_commit.timestamp}}'"
+      - run: wails build -nsis --platform ${{env.platform}} -skipbindings -ldflags="-X 'main.version=${{github.ref_name}}' -X 'main.commit=${{github.sha}}' -X 'main.date=${{github.event.head_commit.timestamp}}'"
       - uses: thedoctor0/zip-release@main
         with:
           type: "zip"
@@ -137,6 +137,7 @@ jobs:
             artifact/checksums.txt
             artifact/*.zip
             artifact/*-installer.exe
+
           body: ${{steps.changelog.outputs.changelog}}
           repository: "apigear-io/studio-releases"
           token: ${{ secrets.APIGEAR_REPOS }}
