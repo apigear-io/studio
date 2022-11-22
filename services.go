@@ -224,7 +224,8 @@ func CheckAppUpdate() (*ReleaseInfo, error) {
 		return nil, fmt.Errorf("update check not complete")
 	}
 	if updateInfo.LatestRelease == nil {
-		return nil, fmt.Errorf("no update available")
+		// no update available
+		return nil, nil
 	}
 	rel := updateInfo.LatestRelease
 	return &ReleaseInfo{
@@ -240,10 +241,10 @@ func UpdateApp(version string) error {
 		return fmt.Errorf("update check not complete")
 	}
 	if updateInfo.Updater == nil {
-		return fmt.Errorf("no update available")
+		return fmt.Errorf("no updater")
 	}
 	if updateInfo.LatestRelease == nil {
-		return fmt.Errorf("no update available")
+		return fmt.Errorf("no update available. update not possible")
 	}
 	if version == "" {
 		return fmt.Errorf("version not specified")
