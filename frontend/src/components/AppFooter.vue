@@ -21,11 +21,10 @@ const $q = useQuasar();
 
 const state = reactive({
   updateAvailable: false as boolean,
-  showAppInfo: false as boolean,
-  version: '0.0.0',
+  version: '0.0.0' as string,
 })
 
-onMounted(async () => {
+async function doCheckUpdate() {
   try {
     const info = await VersionInfo()
     const rel = await CheckUpdate();
@@ -44,7 +43,12 @@ onMounted(async () => {
       icon: 'error',
     });
   }
-});
+}
+
+onMounted(async () => {
+  // call checkupdate deleayed by 500ms
+  setTimeout(doCheckUpdate,  1000);
+})
 
 function openAppInfo() {
   console.log('openAppInfo');
@@ -72,17 +76,6 @@ function openDiscussions() {
   }
 };
 
-function openProductInfo() {
-  try {
-    BrowserOpenURL('https://apigear.io/');
-  } catch (e) {
-    $q.notify({
-      message: String(e),
-      color: 'negative',
-      icon: 'error',
-    });
-  }
-};
 </script>
 
 <style lang="scss" scoped>

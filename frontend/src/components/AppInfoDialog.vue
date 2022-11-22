@@ -125,15 +125,11 @@ onMounted(async () => {
 
 const updateStudio = async () => {
   try {
-    $q.notify({
-      message: 'Updating Studio...',
-      spinner: true,
-      type: 'positive',
-      icon: 'cloud_download',
-      timeout: 0,
-    });
+    $q.loading.show();
     await UpdateProgram(state.newVersion);
+    $q.loading.hide();
   } catch (err) {
+    $q.loading.hide();
     $q.notify({
       color: 'negative',
       message: 'Failed to update: ' + err,

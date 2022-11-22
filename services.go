@@ -27,21 +27,33 @@ var monitorStarted bool
 var runner = sol.NewRunner()
 var serviceCancel context.CancelFunc
 var serviceCtx context.Context
-var updater *up.Updater
-var latestRelease *selfupdate.Release
+
+// UpdateInfo contains information available update
+type UpdateInfo struct {
+	// Updater is the updater
+	Updater *up.Updater
+	// LatestRelease is the latest release available or nil if no update is available
+	LatestRelease *selfupdate.Release
+	// CheckComplete is true if the check for update has been completed
+	CheckComplete bool
+}
+
+var updateInfo = &UpdateInfo{}
 
 func StartUpdater() error {
+	updateInfo.CheckComplete = false
 	serviceCtx, serviceCancel = context.WithCancel(context.Background())
 	u, err := up.NewUpdater("apigear-io/studio-releases", cfg.BuildVersion())
 	if err != nil {
 		return fmt.Errorf("create updater: %v", err)
 	}
-	updater = u
-	r, err := updater.Check()
+	updateInfo.Updater = u
+	r, err := u.Check()
 	if err != nil {
 		return fmt.Errorf("check for update: %v", err)
 	}
-	latestRelease = r
+	updateInfo.LatestRelease = r
+	updateInfo.CheckComplete = true
 	return nil
 }
 
@@ -208,22 +220,35 @@ func GetRunner() *sol.Runner {
 }
 
 func CheckAppUpdate() (*ReleaseInfo, error) {
-	if latestRelease == nil {
-		return nil, nil
+	if !updateInfo.CheckComplete {
+		return nil, fmt.Errorf("update check not complete")
 	}
+	if updateInfo.LatestRelease == nil {
+		return nil, fmt.Errorf("no update available")
+	}
+	rel := updateInfo.LatestRelease
 	return &ReleaseInfo{
-		Version:      latestRelease.Version(),
-		PublishedAt:  latestRelease.PublishedAt,
-		ReleaseNotes: latestRelease.ReleaseNotes,
-		URL:          latestRelease.URL,
+		Version:      rel.Version(),
+		PublishedAt:  rel.PublishedAt,
+		ReleaseNotes: rel.ReleaseNotes,
+		URL:          rel.URL,
 	}, nil
 }
 
 func UpdateApp(version string) error {
-	if updater == nil {
-		return fmt.Errorf("updater not initialized")
+	if !updateInfo.CheckComplete {
+		return fmt.Errorf("update check not complete")
 	}
-	err := updater.Update(latestRelease)
+	if updateInfo.Updater == nil {
+		return fmt.Errorf("no update available")
+	}
+	if updateInfo.LatestRelease == nil {
+		return fmt.Errorf("no update available")
+	}
+	if version == "" {
+		return fmt.Errorf("version not specified")
+	}
+	err := updateInfo.Updater.Update(updateInfo.LatestRelease)
 	if err != nil {
 		return err
 	}
