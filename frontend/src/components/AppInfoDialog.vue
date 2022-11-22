@@ -125,7 +125,11 @@ onMounted(async () => {
 
 const updateStudio = async () => {
   try {
-    $q.loading.show();
+    $q.loading.show({
+      message: 'Updating Studio...',
+      spinnerColor: 'white',
+      boxClass: 'bg-primary text-white',
+    });
     await UpdateProgram(state.newVersion);
     $q.loading.hide();
   } catch (err) {
