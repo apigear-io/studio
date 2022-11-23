@@ -21,7 +21,7 @@ jobs:
   build-windows:
     runs-on: windows-latest
     env:
-      artifact: Apigear-Studio-${{github.ref_name}}-windows-amd64.zip
+      artifact: Apigear-Studio-windows-amd64.zip
       platform: windows/amd64
       installer: "ApiGear-Studio-amd64-installer.exe"
     steps:
@@ -55,7 +55,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     env:
-      artifact: Apigear-Studio-${{github.ref_name}}-linux-amd64.zip
+      artifact: Apigear-Studio-linux-amd64.zip
       platform: linux/amd64
     steps:
       - uses: actions/setup-go@v3
@@ -86,7 +86,7 @@ jobs:
   build-macos:
     runs-on: macos-latest
     env:
-      artifact: Apigear-Studio-${{github.ref_name}}-darwin-universal.zip
+      artifact: Apigear-Studio-darwin-universal.zip
       platform: darwin/universal
     steps:
       - uses: actions/setup-go@v3
