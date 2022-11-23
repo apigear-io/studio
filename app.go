@@ -267,7 +267,6 @@ func (a App) GetTemplates() ([]RepoInfo, error) {
 		log.Error().Err(err).Msgf("get templates: %s", err)
 		return nil, err
 	}
-	fmt.Println(len(in))
 	out := make([]RepoInfo, len(in))
 	for i, tpl := range in {
 		out[i] = RepoInfo{
