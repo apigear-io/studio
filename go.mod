@@ -3,10 +3,11 @@ module github.com/apigear-io/studio
 go 1.19
 
 require (
-	github.com/apigear-io/cli v0.18.5
+	github.com/apigear-io/cli v0.18.6
 	github.com/creativeprojects/go-selfupdate v0.6.1
 	github.com/google/go-github/v47 v47.1.0
 	github.com/magefile/mage v1.14.0
+	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/wailsapp/wails/v2 v2.2.0
 )
 
@@ -63,7 +64,6 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
-	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.3 // indirect

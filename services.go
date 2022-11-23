@@ -18,6 +18,7 @@ import (
 	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/apigear-io/cli/pkg/up"
 	"github.com/creativeprojects/go-selfupdate"
+	"github.com/pkg/browser"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -237,6 +238,15 @@ func CheckAppUpdate() (*ReleaseInfo, error) {
 }
 
 func UpdateApp(version string) error {
+	if rt.GOOS == "windows" {
+		// workaround for windows as update process fails when app is installed
+		// on open browser to github release page
+		rel := updateInfo.LatestRelease
+		if rel == nil {
+			return fmt.Errorf("no update available")
+		}
+		return browser.OpenURL(rel.URL)
+	}
 	if !updateInfo.CheckComplete {
 		return fmt.Errorf("update check not complete")
 	}
