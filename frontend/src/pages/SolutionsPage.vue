@@ -1,5 +1,28 @@
 <template>
   <q-page padding>
+    <q-dialog v-model="showLogs" position="bottom" persistent>
+      <q-card style="width: 800px; max-width: 80vw; max-height: 60vh" class="fit">
+        <q-card-section class="fit">
+          <q-table :rows="logs.list" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" class="fit" filter="object" :filter-method="filter">
+            <template v-slot:body="props">
+              <q-tr :props="props" @click="props.expand = !props.expand">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="rowClass(props.row)">
+                  {{ col.value }}
+                </q-td>
+              </q-tr>
+              <q-tr v-show="props.expand">
+                <q-td colspan="100%" class="text-caption">
+                  <vue-json-pretty :data="props.row" />
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Close" color="primary" @click="closeDialog" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
@@ -53,29 +76,6 @@
         </q-list>
       </q-card-section>
     </q-card>
-    <q-dialog v-model="showLogs" position="bottom">
-      <q-card style="width: 800px; max-width: 80vw; max-height: 60vh" class="fit">
-        <q-card-section class="fit">
-          <q-table :rows="logs.list" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" class="fit" :filter-method="filter">
-            <template v-slot:body="props">
-              <q-tr :props="props" @click="props.expand = !props.expand">
-                <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="rowClass(props.row)">
-                  {{ col.value }}
-                </q-td>
-              </q-tr>
-              <q-tr v-show="props.expand">
-                <q-td colspan="100%" class="text-caption">
-                  <vue-json-pretty :data="props.row" />
-                </q-td>
-              </q-tr>
-            </template>
-          </q-table>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Close" color="primary" @click="closeDialog" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -97,8 +97,22 @@ const $gtm = useGtm();
 const showLogs = ref(false);
 
 const topics = ['app', 'gen', 'sol'];
+var startTime = Date.now()
 const filter = function (rows: readonly any[]): readonly any[] {
-  return rows.filter((row) => row.level != 'info' || topics.includes(row.topic));
+  const result = []
+  for (const row of rows) {
+    if (Date.parse(row.timestamp) < startTime) {
+      continue
+    }
+    if (row.level != 'info') {
+      continue
+    }
+    if (topics.indexOf(row.topic) == -1) {
+      continue
+    }
+    result.push(row)
+  }
+  return result
 };
 
 const columns: QTableProps['columns'] = [
@@ -146,9 +160,9 @@ onUnmounted(() => {
 const runDocument = async (item: main.DocumentInfo) => {
   $gtm?.trackEvent({ event: 'run_document', category: 'solutions', action: 'run_document' });
   console.log('runDocument', item.path);
-  logs.clear();
   try {
     showLogs.value = true;
+    startTime = Date.now()
     logs.startRecordGenLogs(); // should be clear, not stop, we should always log the latest messages
     await RunSolution(item.path);
     showLogs.value = true;
