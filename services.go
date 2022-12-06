@@ -22,13 +22,6 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-var server *net.Server
-var simulation = sim.NewSimulation()
-var monitorStarted bool
-var runner = sol.NewRunner()
-var serviceCancel context.CancelFunc
-var serviceCtx context.Context
-
 // UpdateInfo contains information available update
 type UpdateInfo struct {
 	// Updater is the updater
@@ -39,26 +32,15 @@ type UpdateInfo struct {
 	CheckComplete bool
 }
 
-var updateInfo = &UpdateInfo{}
-
-func StartUpdater() error {
-	updateInfo.CheckComplete = false
-	serviceCtx, serviceCancel = context.WithCancel(context.Background())
-	u, err := up.NewUpdater("apigear-io/studio-releases", cfg.BuildVersion())
-	if err != nil {
-		return fmt.Errorf("create updater: %v", err)
-	}
-	updateInfo.Updater = u
-	r, err := u.Check()
-	if err != nil {
-		return fmt.Errorf("check for update: %v", err)
-	}
-	updateInfo.LatestRelease = r
-	updateInfo.CheckComplete = true
-	return nil
-}
-
-// TODO: rethink context used here, many we can just create new contexts with timeouts
+var (
+	server         *net.Server
+	simulation     = sim.NewSimulation()
+	monitorStarted bool
+	runner         = sol.NewRunner()
+	serviceCancel  context.CancelFunc
+	serviceCtx     context.Context
+	updateInfo     = &UpdateInfo{}
+)
 
 func StartServices(ctx context.Context, port string) error {
 	log.Info().Msg("start background services")
@@ -102,6 +84,25 @@ func StopServices() {
 		serviceCancel()
 	}
 }
+
+func StartUpdater() error {
+	updateInfo.CheckComplete = false
+	serviceCtx, serviceCancel = context.WithCancel(context.Background())
+	u, err := up.NewUpdater("apigear-io/studio-releases", cfg.BuildVersion())
+	if err != nil {
+		return fmt.Errorf("create updater: %v", err)
+	}
+	updateInfo.Updater = u
+	r, err := u.Check()
+	if err != nil {
+		return fmt.Errorf("check for update: %v", err)
+	}
+	updateInfo.LatestRelease = r
+	updateInfo.CheckComplete = true
+	return nil
+}
+
+// TODO: rethink context used here, many we can just create new contexts with timeouts
 
 func RunServer(addr string) error {
 	log.Info().Msgf("start http server on %s", addr)
