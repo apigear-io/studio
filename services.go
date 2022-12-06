@@ -65,29 +65,24 @@ func StartServices(ctx context.Context, port string) error {
 	log.Info().Msg("start updater")
 	err := StartUpdater()
 	if err != nil {
-		return fmt.Errorf("start updater: %v", err)
+		return err
 	}
-	log.Info().Msg("create http server")
 	server = net.NewHTTPServer()
-	log.Info().Msg("register log service")
 	err = RegisterLogService(ctx)
 	if err != nil {
-		return fmt.Errorf("start log service: %s", err)
+		return err
 	}
-	log.Info().Msg("register monitor service")
 	err = RegisterMonitorService(ctx)
 	if err != nil {
-		return fmt.Errorf("start monitor service: %v", err)
+		return err
 	}
-	log.Info().Msg("register simulation service")
 	err = RegisterSimulationService()
 	if err != nil {
-		return fmt.Errorf("start simulation service: %v", err)
+		return err
 	}
-	log.Info().Msg("run http servcer")
 	err = RunServer(fmt.Sprintf(":%s", port))
 	if err != nil {
-		return fmt.Errorf("start server: %v", err)
+		return err
 	}
 	return nil
 }
@@ -109,7 +104,7 @@ func StopServices() {
 }
 
 func RunServer(addr string) error {
-	log.Info().Msgf("start server on %s", addr)
+	log.Info().Msgf("start http server on %s", addr)
 	err := server.Start(addr)
 	if err != nil {
 		log.Error().Msgf("start server: %v", err)
@@ -149,9 +144,11 @@ func RegisterMonitorService(ctx context.Context) error {
 func RegisterSimulationService() error {
 	log.Info().Msg("start simulation service")
 	if server == nil {
+		log.Error().Msg("server not started")
 		return fmt.Errorf("server not started")
 	}
-	if simulation != nil {
+	if simulation == nil {
+		log.Error().Msg("simulation not started")
 		return nil
 	}
 	handler := net.NewSimuRpcHandler(simulation)
@@ -162,8 +159,8 @@ func RegisterSimulationService() error {
 			handler.HandleMessage(req)
 		}
 	}()
-	server.Router().HandleFunc("/ws/", hub.ServeHTTP)
-	log.Debug().Msgf("handle ws rpc server on %s/ws/", server.Address())
+	server.Router().HandleFunc("/ws", hub.ServeHTTP)
+	log.Info().Msgf("simulation server listening on %s/ws", server.Address())
 	return nil
 }
 
@@ -178,7 +175,9 @@ func GetSimulationAddress() (string, error) {
 	if server == nil {
 		return "", fmt.Errorf("server not started")
 	}
-	return fmt.Sprintf("ws://%s/ws/", server.Address()), nil
+	addr := fmt.Sprintf("ws://%s/ws", server.Address())
+	log.Info().Msgf("simulation address: %s", addr)
+	return addr, nil
 }
 
 func RegisterLogService(ctx context.Context) error {
