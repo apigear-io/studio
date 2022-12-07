@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@gtm-support/vue-gtm": "^1.6.0",
-    "@quasar/extras": "^1.15.0",
+    "@quasar/extras": "^1.15.7",
     "pinia": "^2.0.11",
     "quasar": "^2.10.0",
     "vue": "^3.0.0",
@@ -28,6 +28,7 @@
     "@typescript-eslint/parser": "^5.10.0",
     "@vue/devtools": "^6.2.1",
     "autoprefixer": "^10.4.2",
+    "esbuild": "^0.15.18",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",

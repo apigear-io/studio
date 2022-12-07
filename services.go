@@ -15,6 +15,7 @@ import (
 	"github.com/apigear-io/cli/pkg/net"
 	"github.com/apigear-io/cli/pkg/net/rpc"
 	"github.com/apigear-io/cli/pkg/sim"
+	"github.com/apigear-io/cli/pkg/sim/core"
 	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/apigear-io/cli/pkg/up"
 	"github.com/creativeprojects/go-selfupdate"
@@ -162,6 +163,10 @@ func RegisterSimulationService() error {
 	}()
 	server.Router().HandleFunc("/ws", hub.ServeHTTP)
 	log.Info().Msgf("simulation server listening on %s/ws", server.Address())
+	log.Info().Msg("register simulation events")
+	simulation.OnEvent(func(evt *core.APIEvent) {
+		runtime.EventsEmit(serviceCtx, "simu", evt)
+	})
 	return nil
 }
 
