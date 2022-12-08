@@ -159,7 +159,10 @@ func RegisterSimulationService(ctx context.Context) error {
 	go func() {
 		for req := range hub.Requests() {
 			// ends with closing of requests
-			handler.HandleMessage(req)
+			err := handler.HandleMessage(req)
+			if err != nil {
+				log.Error().Err(err).Msg("handle simulation request")
+			}
 		}
 	}()
 	server.Router().HandleFunc("/ws", hub.ServeHTTP)
