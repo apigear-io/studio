@@ -11,7 +11,7 @@
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table table-class="text-positive" table-header-class="text-primary" :rows="simu.events" :columns="columns" row-key="id" dense flat :pagination="state.initialPagination" />
+        <q-table table-class="text-positive" table-header-class="text-primary" :rows="simu.events" :columns="columns" row-key="timestamp" dense flat :pagination="state.initialPagination" />
       </q-card-section>
     </q-card>
   </q-page>
@@ -24,11 +24,12 @@ import { useSimulationStore } from '../stores/simulation-store';
 
 const columns: QTableProps['columns'] = [
   { name: 'time', label: 'Time', field: 'timestamp', align: 'left', style: 'width: 120px', sortable: true },
-  { name: 'type', label: 'Type', field: 'type', align: 'center', style: 'width: 80px' },
-  { name: 'symbol', label: 'Symbol', field: 'symbol', align: 'center', style: 'width: 80px' },
-  { name: 'name', label: 'Name', field: 'name', align: 'center', style: 'width: 80px' },
-  { name: 'args', label: 'Args', field: 'args', align: 'center', style: 'width: 240px' },
-  { name: 'kwargs', label: 'KwArgs', field: 'kwargs', align: 'center', style: 'width: 240px' },
+  { name: 'type', label: 'Type', field: 'type', align: 'left', style: 'width: 80px' },
+  { name: 'symbol', label: 'Symbol', field: 'symbol', align: 'left', style: 'width: 80px' },
+  { name: 'name', label: 'Name', field: 'name', align: 'left', style: 'width: 80px' },
+  { name: 'error', label: 'Error', field: 'error', align: 'left', style: 'width: 80px' },
+  { name: 'args', label: 'Args', field: 'args', align: 'left', style: 'width: 240px' },
+  { name: 'kwargs', label: 'KwArgs', field: 'kwargs', align: 'left', style: 'width: 240px' },
 ];
 
 const simu = useSimulationStore();

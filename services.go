@@ -43,6 +43,10 @@ var (
 	updateInfo     = &UpdateInfo{}
 )
 
+func init() {
+	serviceCtx, serviceCancel = context.WithCancel(context.Background())
+}
+
 func StartServices(ctx context.Context, port string) error {
 	log.Info().Msg("start background services")
 	log.Info().Msg("start updater")
@@ -59,7 +63,7 @@ func StartServices(ctx context.Context, port string) error {
 	if err != nil {
 		return err
 	}
-	err = RegisterSimulationService()
+	err = RegisterSimulationService(ctx)
 	if err != nil {
 		return err
 	}
@@ -88,7 +92,6 @@ func StopServices() {
 
 func StartUpdater() error {
 	updateInfo.CheckComplete = false
-	serviceCtx, serviceCancel = context.WithCancel(context.Background())
 	u, err := up.NewUpdater("apigear-io/studio-releases", cfg.BuildVersion())
 	if err != nil {
 		return fmt.Errorf("create updater: %v", err)
@@ -102,8 +105,6 @@ func StartUpdater() error {
 	updateInfo.CheckComplete = true
 	return nil
 }
-
-// TODO: rethink context used here, many we can just create new contexts with timeouts
 
 func RunServer(addr string) error {
 	log.Info().Msgf("start http server on %s", addr)
@@ -119,7 +120,7 @@ func RestartServer(ctx context.Context, addr string) error {
 	if server == nil {
 		return fmt.Errorf("server not started")
 	}
-	return server.Restart(ctx, addr)
+	return server.Restart(serviceCtx, addr)
 }
 
 func RegisterMonitorService(ctx context.Context) error {
@@ -143,7 +144,7 @@ func RegisterMonitorService(ctx context.Context) error {
 	return nil
 }
 
-func RegisterSimulationService() error {
+func RegisterSimulationService(ctx context.Context) error {
 	log.Info().Msg("start simulation service")
 	if server == nil {
 		log.Error().Msg("server not started")
@@ -162,10 +163,11 @@ func RegisterSimulationService() error {
 		}
 	}()
 	server.Router().HandleFunc("/ws", hub.ServeHTTP)
-	log.Info().Msgf("simulation server listening on %s/ws", server.Address())
+	log.Debug().Msgf("simulation server listening on %s/ws", server.Address())
 	log.Info().Msg("register simulation events")
-	simulation.OnEvent(func(evt *core.APIEvent) {
-		runtime.EventsEmit(serviceCtx, "simu", evt)
+	simulation.OnEvent(func(evt *core.SimuEvent) {
+		log.Info().Msgf("send simulation event: %v", evt)
+		runtime.EventsEmit(ctx, "sim", evt)
 	})
 	return nil
 }

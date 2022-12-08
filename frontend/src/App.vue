@@ -17,17 +17,19 @@ export default defineComponent({
   name: 'App',
   setup() {
     console.log('App.setup');
-    const monitor = useMonitorStore();
-    monitor.init();
-    const project = useProjectStore();
-    project.init();
+    const monitorStore = useMonitorStore();
+    monitorStore.init();
+    const projectStore = useProjectStore();
+    projectStore.init();
     const logStore = useLogStore();
     logStore.init();
     const simuStore = useSimulationStore();
     simuStore.init();
     return {
-      monitor,
-      project,
+      monitorStore,
+      projectStore,
+      logStore,
+      simuStore,
     };
   },
 });
