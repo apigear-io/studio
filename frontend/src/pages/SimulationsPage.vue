@@ -21,7 +21,7 @@
             </q-item-section>
             <q-item-section side>
               <q-btn-group class="text-primary" flat>
-                <q-btn v-if="running.sources[item.path]" class="text-primary" label="Stop" icon="stop" @click="stopDocument(item)" />
+                <q-btn v-if="simu.running[item.path]" class="text-primary" label="Stop" icon="stop" @click="stopDocument(item)" />
                 <q-btn v-else class="text-primary" label="Play" icon="play_arrow" @click="runDocument(item)" />
                 <q-btn class="text-primary" label="Edit" icon="edit_note" @click.stop="editDocument(item)" />
                 <q-btn class="text-primary" icon="more_vert">
@@ -52,10 +52,11 @@ import { useQuasar } from 'quasar';
 import { useGtm } from '@gtm-support/vue-gtm';
 import { OpenSourceInEditor, StartScenario, StopScenario } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
+import { useSimulationStore } from '../stores/simulation-store';
 import { main } from '../wailsjs/go/models';
-import { reactive } from 'vue';
 
 const store = useProjectStore();
+const simu = useSimulationStore();
 const $q = useQuasar();
 const $gtm = useGtm();
 function icon(docType: string) {
@@ -68,9 +69,6 @@ function icon(docType: string) {
       return 'av_timer';
   }
 }
-const running = reactive({
-  sources: {} as { [key: string]: boolean },
-});
 
 const runDocument = async (doc: main.DocumentInfo) => {
   $gtm?.trackEvent({
@@ -81,8 +79,7 @@ const runDocument = async (doc: main.DocumentInfo) => {
   console.log('runDocument', doc);
   try {
     await StartScenario(doc.path);
-    running.sources[doc.path] = true;
-    // router.push('/projects/simulations/messages');
+    simu.start(doc.path)
     $q.notify({
       color: 'positive',
       message: "Scenario '" + doc.name + "' started",
@@ -106,7 +103,7 @@ const stopDocument = async (doc: main.DocumentInfo) => {
   console.log('stopDocument', doc);
   try {
     await StopScenario(doc.path);
-    running.sources[doc.path] = false;
+    simu.stop(doc.path)
   } catch (err) {
     $q.notify({
       color: 'negative',

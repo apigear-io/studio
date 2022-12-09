@@ -14,6 +14,7 @@ export const useSimulationStore = defineStore('sim', {
   state: () => ({
     limit: 500 as number,
     events: [] as ISimuEvent[],
+    running: {} as Record<string, boolean>,
   }),
   actions: {
     clear() {
@@ -30,6 +31,12 @@ export const useSimulationStore = defineStore('sim', {
           this.events.pop();
         }
       });
+    },
+    start(id: string) {
+      this.running[id] = true;
+    },
+    stop(id: string) {
+      this.running[id] = false;
     },
   },
 });
