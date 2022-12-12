@@ -237,24 +237,11 @@ func doReadProject(source string) (*ProjectInfo, error) {
 		docs = append(docs, DocumentInfo{
 			Name: entry.Name(),
 			Path: helper.Join(source, "apigear", entry.Name()),
-			Type: guessDocumentType(entry.Name()),
+			Type: helper.GetDocumentType(entry.Name()),
 		})
 	}
 	p.Documents = docs
 	return p, nil
-}
-
-func guessDocumentType(path string) string {
-	if strings.HasSuffix(path, ".module.yaml") {
-		return "module"
-	}
-	if strings.HasSuffix(path, ".solution.yaml") {
-		return "solution"
-	}
-	if strings.HasSuffix(path, ".scenario.yaml") {
-		return "scenario"
-	}
-	return "unknown"
 }
 
 func (a App) EmitProjectChanged() {
