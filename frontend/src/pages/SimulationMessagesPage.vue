@@ -23,13 +23,13 @@ import { reactive } from 'vue';
 import { useSimulationStore } from '../stores/simulation-store';
 
 const columns: QTableProps['columns'] = [
-  { name: 'time', label: 'Time', field: 'timestamp', align: 'left', style: 'width: 120px', sortable: true },
+  { name: 'time', label: 'Time', field: 'timestamp', align: 'left', style: 'width: 80px', sortable: true },
   { name: 'type', label: 'Type', field: 'type', align: 'left', style: 'width: 80px' },
   { name: 'symbol', label: 'Symbol', field: 'symbol', align: 'left', style: 'width: 80px' },
   { name: 'name', label: 'Name', field: 'name', align: 'left', style: 'width: 80px' },
   { name: 'error', label: 'Error', field: 'error', align: 'left', style: 'width: 80px' },
-  { name: 'args', label: 'Args', field: 'args', align: 'left', style: 'width: 240px' },
-  { name: 'kwargs', label: 'KwArgs', field: 'kwargs', align: 'left', style: 'width: 240px' },
+  { name: 'args', label: 'Args', field: 'args', align: 'left', style: 'width: 80px' },
+  { name: 'kwargs', label: 'KwArgs', field: 'kwargs', align: 'left', style: 'width: 80px' },
 ];
 
 const simu = useSimulationStore();
