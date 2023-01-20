@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { EventsOn } from '../wailsjs/runtime/runtime';
 
 export interface ISimuEvent {
+  timestamp: string;
   type: string;
   symbol: string;
   name: string;

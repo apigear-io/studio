@@ -18,7 +18,7 @@ export function GetTemplates():Promise<Array<main.RepoInfo>>;
 
 export function ImportProject(arg1:string,arg2:string):Promise<main.ProjectInfo>;
 
-export function InstallTemplate(arg1:string):Promise<Error>;
+export function InstallTemplate(arg1:string):Promise<void>;
 
 export function InstallTemplateFromSource(arg1:string):Promise<main.RepoInfo>;
 
@@ -28,7 +28,7 @@ export function OpenProject():Promise<main.ProjectInfo>;
 
 export function OpenRecentProject(arg1:string):Promise<main.ProjectInfo>;
 
-export function OpenSourceInEditor(arg1:string):Promise<Error>;
+export function OpenSourceInEditor(arg1:string):Promise<void>;
 
 export function ReadSettings():Promise<main.AppSettings>;
 
@@ -38,23 +38,23 @@ export function RefreshCurrentProject():Promise<main.ProjectInfo>;
 
 export function RemoveRecentProject(arg1:string):Promise<void>;
 
-export function RemoveTemplate(arg1:string):Promise<Error>;
+export function RemoveTemplate(arg1:string):Promise<void>;
 
 export function RestartApp():Promise<void>;
 
-export function RunSolution(arg1:string):Promise<Error>;
+export function RunSolution(arg1:string):Promise<void>;
 
 export function SelectDirectory():Promise<string>;
 
 export function ShareProject(arg1:main.ProjectInfo):Promise<string>;
 
-export function StartScenario(arg1:string):Promise<Error>;
+export function StartScenario(arg1:string):Promise<void>;
 
-export function StopScenario(arg1:string):Promise<Error>;
+export function StopScenario(arg1:string):Promise<void>;
 
-export function UpdateProgram(arg1:string):Promise<Error>;
+export function UpdateProgram(arg1:string):Promise<void>;
 
-export function UpdateTemplateRegistry():Promise<Error>;
+export function UpdateTemplateRegistry():Promise<void>;
 
 export function VersionInfo():Promise<main.VersionInfo>;
 

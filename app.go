@@ -414,7 +414,8 @@ func (a App) CheckUpdate() (*ReleaseInfo, error) {
 
 func (a App) UpdateProgram(version string) error {
 	log.Debug().Msgf("update program")
-	err := UpdateApp(version)
+	ctx := context.Background()
+	err := UpdateApp(ctx, version)
 	if err != nil {
 		log.Error().Err(err).Msgf("update program: %s", err)
 		return err

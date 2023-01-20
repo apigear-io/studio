@@ -50,7 +50,7 @@ func init() {
 func StartServices(ctx context.Context, port string) error {
 	log.Info().Msg("start background services")
 	log.Info().Msg("start updater")
-	err := StartUpdater()
+	err := StartUpdater(ctx)
 	if err != nil {
 		return err
 	}
@@ -90,14 +90,14 @@ func StopServices() {
 	}
 }
 
-func StartUpdater() error {
+func StartUpdater(ctx context.Context) error {
 	updateInfo.CheckComplete = false
 	u, err := up.NewUpdater("apigear-io/studio-releases", cfg.BuildVersion())
 	if err != nil {
 		return fmt.Errorf("create updater: %v", err)
 	}
 	updateInfo.Updater = u
-	r, err := u.Check()
+	r, err := u.Check(ctx)
 	if err != nil {
 		return fmt.Errorf("check for update: %v", err)
 	}
@@ -247,7 +247,7 @@ func CheckAppUpdate() (*ReleaseInfo, error) {
 	}, nil
 }
 
-func UpdateApp(version string) error {
+func UpdateApp(ctx context.Context, version string) error {
 	if rt.GOOS == "windows" {
 		// workaround for windows as update process fails when app is installed
 		// on open browser to github release page
@@ -269,7 +269,7 @@ func UpdateApp(version string) error {
 	if version == "" {
 		return fmt.Errorf("version not specified")
 	}
-	err := updateInfo.Updater.Update(updateInfo.LatestRelease)
+	err := updateInfo.Updater.Update(ctx, updateInfo.LatestRelease)
 	if err != nil {
 		return err
 	}
