@@ -3,7 +3,7 @@ module github.com/apigear-io/studio
 go 1.19
 
 require (
-	github.com/apigear-io/cli v0.19.3
+	github.com/apigear-io/cli v0.20.0
 	github.com/creativeprojects/go-selfupdate v1.0.0
 	github.com/google/go-github/v47 v47.1.0
 	github.com/magefile/mage v1.14.0
@@ -20,12 +20,12 @@ require (
 	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230117203413-a47887b8f098 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
-	github.com/antlr/antlr4/runtime/Go/antlr v1.4.10 // indirect
+	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20221202181307-76fa05c21b12 // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/cloudflare/circl v1.3.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.8.0 // indirect
-	github.com/dop251/goja v0.0.0-20230118114522-2c325f1ef691 // indirect
+	github.com/dop251/goja v0.0.0-20230119130012-17fd568758fe // indirect
 	github.com/dop251/goja_nodejs v0.0.0-20221211191749-434192f0843e // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/ettle/strcase v0.1.1 // indirect

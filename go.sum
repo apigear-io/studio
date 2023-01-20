@@ -56,10 +56,10 @@ github.com/acomagu/bufpipe v1.0.3 h1:fxAGrHZTgQ9w5QqVItgzwj235/uYZYgbXitB+dLupOk
 github.com/acomagu/bufpipe v1.0.3/go.mod h1:mxdxdup/WdsKVreO5GpW4+M/1CE2sMG4jeGJ2sYmHc4=
 github.com/anmitsu/go-shlex v0.0.0-20200514113438-38f4b401e2be h1:9AeTilPcZAjCFIImctFaOjnTIavg87rW78vTPkQqLI8=
 github.com/anmitsu/go-shlex v0.0.0-20200514113438-38f4b401e2be/go.mod h1:ySMOLuWl6zY27l47sB3qLNK6tF2fkHG55UZxx8oIVo4=
-github.com/antlr/antlr4/runtime/Go/antlr v1.4.10 h1:yL7+Jz0jTC6yykIK/Wh74gnTJnrGr5AyrNMXuA0gves=
-github.com/antlr/antlr4/runtime/Go/antlr v1.4.10/go.mod h1:F7bn7fEU90QkQ3tnmaTx3LTKLEDqnwWODIYppRQ5hnY=
-github.com/apigear-io/cli v0.19.3 h1:moQBY6d4ZcwnXRmPqZOG62nLy92DApVJeBNAGQxpK8s=
-github.com/apigear-io/cli v0.19.3/go.mod h1:d+x31bqHsL10mt2Nxh1G0IGQ8Nsr5+5vp7kP/vlNeSU=
+github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20221202181307-76fa05c21b12 h1:npHgfD4Tl2WJS3AJaMUi5ynGDPUBfkg3U3fCzDyXZ+4=
+github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20221202181307-76fa05c21b12/go.mod h1:pSwJ0fSY5KhvocuWSx4fz3BA8OrA1bQn+K1Eli3BRwM=
+github.com/apigear-io/cli v0.20.0 h1:jWrXvKV7l2h7j+4nfymqd9i1sPyCqK9LLd/vInNNnQg=
+github.com/apigear-io/cli v0.20.0/go.mod h1:XT6Wm7h4ivOOQEHiSsKP0PcCEBpL+E7dOFtEjLgEItg=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPdPJAN/hZIm0C4OItdklCFmMRWYpio=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
 github.com/bep/debounce v1.2.1 h1:v67fRdBA9UQu2NhLFXrSg0Brw7CexQekrBwDMM8bzeY=
@@ -90,8 +90,8 @@ github.com/dlclark/regexp2 v1.8.0 h1:rJD5HeGIT/2b5CDk63FVCwZA3qgYElfg+oQK7uH5pfE
 github.com/dlclark/regexp2 v1.8.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/dop251/goja v0.0.0-20211022113120-dc8c55024d06/go.mod h1:R9ET47fwRVRPZnOGvHxxhuZcbrMCuiqOz3Rlrh4KSnk=
 github.com/dop251/goja v0.0.0-20221118162653-d4bf6fde1b86/go.mod h1:yRkwfj0CBpOGre+TwBsqPV0IH0Pk73e4PXJOeNDboGs=
-github.com/dop251/goja v0.0.0-20230118114522-2c325f1ef691 h1:MZ3CbU2fmuY/Vn/1rx6daNfDeicxSWRlcj79pon4wfs=
-github.com/dop251/goja v0.0.0-20230118114522-2c325f1ef691/go.mod h1:yRkwfj0CBpOGre+TwBsqPV0IH0Pk73e4PXJOeNDboGs=
+github.com/dop251/goja v0.0.0-20230119130012-17fd568758fe h1:PsLX9tWRxptk4COd23DJ0bnbXRKPDvBP+A6740Ndxp0=
+github.com/dop251/goja v0.0.0-20230119130012-17fd568758fe/go.mod h1:yRkwfj0CBpOGre+TwBsqPV0IH0Pk73e4PXJOeNDboGs=
 github.com/dop251/goja_nodejs v0.0.0-20210225215109-d91c329300e7/go.mod h1:hn7BA7c8pLvoGndExHudxTDKZ84Pyvv+90pbBjbTz0Y=
 github.com/dop251/goja_nodejs v0.0.0-20211022123610-8dd9abb0616d/go.mod h1:DngW8aVqWbuLRMHItjPUyqdj+HWPvnQe8V8y1nDpIbM=
 github.com/dop251/goja_nodejs v0.0.0-20221211191749-434192f0843e h1:DJ5cKH4HUYevCd09vMIbwc8U02eBKLFR2q1O1hSAJcY=
