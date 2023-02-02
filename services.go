@@ -13,7 +13,6 @@ import (
 	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
-	"github.com/apigear-io/cli/pkg/net/rpc"
 	"github.com/apigear-io/cli/pkg/sim"
 	"github.com/apigear-io/cli/pkg/sim/core"
 	"github.com/apigear-io/cli/pkg/sol"
@@ -154,17 +153,7 @@ func RegisterSimulationService(ctx context.Context) error {
 		log.Error().Msg("simulation not started")
 		return nil
 	}
-	handler := net.NewSimuRpcHandler(simulation)
-	hub := rpc.NewHub(serviceCtx)
-	go func() {
-		for req := range hub.Requests() {
-			// ends with closing of requests
-			err := handler.HandleMessage(req)
-			if err != nil {
-				log.Error().Err(err).Msg("handle simulation request")
-			}
-		}
-	}()
+	hub := net.NewSimuHub(ctx, simulation)
 	server.Router().HandleFunc("/ws", hub.ServeHTTP)
 	log.Debug().Msgf("simulation server listening on %s/ws", server.Address())
 	log.Info().Msg("register simulation events")
