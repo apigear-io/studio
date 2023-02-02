@@ -13,7 +13,6 @@ import (
 	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
-	"github.com/apigear-io/cli/pkg/net/olnk"
 	"github.com/apigear-io/cli/pkg/sim"
 	"github.com/apigear-io/cli/pkg/sim/core"
 	"github.com/apigear-io/cli/pkg/sol"
@@ -154,7 +153,7 @@ func RegisterSimulationService(ctx context.Context) error {
 		log.Error().Msg("simulation not started")
 		return nil
 	}
-	hub := olnk.NewHub(ctx, simulation)
+	hub := net.NewSimuHub(ctx, simulation)
 	server.Router().HandleFunc("/ws", hub.ServeHTTP)
 	log.Debug().Msgf("simulation server listening on %s/ws", server.Address())
 	log.Info().Msg("register simulation events")
