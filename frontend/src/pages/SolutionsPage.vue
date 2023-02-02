@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
-    <q-dialog v-model="showLogs" position="bottom" persistent>
-      <q-card style="width: 800px; max-width: 80vw; max-height: 60vh" class="fit">
+    <q-dialog v-model="showLogs" persistent position="bottom">
+      <q-card style="width: 800px; max-width: 80vw; max-height: 40vh" class="fit">
         <q-card-section class="fit">
           <q-table :rows="logs.list" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" class="fit" filter="object" :filter-method="filter">
             <template v-slot:body="props">
