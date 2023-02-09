@@ -356,15 +356,14 @@ func (a App) StartScenario(source string) error {
 	s := GetSimulation()
 	result, err := spec.CheckFile(source)
 	if err != nil {
-		log.Error().Err(err).Msgf("start scenario: %s", err)
-		return err
+		log.Warn().Err(err).Msgf("invalid scenario: %s", err)
 	}
 	if !result.Valid() {
 		var entries []string
 		for _, err := range result.Errors() {
 			entries = append(entries, err.String())
 		}
-		return fmt.Errorf("scenario file is invalid: %s", strings.Join(entries, " / "))
+		log.Warn().Msgf("invalid scenario: %s", strings.Join(entries, " / "))
 	}
 
 	doc, err := actions.ReadScenario(source)
