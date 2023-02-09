@@ -376,6 +376,14 @@ func (a App) StartScenario(source string) error {
 		log.Error().Err(err).Msgf("start scenario: %s", err)
 		return err
 	}
+	// TODO: fix this to make it cancelable when the scenario is stopped
+	go func() {
+		err = s.PlayAllSequences()
+		if err != nil {
+			log.Error().Msgf("play scenario: %v", err)
+		}
+	}()
+
 	return nil
 }
 
