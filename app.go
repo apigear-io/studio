@@ -376,13 +376,8 @@ func (a App) StartScenario(source string) error {
 		log.Error().Err(err).Msgf("start scenario: %s", err)
 		return err
 	}
-	// TODO: fix this to make it cancelable when the scenario is stopped
-	go func() {
-		err = s.PlayAllSequences()
-		if err != nil {
-			log.Error().Msgf("play scenario: %v", err)
-		}
-	}()
+	ctx := context.Background()
+	err = s.PlayAllSequences(ctx)
 
 	return nil
 }
@@ -390,6 +385,7 @@ func (a App) StartScenario(source string) error {
 func (a App) StopScenario(source string) error {
 	log.Debug().Msgf("stop scenario %s", source)
 	s := GetSimulation()
+	s.StopAllSequences()
 	err := s.UnloadScenario(source)
 	if err != nil {
 		log.Error().Err(err).Msgf("stop scenario: %s", err)
