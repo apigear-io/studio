@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { EventsOn } from '../wailsjs/runtime/runtime';
 
 export interface IMonitorEvent {
+  id: string;
   timestamp: number;
   source: string;
   type: string;

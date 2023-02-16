@@ -310,13 +310,14 @@ func (a App) SelectDirectory() (string, error) {
 
 func (a App) RunSolution(source string) error {
 	log.Info().Msgf("run solution %s", source)
+	ctx := context.Background()
 	doc, err := sol.ReadSolutionDoc(source)
 	if err != nil {
 		log.Error().Err(err).Msgf("read: %s", err)
 		return err
 	}
 	r := GetRunner()
-	err = r.RunDoc(source, doc)
+	err = r.RunDoc(ctx, source, doc)
 	if err != nil {
 		log.Error().Err(err).Msgf("solution: %s", err)
 		return err
@@ -327,13 +328,14 @@ func (a App) RunSolution(source string) error {
 func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 	log.Info().Msgf("watch solution %s: enabled: %t", source, enabled)
 	r := GetRunner()
+	ctx := context.Background()
 	if enabled {
 		doc, err := sol.ReadSolutionDoc(source)
 		if err != nil {
 			log.Error().Msgf("watch solution: %s", err)
 			return nil, err
 		}
-		_, err = r.StartWatch(source, doc)
+		err = r.StartWatch(ctx, source, doc)
 		if err != nil {
 			log.Error().Msgf("watch solution: %s", err)
 		}

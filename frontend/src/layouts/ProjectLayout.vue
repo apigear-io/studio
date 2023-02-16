@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header class="q-dark shadow-4">
+    <q-header class="q-dark">
       <q-toolbar>
         <q-icon name="img:icons/appicon-96x96.png" color="red-7" size="md" />
         <q-toolbar-title>ApiGear Studio</q-toolbar-title>
@@ -65,7 +65,7 @@
       </q-splitter>
     </q-page-container>
 
-    <q-footer class="bg-grey-10 shadow-4">
+    <q-footer class="bg-grey-10">
       <app-footer></app-footer>
     </q-footer>
   </q-layout>
