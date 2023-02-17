@@ -7,7 +7,7 @@
           <q-toolbar-title>Simulation Events</q-toolbar-title>
           <q-space />
           <q-toggle size="sm" v-model="state.isListening" label="Scroll" style="min-width: 120px" />
-          <q-btn flat icon="block" label="Clear" style="min-width: 120px" />
+          <q-btn flat icon="block" label="Clear" style="min-width: 120px"  @click="simu.clear()"/>
         </q-toolbar>
       </q-card-section>
       <q-card-section>
