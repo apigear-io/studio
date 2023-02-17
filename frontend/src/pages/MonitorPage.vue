@@ -23,42 +23,11 @@ import { reactive } from 'vue';
 import { useMonitorStore } from '../stores/monitor-store';
 
 const columns: QTableProps['columns'] = [
-  {
-    name: 'time',
-    label: 'Time',
-    field: 'timestamp',
-    align: 'left',
-    style: 'width: 120px',
-    sortable: true,
-  },
-  {
-    name: 'source',
-    label: 'Source',
-    field: 'source',
-    align: 'center',
-    style: 'width: 80px',
-  },
-  {
-    name: 'type',
-    label: 'Type',
-    field: 'type',
-    align: 'center',
-    style: 'width: 80px',
-  },
-  {
-    name: 'symbol',
-    label: 'Symbol',
-    field: 'symbol',
-    align: 'left',
-    style: 'width: 240px',
-  },
-  {
-    name: 'data',
-    label: 'Data',
-    field: 'data',
-    align: 'center',
-    style: 'width: 480px',
-  },
+  { name: 'time', label: 'Time', field: 'timestamp', align: 'left', style: 'width: 80px' },
+  { name: 'source', label: 'Source', field: 'source', style: 'width: 40px' },
+  { name: 'type', label: 'Type', field: 'type', style: 'width: 40px' },
+  { name: 'symbol', label: 'Symbol', field: 'symbol', align: 'left', style: 'width: 160px' },
+  { name: 'data', label: 'Data', field: 'data', align: 'left', style: 'width: 320px', format: (val) => JSON.stringify(val) },
 ];
 
 const mon = useMonitorStore();

@@ -17,7 +17,7 @@
     "@quasar/cli": "^2.0.0",
     "@quasar/extras": "^1.15.10",
     "pinia": "^2.0.11",
-    "quasar": "^2.11.5",
+    "quasar": "^2.11.6",
     "vue": "^3.0.0",
     "vue-json-pretty": "^2.2.2",
     "vue-router": "^4.1.0"

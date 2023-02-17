@@ -131,15 +131,12 @@ func RegisterMonitorService(ctx context.Context) error {
 		return fmt.Errorf("monitor service already started")
 	}
 	monitorStarted = true
-	server.Router().Post("/monitor/{source}/", net.HandleMonitorRequest)
+	server.Router().Post("/monitor/{source}", net.HandleMonitorRequest)
 	log.Info().Msgf("handle monitor request on %s/monitor/{source}", server.Address())
-	go func(emitter chan *mon.Event) {
-		// capture mon events and send to app
-		for event := range emitter {
-			log.Debug().Msgf("send monitor event: %v", event)
-			runtime.EventsEmit(ctx, "mon", event)
-		}
-	}(mon.Emitter())
+	mon.Emitter.On(func(event *mon.Event) {
+		log.Debug().Msgf("send monitor event: %v", event)
+		runtime.EventsEmit(ctx, "mon", event)
+	})
 	return nil
 }
 
@@ -168,7 +165,7 @@ func GetMonitorAddress() (string, error) {
 	if server == nil {
 		return "", fmt.Errorf("server not started")
 	}
-	return fmt.Sprintf("http://%s/monitor/${source}/", server.Address()), nil
+	return fmt.Sprintf("http://%s/monitor/${source}", server.Address()), nil
 }
 
 func GetSimulationAddress() (string, error) {

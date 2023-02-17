@@ -1,6 +1,6 @@
 <template>
   <q-layout>
-    <q-page-container class="q-dark">
+    <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>

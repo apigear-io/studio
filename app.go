@@ -310,13 +310,14 @@ func (a App) SelectDirectory() (string, error) {
 
 func (a App) RunSolution(source string) error {
 	log.Info().Msgf("run solution %s", source)
+	ctx := context.Background()
 	doc, err := sol.ReadSolutionDoc(source)
 	if err != nil {
 		log.Error().Err(err).Msgf("read: %s", err)
 		return err
 	}
 	r := GetRunner()
-	err = r.RunDoc(source, doc)
+	err = r.RunDoc(ctx, source, doc)
 	if err != nil {
 		log.Error().Err(err).Msgf("solution: %s", err)
 		return err
@@ -327,13 +328,14 @@ func (a App) RunSolution(source string) error {
 func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 	log.Info().Msgf("watch solution %s: enabled: %t", source, enabled)
 	r := GetRunner()
+	ctx := context.Background()
 	if enabled {
 		doc, err := sol.ReadSolutionDoc(source)
 		if err != nil {
 			log.Error().Msgf("watch solution: %s", err)
 			return nil, err
 		}
-		_, err = r.StartWatch(source, doc)
+		err = r.StartWatch(ctx, source, doc)
 		if err != nil {
 			log.Error().Msgf("watch solution: %s", err)
 		}
@@ -376,13 +378,8 @@ func (a App) StartScenario(source string) error {
 		log.Error().Err(err).Msgf("start scenario: %s", err)
 		return err
 	}
-	// TODO: fix this to make it cancelable when the scenario is stopped
-	go func() {
-		err = s.PlayAllSequences()
-		if err != nil {
-			log.Error().Msgf("play scenario: %v", err)
-		}
-	}()
+	ctx := context.Background()
+	err = s.PlayAllSequences(ctx)
 
 	return nil
 }
@@ -390,6 +387,7 @@ func (a App) StartScenario(source string) error {
 func (a App) StopScenario(source string) error {
 	log.Debug().Msgf("stop scenario %s", source)
 	s := GetSimulation()
+	s.StopAllSequences()
 	err := s.UnloadScenario(source)
 	if err != nil {
 		log.Error().Err(err).Msgf("stop scenario: %s", err)

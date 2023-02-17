@@ -3,7 +3,7 @@
     <q-page-container class="q-dark">
       <router-view />
     </q-page-container>
-    <q-footer class="bg-grey-10 shadow-4">
+    <q-footer class="bg-grey-10">
       <app-footer></app-footer>
     </q-footer>
   </q-layout>
