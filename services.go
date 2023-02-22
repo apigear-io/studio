@@ -16,7 +16,6 @@ import (
 	"github.com/apigear-io/cli/pkg/sim"
 	"github.com/apigear-io/cli/pkg/sim/core"
 	"github.com/apigear-io/cli/pkg/sol"
-	"github.com/apigear-io/cli/pkg/tasks"
 	"github.com/apigear-io/cli/pkg/up"
 	"github.com/creativeprojects/go-selfupdate"
 	"github.com/pkg/browser"
@@ -71,11 +70,6 @@ func StartServices(ctx context.Context, port string) error {
 	if err != nil {
 		return err
 	}
-	// emit task events
-	runner.OnTask(func(evt *tasks.TaskEvent) {
-		runtime.EventsEmit(ctx, "log", evt)
-	})
-
 	return nil
 }
 
