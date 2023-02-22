@@ -6,12 +6,14 @@
           <q-avatar icon="av_timer" />
           <q-toolbar-title>Simulation Events</q-toolbar-title>
           <q-space />
+          <q-btn flat icon="arrow_back" label="Back" style="min-width: 120px" to="/projects/simulations/" />
           <q-toggle size="sm" v-model="state.isListening" label="Scroll" style="min-width: 120px" />
-          <q-btn flat icon="block" label="Clear" style="min-width: 120px"  @click="simu.clear()"/>
+          <q-btn flat icon="block" label="Clear" style="min-width: 120px" @click="simu.clear()" />
         </q-toolbar>
       </q-card-section>
       <q-card-section>
-        <q-table table-class="text-positive" table-header-class="text-primary" :rows="simu.events" :columns="columns" row-key="timestamp" dense flat :pagination="state.initialPagination" />
+        <q-table table-class="text-positive" table-header-class="text-primary" :rows="simu.events" :columns="columns"
+          row-key="timestamp" dense flat :pagination="state.initialPagination" />
       </q-card-section>
     </q-card>
   </q-page>
