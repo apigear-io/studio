@@ -9,7 +9,7 @@ The workflow extends the API driven process with API monitoring and API simulati
 ## Features
 
 - Create new API projects from templates using [ObjectAPI](https://docs.apigear.io/docs/category/objectapi)
-- Install [technology templates[(https://docs.apigear.io/docs/category/sdk-templates) from our Marketplace
+- Install [technology templates](https://docs.apigear.io/docs/category/sdk-templates) from our Marketplace
 - Generate SDKs for your API projects using solutions
 - Run [API simulations](https://docs.apigear.io/docs/category/api-simulation) based on provided scenarios
 - View [API monitoring](https://docs.apigear.io/docs/category/api-monitoring) results
