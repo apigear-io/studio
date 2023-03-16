@@ -17,7 +17,7 @@ The workflow extends the API driven process with API monitoring and API simulati
 
 ## Install
 
-ApiGear Studio is a desktop application that runs on Windows, Mac and Linux. You can download the latest version from [here](https://github.com/apigear-io/studio-releases/releases/latest).
+ApiGear Studio is a desktop application that runs on Windows, Mac and Linux. You can download the latest version from [Studio release page](https://github.com/apigear-io/studio-releases/releases/latest).
 
 The product has not yet a certification from Microsoft, Apple or Linux. So you may need to disable the security check to run the application.
 
