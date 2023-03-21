@@ -82,7 +82,7 @@ export namespace main {
 	}
 	export class ReleaseInfo {
 	    version: string;
-	    // Go type: time.Time
+	    // Go type: time
 	    published_at: any;
 	    release_notes: string;
 	    url: string;
