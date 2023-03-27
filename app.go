@@ -381,6 +381,11 @@ func (a App) StartScenario(source string) error {
 	ctx := context.Background()
 	err = s.PlayAllSequences(ctx)
 
+	if err != nil {
+		log.Error().Err(err).Msgf("start scenario: %s", err)
+		return err
+	}
+
 	return nil
 }
 
