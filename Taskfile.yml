@@ -1,0 +1,23 @@
+version: 3
+
+env:
+  GO111MODULE: on
+  CGO_ENABLED: 0
+
+tasks:
+  dev:
+    desc: Run studio in dev-mode
+    cmds:
+      - wails dev
+  update:
+    desc: Update wails
+    cmds:
+      - go install github.com/wailsapp/wails/v2/cmd/wails@latest
+  build:
+    desc: Build the project
+    cmds:
+      - wails build
+  test:
+    desc: Run tests
+    cmds:
+      - go test -failfast -race ./...
