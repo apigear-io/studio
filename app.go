@@ -335,7 +335,7 @@ func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 			log.Error().Msgf("watch solution: %s", err)
 			return nil, err
 		}
-		err = r.StartWatch(ctx, source, doc)
+		err = r.WatchDoc(ctx, source, doc)
 		if err != nil {
 			log.Error().Msgf("watch solution: %s", err)
 		}
