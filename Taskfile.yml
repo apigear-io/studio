@@ -12,7 +12,7 @@ tasks:
   update:
     desc: Update wails
     cmds:
-      - go install github.com/wailsapp/wails/v2/cmd/wails@latest
+      - go install github.com/wailsapp/wails/v2/cmd/wails@v2.4.1
   build:
     desc: Build the project
     cmds:

@@ -115,7 +115,7 @@ func (a *App) ShareProject(project ProjectInfo) string {
 // InstallTemplate installs a template either from local or remote source
 func (a *App) InstallTemplate(name string) error {
 	log.Info().Msgf("Install Template %s", name)
-	err := tpl.InstallTemplate(name)
+	err := tpl.Install(name)
 	if err != nil {
 		log.Error().Err(err).Msgf("install template: %s", err)
 	}
@@ -249,7 +249,7 @@ func (a App) EmitProjectChanged() {
 }
 
 func (a App) GetTemplates() ([]RepoInfo, error) {
-	in, err := tpl.ListTemplates()
+	in, err := tpl.List()
 	if err != nil {
 		log.Error().Err(err).Msgf("get templates: %s", err)
 		return nil, err
@@ -275,7 +275,7 @@ func (a App) UpdateTemplateRegistry() error {
 
 func (a App) InstallTemplateFromSource(source string) (*RepoInfo, error) {
 	log.Info().Msgf("Install Template From Source %s", source)
-	vcs, err := tpl.ImportTemplate(source)
+	vcs, err := tpl.Import(source)
 	if err != nil {
 		log.Error().Err(err).Msgf("install template from source %s", source)
 		return nil, err
@@ -288,7 +288,7 @@ func (a App) InstallTemplateFromSource(source string) (*RepoInfo, error) {
 
 func (a App) RemoveTemplate(name string) error {
 	log.Info().Msgf("Remove Template %s", name)
-	err := tpl.RemoveTemplate(name)
+	err := tpl.Remove(name)
 	if err != nil {
 		log.Error().Err(err).Msgf("remove template %s", name)
 	}
