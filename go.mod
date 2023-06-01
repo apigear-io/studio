@@ -8,7 +8,7 @@ require (
 	github.com/google/go-github/v47 v47.1.0
 	github.com/magefile/mage v1.14.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
-	github.com/wailsapp/wails/v2 v2.4.1
+	github.com/wailsapp/wails/v2 v2.5.1
 )
 
 require github.com/gorilla/websocket v1.5.0 // indirect
