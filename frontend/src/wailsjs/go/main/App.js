@@ -18,24 +18,28 @@ export function EmitProjectChanged() {
   return window['go']['main']['App']['EmitProjectChanged']();
 }
 
+export function GetCacheList() {
+  return window['go']['main']['App']['GetCacheList']();
+}
+
 export function GetMonitorAddress() {
   return window['go']['main']['App']['GetMonitorAddress']();
+}
+
+export function GetRegistryList() {
+  return window['go']['main']['App']['GetRegistryList']();
 }
 
 export function GetSimulationAddress() {
   return window['go']['main']['App']['GetSimulationAddress']();
 }
 
-export function GetTemplates() {
-  return window['go']['main']['App']['GetTemplates']();
-}
-
 export function ImportProject(arg1, arg2) {
   return window['go']['main']['App']['ImportProject'](arg1, arg2);
 }
 
-export function InstallTemplate(arg1) {
-  return window['go']['main']['App']['InstallTemplate'](arg1);
+export function InstallTemplate(arg1, arg2) {
+  return window['go']['main']['App']['InstallTemplate'](arg1, arg2);
 }
 
 export function InstallTemplateFromSource(arg1) {

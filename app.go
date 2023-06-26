@@ -10,10 +10,10 @@ import (
 	"github.com/apigear-io/cli/pkg/cfg"
 	"github.com/apigear-io/cli/pkg/helper"
 	"github.com/apigear-io/cli/pkg/prj"
+	"github.com/apigear-io/cli/pkg/repos"
 	"github.com/apigear-io/cli/pkg/sim/actions"
 	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/apigear-io/cli/pkg/spec"
-	"github.com/apigear-io/cli/pkg/tpl"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -113,9 +113,10 @@ func (a *App) ShareProject(project ProjectInfo) string {
 }
 
 // InstallTemplate installs a template either from local or remote source
-func (a *App) InstallTemplate(name string) error {
+func (a *App) InstallTemplate(name string, version string) error {
 	log.Info().Msgf("Install Template %s", name)
-	err := tpl.Install(name)
+	repoID := repos.MakeRepoID(name, version)
+	err := repos.InstallTemplateFromRepoID(repoID)
 	if err != nil {
 		log.Error().Err(err).Msgf("install template: %s", err)
 	}
@@ -248,8 +249,29 @@ func (a App) EmitProjectChanged() {
 	runtime.EventsEmit(a.ctx, "ProjectChanged", a.currentProject)
 }
 
-func (a App) GetTemplates() ([]RepoInfo, error) {
-	in, err := tpl.List()
+func (a App) GetCacheList() ([]RepoInfo, error) {
+	in, err := repos.Cache.List()
+	if err != nil {
+		log.Error().Err(err).Msgf("get templates: %s", err)
+		return nil, err
+	}
+	out := make([]RepoInfo, len(in))
+	for i, tpl := range in {
+		out[i] = RepoInfo{
+			Name:        tpl.Name,
+			Description: tpl.Description,
+			Source:      tpl.Git,
+			Path:        tpl.Path,
+			Installed:   tpl.InCache,
+			Available:   tpl.InRegistry,
+			Versions:    tpl.Versions.AsList(),
+		}
+	}
+	return out, nil
+}
+
+func (a App) GetRegistryList() ([]RepoInfo, error) {
+	in, err := repos.Registry.List()
 	if err != nil {
 		log.Error().Err(err).Msgf("get templates: %s", err)
 		return nil, err
@@ -270,27 +292,27 @@ func (a App) GetTemplates() ([]RepoInfo, error) {
 }
 
 func (a App) UpdateTemplateRegistry() error {
-	return tpl.UpdateRegistry()
+	return repos.Registry.Update()
 }
 
 func (a App) InstallTemplateFromSource(source string) (*RepoInfo, error) {
 	log.Info().Msgf("Install Template From Source %s", source)
-	vcs, err := tpl.Import(source)
+	fqn, err := repos.Cache.Install(source, "")
 	if err != nil {
 		log.Error().Err(err).Msgf("install template from source %s", source)
 		return nil, err
 	}
 	return &RepoInfo{
-		Name:   vcs.FullName,
+		Name:   fqn,
 		Source: source,
 	}, nil
 }
 
-func (a App) RemoveTemplate(name string) error {
-	log.Info().Msgf("Remove Template %s", name)
-	err := tpl.Remove(name)
+func (a App) RemoveTemplate(fqn string) error {
+	log.Info().Msgf("Remove Template %s", fqn)
+	err := repos.Cache.Remove(fqn)
 	if err != nil {
-		log.Error().Err(err).Msgf("remove template %s", name)
+		log.Error().Err(err).Msgf("remove template %s", fqn)
 	}
 	return err
 }

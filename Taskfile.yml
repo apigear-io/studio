@@ -5,6 +5,13 @@ env:
   CGO_ENABLED: 0
 
 tasks:
+  init:
+    desc: install initial dependencies
+    cmds:
+      - go install github.com/wailsapp/wails/v2/cmd/wails@v2.4.1
+      - go version
+      - go mod tidy
+
   dev:
     desc: Run studio in dev-mode
     cmds:
