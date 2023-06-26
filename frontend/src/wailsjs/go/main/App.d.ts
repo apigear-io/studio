@@ -10,15 +10,17 @@ export function CreateProject():Promise<any>;
 
 export function EmitProjectChanged():Promise<void>;
 
+export function GetCacheList():Promise<Array<main.RepoInfo>>;
+
 export function GetMonitorAddress():Promise<string>;
+
+export function GetRegistryList():Promise<Array<main.RepoInfo>>;
 
 export function GetSimulationAddress():Promise<string>;
 
-export function GetTemplates():Promise<Array<main.RepoInfo>>;
-
 export function ImportProject(arg1:string,arg2:string):Promise<any>;
 
-export function InstallTemplate(arg1:string):Promise<void>;
+export function InstallTemplate(arg1:string,arg2:string):Promise<void>;
 
 export function InstallTemplateFromSource(arg1:string):Promise<any>;
 
