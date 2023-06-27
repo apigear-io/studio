@@ -14,9 +14,9 @@ env:
   PUBLIC_TOKEN: ${{ secrets.PUBLIC_TOKEN }}
   REPO_TOKEN: ${{ secrets.APIGEAR_REPOS }}
 
-  wails_version: "v2.2"
-  go_version: "1.19.x"
-  node_version: "16.x"
+  wails_version: "v2.4.1"
+  go_version: "1.20.x"
+  node_version: "18.x"
 jobs:
   build-windows:
     runs-on: windows-latest

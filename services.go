@@ -53,19 +53,24 @@ func StartServices(ctx context.Context, port string) error {
 	if err != nil {
 		return err
 	}
+	log.Info().Msg("start http server")
 	server = net.NewHTTPServer()
+	log.Info().Msg("register log service")
 	err = RegisterLogService(ctx)
 	if err != nil {
 		return err
 	}
+	log.Info().Msg("register monitor service")
 	err = RegisterMonitorService(ctx)
 	if err != nil {
 		return err
 	}
+	log.Info().Msg("register simulation service")
 	err = RegisterSimulationService(ctx)
 	if err != nil {
 		return err
 	}
+	log.Info().Msg("run server")
 	err = RunServer(fmt.Sprintf(":%s", port))
 	if err != nil {
 		return err

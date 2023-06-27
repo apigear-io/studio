@@ -25,7 +25,7 @@ export const useLogStore = defineStore('log', {
       console.log('stop recording gen logs');
     },
     init() {
-      console.log('start log capturing');
+      console.log('init log store');
       this.list = [];
       EventsOn('log', (data) => {
         const event = JSON.parse(data);

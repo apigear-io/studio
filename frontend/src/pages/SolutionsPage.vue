@@ -104,9 +104,6 @@ const filter = function (rows: readonly any[]): readonly any[] {
     if (Date.parse(row.timestamp) < startTime) {
       continue
     }
-    if (row.level != 'info') {
-      continue
-    }
     if (topics.indexOf(row.topic) == -1) {
       continue
     }
@@ -163,7 +160,6 @@ const runDocument = async (item: main.DocumentInfo) => {
   try {
     showLogs.value = true;
     startTime = Date.now()
-    logs.startRecordGenLogs(); // should be clear, not stop, we should always log the latest messages
     await RunSolution(item.path);
     showLogs.value = true;
   } catch (e) {
