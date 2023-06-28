@@ -1,9 +1,9 @@
 <template>
   <q-page padding>
-    <q-dialog v-model="showLogs" persistent position="bottom">
-      <q-card style="width: 800px; max-width: 80vw; max-height: 40vh" class="fit">
+    <q-dialog v-model="showLogs" position="bottom">
+      <q-card style="width: 800px; max-width: 80vw; max-height: 50vh">
         <q-card-section class="fit">
-          <q-table :rows="logs.list" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" class="fit" filter="object" :filter-method="filter">
+          <q-table :rows="logs.list" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" filter="object" :filter-method="filter">
             <template v-slot:body="props">
               <q-tr :props="props" @click="props.expand = !props.expand">
                 <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="rowClass(props.row)">
@@ -113,6 +113,7 @@ const filter = function (rows: readonly any[]): readonly any[] {
 };
 
 const columns: QTableProps['columns'] = [
+  { name: 'timestamp', label: 'Time', field: 'time', align: 'left' },
   { name: 'level', label: 'Level', field: 'level', align: 'left' },
   { name: 'topic', label: 'Topic', field: 'topic', align: 'left' },
   { name: 'message', label: 'Messages', field: 'message', align: 'left' },
@@ -122,7 +123,7 @@ const pagination = {
   sortBy: 'desc',
   descending: false,
   page: 1,
-  rowsPerPage: 15,
+  rowsPerPage: 10,
 };
 
 function icon(docType: string) {

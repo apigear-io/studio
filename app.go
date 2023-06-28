@@ -116,9 +116,9 @@ func (a *App) ShareProject(project ProjectInfo) string {
 func (a *App) InstallTemplate(name string, version string) error {
 	log.Info().Msgf("Install Template %s", name)
 	repoID := repos.MakeRepoID(name, version)
-	err := repos.InstallTemplateFromRepoID(repoID)
+	fixedRepoId, err := repos.GetOrInstallTemplateFromRepoID(repoID)
 	if err != nil {
-		log.Error().Err(err).Msgf("install template: %s", err)
+		log.Error().Err(err).Msgf("install template: %s", fixedRepoId)
 	}
 	return err
 }

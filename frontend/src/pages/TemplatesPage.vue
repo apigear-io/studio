@@ -17,10 +17,14 @@
           <q-tab name="installed" label="Installed" />
           <q-tab name="available" label="Available" />
         </q-tabs>
-        <q-tabs-panels v-model="state.tab">
+        <q-tab-panels v-model="state.tab">
+        <q-tab-panel name="installed">
           <TemplateCache v-if="state.tab === 'installed'" />
+        </q-tab-panel>
+        <q-tab-panel name="available">
           <TemplateRegistry v-if="state.tab === 'available'" />
-        </q-tabs-panels>
+        </q-tab-panel>
+        </q-tab-panels>
       </q-card-section>
     </q-card>
   </q-page>

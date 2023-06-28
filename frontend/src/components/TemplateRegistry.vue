@@ -8,7 +8,6 @@
         <q-item-label>
           <q-btn flat>{{ item.name }}</q-btn>
         </q-item-label>
-        <q-item-label caption lines="2">{{ item.description }}</q-item-label>
       </q-item-section>
       <q-item-section side>
         <q-btn-group flat>
