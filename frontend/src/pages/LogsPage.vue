@@ -9,7 +9,7 @@
         </q-toolbar>
       </q-card-section>
       <q-card-section class="fit">
-        <q-table :rows="logStore.list" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" class="fit">
+        <q-table :rows="logStore.events" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" class="fit">
           <template v-slot:body="props">
             <q-tr :props="props" @click="props.expand = !props.expand">
               <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="rowClass(props.row)">

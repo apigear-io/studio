@@ -341,7 +341,7 @@ func (a App) RunSolution(source string) error {
 	r := GetRunner()
 	err = r.RunDoc(ctx, source, doc)
 	if err != nil {
-		log.Error().Err(err).Msgf("solution: %s", err)
+		log.Error().Err(err).Msg("run solution")
 		return err
 	}
 	return nil

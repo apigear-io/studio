@@ -9,32 +9,52 @@ export interface ILogEvent {
   message: string;
 }
 
+
+const solutionTopics = ['app', 'gen', 'sol'];
+
 export const useLogStore = defineStore('log', {
   state: () => ({
     limit: 500 as number,
-    list: [] as ILogEvent[],
+    events: [] as ILogEvent[],
+    solutionEvents: [] as ILogEvent[],
+    recordingSolutionRun: false as boolean,
   }),
   actions: {
     clear() {
-      this.list = [];
+      this.events = [];
     },
-    startRecordGenLogs() {
+    startRecordSolutionRun() {
       console.log('start recording gen logs');
+      this.solutionEvents = [];
+      this.recordingSolutionRun = true;
     },
-    stopRecordGenLogs() {
+    stopRecordingSolutionRun() {
       console.log('stop recording gen logs');
+      this.recordingSolutionRun = false;
+    },
+    pushEvent(event: ILogEvent) {
+      // check limit and pop
+      if (this.events.length > this.limit) {
+        this.events.pop();
+      }
+      this.events.unshift(event);
+    },
+    pushSolutionEvent(event: ILogEvent) {
+      if (this.recordingSolutionRun) {
+        // check limit and pop
+        if (this.solutionEvents.length > this.limit) {
+          this.solutionEvents.pop();
+        }
+        this.solutionEvents.unshift(event);
+      }
     },
     init() {
       console.log('init log store');
-      this.list = [];
+      this.events = [];
       EventsOn('log', (data) => {
         const event = JSON.parse(data);
-        console.log('log event', event);
-        this.list.unshift(event);
-        // limit the number of events
-        if (this.list.length > this.limit) {
-          this.list.pop();
-        }
+        this.pushEvent(event)
+        this.pushSolutionEvent(event)
       });
     },
   },

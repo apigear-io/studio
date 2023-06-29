@@ -3,7 +3,7 @@
     <q-dialog v-model="showLogs" position="bottom">
       <q-card style="width: 800px; max-width: 80vw; max-height: 50vh">
         <q-card-section class="fit">
-          <q-table :rows="logs.list" :columns="columns" row-key="timestamp" dense flat :pagination="pagination" filter="object" :filter-method="filter">
+          <q-table :rows="logs.solutionEvents" :columns="columns" row-key="timestamp" dense flat :pagination="pagination">
             <template v-slot:body="props">
               <q-tr :props="props" @click="props.expand = !props.expand">
                 <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="rowClass(props.row)">
@@ -96,26 +96,10 @@ const $q = useQuasar();
 const $gtm = useGtm();
 const showLogs = ref(false);
 
-const topics = ['app', 'gen', 'sol'];
-var startTime = Date.now()
-const filter = function (rows: readonly any[]): readonly any[] {
-  const result = []
-  for (const row of rows) {
-    if (Date.parse(row.timestamp) < startTime) {
-      continue
-    }
-    if (topics.indexOf(row.topic) == -1) {
-      continue
-    }
-    result.push(row)
-  }
-  return result
-};
-
 const columns: QTableProps['columns'] = [
-  { name: 'timestamp', label: 'Time', field: 'time', align: 'left' },
   { name: 'level', label: 'Level', field: 'level', align: 'left' },
   { name: 'topic', label: 'Topic', field: 'topic', align: 'left' },
+  { name: 'error', label: 'Error', field: 'error', align: 'left' },
   { name: 'message', label: 'Messages', field: 'message', align: 'left' },
 ];
 
@@ -152,7 +136,7 @@ function rowClass(item: ILogEvent): string {
 
 onUnmounted(() => {
   showLogs.value = false;
-  logs.stopRecordGenLogs();
+  logs.stopRecordingSolutionRun();
 });
 
 const runDocument = async (item: main.DocumentInfo) => {
@@ -160,9 +144,9 @@ const runDocument = async (item: main.DocumentInfo) => {
   console.log('runDocument', item.path);
   try {
     showLogs.value = true;
-    startTime = Date.now()
+    logs.startRecordSolutionRun();
     await RunSolution(item.path);
-    showLogs.value = true;
+    logs.stopRecordingSolutionRun()
   } catch (e) {
     showLogs.value = true;
     console.error(e);
