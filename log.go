@@ -5,3 +5,4 @@ import (
 )
 
 var log = zlog.Topic("app")
+var simLog = zlog.Topic("sim")

@@ -1,12 +1,35 @@
 <template>
   <q-page padding>
+    <q-dialog v-model="showLogs" position="bottom">
+      <q-card style="width: 800px; max-width: 80vw; max-height: 50vh">
+        <q-card-section class="fit">
+          <q-table :rows="logs.simEvents" :columns="columns" row-key="timestamp" dense flat :pagination="pagination">
+            <template v-slot:body="props">
+              <q-tr :props="props" @click="props.expand = !props.expand">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props" :class="rowClass(props.row)">
+                  {{ col.value }}
+                </q-td>
+              </q-tr>
+              <q-tr v-show="props.expand">
+                <q-td colspan="100%" class="text-caption">
+                  <vue-json-pretty :data="props.row" />
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Close" color="primary" @click="closeDialog" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-avatar icon="av_timer"/>
+          <q-avatar icon="av_timer" />
           <q-toolbar-title>Simulation Scenarios</q-toolbar-title>
           <q-space />
-          <q-btn flat icon="av_timer" label="Events" style="width: 120px" to="/projects/simulations/messages" />
+          <q-btn flat icon="av_timer" label="Simulation Events" to="/projects/simulations/messages" />
         </q-toolbar>
       </q-card-section>
       <q-card-section>
@@ -48,17 +71,24 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
+import { useQuasar, QTableProps } from 'quasar';
 import { useGtm } from '@gtm-support/vue-gtm';
 import { OpenSourceInEditor, StartScenario, StopScenario } from '../wailsjs/go/main/App';
 import { useProjectStore } from '../stores/project-store';
 import { useSimulationStore } from '../stores/simulation-store';
 import { main } from '../wailsjs/go/models';
+import { useLogStore, ILogEvent } from '../stores/log-store';
+import { ref } from 'vue';
+import VueJsonPretty from 'vue-json-pretty';
+import 'vue-json-pretty/lib/styles.css';
 
 const store = useProjectStore();
 const simu = useSimulationStore();
+const logs = useLogStore();
 const $q = useQuasar();
 const $gtm = useGtm();
+const showLogs = ref(false);
+
 function icon(docType: string) {
   switch (docType) {
     case 'module':
@@ -70,6 +100,33 @@ function icon(docType: string) {
   }
 }
 
+const columns: QTableProps['columns'] = [
+  { name: 'level', label: 'Level', field: 'level', align: 'left' },
+  { name: 'topic', label: 'Topic', field: 'topic', align: 'left' },
+  { name: 'error', label: 'Error', field: 'error', align: 'left' },
+  { name: 'message', label: 'Messages', field: 'message', align: 'left' },
+];
+
+const pagination = {
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+};
+
+function rowClass(item: ILogEvent): string {
+  switch (item.level) {
+    case 'info':
+      return '';
+    case 'warning':
+      return 'text-warning';
+    case 'error':
+      return 'text-red-4';
+    default:
+      return '';
+  }
+}
+
 const runDocument = async (doc: main.DocumentInfo) => {
   $gtm?.trackEvent({
     event: 'run_document',
@@ -78,8 +135,10 @@ const runDocument = async (doc: main.DocumentInfo) => {
   });
   console.log('runDocument', doc);
   try {
+    showLogs.value = true;
+    logs.startRecordSimEvents();
     await StartScenario(doc.path);
-    simu.start(doc.path)
+    simu.start(doc.path);
     $q.notify({
       color: 'positive',
       message: "Scenario '" + doc.name + "' started",
@@ -101,9 +160,11 @@ const stopDocument = async (doc: main.DocumentInfo) => {
     action: 'stop_document',
   });
   console.log('stopDocument', doc);
+  showLogs.value = false;
+  logs.stopRecordSimEvents();
   try {
     await StopScenario(doc.path);
-    simu.stop(doc.path)
+    simu.stop(doc.path);
   } catch (err) {
     $q.notify({
       color: 'negative',
@@ -112,6 +173,10 @@ const stopDocument = async (doc: main.DocumentInfo) => {
     });
   }
 };
+
+function closeDialog() {
+  showLogs.value = false;
+}
 
 async function editDocument(doc: main.DocumentInfo) {
   $gtm?.trackEvent({

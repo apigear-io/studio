@@ -26,7 +26,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-avatar icon="chair"/>
+          <q-avatar icon="chair" />
           <q-toolbar-title>SDK Solutions</q-toolbar-title>
           <q-space />
           <q-btn flat label="Summary" style="width: 120px" />
@@ -124,11 +124,11 @@ function icon(docType: string) {
 function rowClass(item: ILogEvent): string {
   switch (item.level) {
     case 'info':
-      return 'text-info';
+      return '';
     case 'warning':
       return 'text-warning';
     case 'error':
-      return 'text-negative';
+      return 'text-red-4';
     default:
       return '';
   }
@@ -146,7 +146,7 @@ const runDocument = async (item: main.DocumentInfo) => {
     showLogs.value = true;
     logs.startRecordSolutionRun();
     await RunSolution(item.path);
-    logs.stopRecordingSolutionRun()
+    logs.stopRecordingSolutionRun();
   } catch (e) {
     showLogs.value = true;
     console.error(e);

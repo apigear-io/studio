@@ -9,19 +9,19 @@ export interface ILogEvent {
   message: string;
 }
 
-
-const solutionTopics = ['app', 'gen', 'sol'];
-
 export const useLogStore = defineStore('log', {
   state: () => ({
     limit: 500 as number,
     events: [] as ILogEvent[],
+    simEvents: [] as ILogEvent[],
+    recordSimEvents: false as boolean,
     solutionEvents: [] as ILogEvent[],
     recordingSolutionRun: false as boolean,
   }),
   actions: {
     clear() {
       this.events = [];
+      this.simEvents = [];
     },
     startRecordSolutionRun() {
       console.log('start recording gen logs');
@@ -48,13 +48,30 @@ export const useLogStore = defineStore('log', {
         this.solutionEvents.unshift(event);
       }
     },
+    startRecordSimEvents() {
+      this.simEvents = [];
+      this.recordSimEvents = true;
+    },
+    stopRecordSimEvents() {
+      this.recordSimEvents = false;
+    },
     init() {
       console.log('init log store');
       this.events = [];
       EventsOn('log', (data) => {
         const event = JSON.parse(data);
-        this.pushEvent(event)
-        this.pushSolutionEvent(event)
+        this.pushEvent(event);
+        this.pushSolutionEvent(event);
+        if (event.topic === 'sim') {
+          if (this.recordSimEvents) {
+            console.log('sim event', event);
+            this.simEvents.unshift(event);
+            // limit the number of events
+            if (this.simEvents.length > this.limit) {
+              this.simEvents.pop();
+            }
+          }
+        }
       });
     },
   },

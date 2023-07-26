@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
         <q-toolbar class="bg-primary text-white rounded-borders">
-          <q-avatar icon="view_list"/>
+          <q-avatar icon="view_list" />
           <q-toolbar-title>Log Events</q-toolbar-title>
           <q-space />
         </q-toolbar>
@@ -66,11 +66,11 @@ const columns: QTableProps['columns'] = [
 function rowClass(item: ILogEvent): string {
   switch (item.level) {
     case 'info':
-      return 'text-info';
+      return '';
     case 'warning':
       return 'text-warning';
     case 'error':
-      return 'text-negative';
+      return 'text-red-4';
     default:
       return '';
   }

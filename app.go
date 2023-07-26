@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/apigear-io/cli/pkg/cfg"
 	"github.com/apigear-io/cli/pkg/helper"
@@ -335,7 +334,7 @@ func (a App) RunSolution(source string) error {
 	ctx := context.Background()
 	doc, err := sol.ReadSolutionDoc(source)
 	if err != nil {
-		log.Error().Err(err).Msgf("read: %s", err)
+		log.Error().Err(err).Msgf("read document %s", helper.BaseName(source))
 		return err
 	}
 	r := GetRunner()
@@ -380,31 +379,31 @@ func (a App) StartScenario(source string) error {
 	s := GetSimulation()
 	result, err := spec.CheckFile(source)
 	if err != nil {
-		log.Warn().Err(err).Msgf("invalid scenario: %s", err)
+		simLog.Error().Err(err).Msgf("invalid scenario: %s", source)
+		return err
 	}
 	if !result.Valid() {
-		var entries []string
-		for _, err := range result.Errors() {
-			entries = append(entries, err.String())
+		for _, err := range result.Errors {
+			simLog.Error().Str("context", err.Related).Msgf("%s: %s", err.Field, err.Description)
 		}
-		log.Warn().Msgf("invalid scenario: %s", strings.Join(entries, " / "))
+		return fmt.Errorf("invalid scenario: %s", source)
 	}
 
 	doc, err := actions.ReadScenario(source)
 	if err != nil {
-		log.Error().Err(err).Msgf("start scenario: %s", err)
+		simLog.Error().Err(err).Msgf("read scenario: %s", err)
 		return err
 	}
 	err = s.LoadScenario(source, doc)
 	if err != nil {
-		log.Error().Err(err).Msgf("start scenario: %s", err)
+		simLog.Error().Err(err).Msgf("load scenario: %s", err)
 		return err
 	}
 	ctx := context.Background()
 	err = s.PlayAllSequences(ctx)
 
 	if err != nil {
-		log.Error().Err(err).Msgf("start scenario: %s", err)
+		simLog.Error().Err(err).Msgf("play scenario: %s", err)
 		return err
 	}
 
@@ -412,12 +411,12 @@ func (a App) StartScenario(source string) error {
 }
 
 func (a App) StopScenario(source string) error {
-	log.Debug().Msgf("stop scenario %s", source)
+	simLog.Debug().Msgf("stop scenario %s", source)
 	s := GetSimulation()
 	s.StopAllSequences()
 	err := s.UnloadScenario(source)
 	if err != nil {
-		log.Error().Err(err).Msgf("stop scenario: %s", err)
+		simLog.Error().Err(err).Msgf("stop scenario: %s", err)
 	}
 	return err
 }
@@ -466,7 +465,7 @@ func (a App) CheckDocument(file string) (*CheckResult, error) {
 		}, err
 	}
 	var errors []string
-	for _, err := range result.Errors() {
+	for _, err := range result.Errors {
 		errors = append(errors, err.String())
 	}
 	return &CheckResult{
