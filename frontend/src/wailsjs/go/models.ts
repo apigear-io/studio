@@ -47,8 +47,8 @@ export namespace main {
 	    }
 	}
 	export class ProjectInfo {
-	    path: string;
 	    name: string;
+	    path: string;
 	    documents: DocumentInfo[];
 	
 	    static createFrom(source: any = {}) {
@@ -57,8 +57,8 @@ export namespace main {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.path = source["path"];
 	        this.name = source["name"];
+	        this.path = source["path"];
 	        this.documents = this.convertValues(source["documents"], DocumentInfo);
 	    }
 	
