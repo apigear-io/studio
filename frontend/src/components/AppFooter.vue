@@ -1,10 +1,8 @@
 <template>
   <div class="row">
-    <q-btn flat icon="img:icons/appicon-16x16.png" :label="`ApiGear Studio ${state.version}`" color="blue-grey-4"
-      @click="openAppInfo()" />
+    <q-btn flat icon="img:icons/appicon-16x16.png" :label="`ApiGear Studio ${state.version}`" color="blue-grey-4" @click="openAppInfo()" />
     <q-space />
-    <q-btn v-if="state.updateAvailable" flat icon="update" label="A new ApiGear Studio update is available"
-      color="primary" @click="openAppInfo()" />
+    <q-btn v-if="state.updateAvailable" flat icon="update" label="A new ApiGear Studio update is available" color="primary" @click="openAppInfo()" />
     <q-space />
     <q-btn flat icon="forum" label="Discussions" color="blue-grey-4" @click="openDiscussions()" />
   </div>
@@ -18,15 +16,14 @@ import { CheckUpdate, VersionInfo } from '../wailsjs/go/main/App';
 import { onMounted, reactive } from 'vue';
 const $q = useQuasar();
 
-
 const state = reactive({
   updateAvailable: false as boolean,
   version: '0.0.0' as string,
-})
+});
 
 async function doCheckUpdate() {
   try {
-    const info = await VersionInfo()
+    const info = await VersionInfo();
     const rel = await CheckUpdate();
     console.log('relInfo', rel);
     console.log('info', info);
@@ -36,19 +33,20 @@ async function doCheckUpdate() {
     if (rel != null) {
       state.updateAvailable = true;
     }
-  } catch(err) {
-    $q.notify({
-      color: 'negative',
-      message: 'Failed to check for updates: ' + err,
-      icon: 'error',
-    });
+  } catch (err) {
+    console.log('Failed to check for updates: ' + err);
+    // $q.notify({
+    //   color: 'negative',
+    //   message: 'Failed to check for updates: ' + err,
+    //   icon: 'error',
+    // });
   }
 }
 
 onMounted(async () => {
   // call checkupdate deleayed by 500ms
-  setTimeout(doCheckUpdate,  1000);
-})
+  setTimeout(doCheckUpdate, 1000);
+});
 
 function openAppInfo() {
   console.log('openAppInfo');
@@ -57,12 +55,14 @@ function openAppInfo() {
       version: state.version,
     },
     component: AppInfoDialog,
-  }).onOk(() => {
-    console.log('ok');
-  }).onCancel(() => {
-    console.log('cancel');
-  });
-};
+  })
+    .onOk(() => {
+      console.log('ok');
+    })
+    .onCancel(() => {
+      console.log('cancel');
+    });
+}
 
 function openDiscussions() {
   try {
@@ -74,10 +74,7 @@ function openDiscussions() {
       icon: 'error',
     });
   }
-};
-
+}
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
