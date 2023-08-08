@@ -1,11 +1,10 @@
 import {
-  Divider,
+  Button,
   Grid,
   Group,
   NavLink,
   Paper,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
 import {
@@ -15,21 +14,27 @@ import {
   IconFolderOpen,
   IconInfoCircle,
   IconPlus,
+  IconTrash,
 } from "@tabler/icons-react";
 import {
   CreateProject,
   OpenProject,
   OpenRecentProject,
+  RemoveRecentProject,
 } from "../wailsjs/go/main/App";
 import { useNavigate } from "react-router-dom";
-import { notifyError, notifyOpen } from "../toasts";
+import { notifyError, notifyOpen, notifySuccess } from "../toasts";
 import { useProjectStore } from "../stores/ProjectStore";
+import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
+import PageHeader from "../components/PageHeader";
 
 function StartSection() {
+  const refresh = useProjectStore((state) => state.refresh);
   const nav = useNavigate();
   function openProject() {
     OpenProject()
       .then(() => {
+        refresh();
         nav("/project");
         notifyOpen("Project opened");
       })
@@ -80,12 +85,24 @@ function StartSection() {
 }
 
 function RecentSection() {
+  const refresh = useProjectStore((state) => state.refresh);
   const recent = useProjectStore((state) => state.recent);
   const nav = useNavigate();
   function openRecent(path: string) {
     OpenRecentProject(path)
       .then(() => {
+        refresh();
         nav("/project");
+      })
+      .catch((err) => {
+        notifyError(err);
+      });
+  }
+  function deleteRecent(path: string) {
+    RemoveRecentProject(path)
+      .then(() => {
+        refresh();
+        notifySuccess("Recent project deleted");
       })
       .catch((err) => {
         notifyError(err);
@@ -94,34 +111,48 @@ function RecentSection() {
   return (
     <Stack spacing="xs">
       <Title order={3}>Recent ...</Title>
-      {recent.map((item, index) => (
-        <NavLink
-          key={index}
-          label={item}
-          icon={<IconFolder />}
-          onClick={() => openRecent(item)}
-        />
-      ))}
+      <Stack spacing="xs">
+        {recent.map((item, index) => (
+          <Group key={index} position="apart" noWrap>
+            <NavLink
+              label={item}
+              icon={<IconFolder />}
+              onClick={() => openRecent(item)}
+            />
+            <Button
+              variant="link"
+              onClick={() => deleteRecent(item)}
+              leftIcon={<IconTrash size={18} />}
+            >
+              Delete
+            </Button>
+          </Group>
+        ))}
+      </Stack>
     </Stack>
   );
 }
 function MoreSection() {
+  function openApiGear() {
+    BrowserOpenURL("https://apigear.io");
+  }
+  function openDocs() {
+    BrowserOpenURL("https://docs.apigear.io");
+  }
   return (
     <Stack spacing="xs">
       <Title order={3}>More ...</Title>
       <NavLink
-        component="a"
-        href="https://apigear.io"
         label="About ApiGear"
         description="Learn more about ApiGear"
         icon={<IconInfoCircle />}
+        onClick={openApiGear}
       />
       <NavLink
-        component="a"
-        href="https://docs.apigear.io"
         label="Documentation"
         description="Read the documentation"
         icon={<IconBook />}
+        onClick={openDocs}
       />
     </Stack>
   );
@@ -131,13 +162,7 @@ export default function WelcomePage() {
   return (
     <Paper p="lg">
       <Stack spacing="lg">
-        <Group>
-          <Stack spacing="0">
-            <Title order={1}>ApiGear Studio</Title>
-            <Text c="dimmed">APIs evolved</Text>
-          </Stack>
-        </Group>
-        <Divider />
+        <PageHeader title="ApiGear Studio" description="APIs evolved" />
         <Grid gutter="lg">
           <Grid.Col span={6}>
             <StartSection />

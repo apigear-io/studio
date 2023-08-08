@@ -1,7 +1,7 @@
 import { Group, Header, Title, Code, Button } from "@mantine/core";
-import { IconInfoCircle, IconSwitchHorizontal } from "@tabler/icons-react";
+import { IconHelpCircle, IconSwitchHorizontal } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import NewDocumentMenu from "./NewDocumentMenu";
+import NewDocumentAction from "./NewDocumentAction";
 
 export default function AppHeader() {
   const nav = useNavigate();
@@ -17,7 +17,7 @@ export default function AppHeader() {
           <Code sx={{ fontWeight: 700 }}>v0.0.1</Code>
         </Group>
         <Group position="apart" px="md">
-          <NewDocumentMenu />
+          <NewDocumentAction />
         </Group>
         <Group position="apart" px="md">
           <Button
@@ -27,7 +27,7 @@ export default function AppHeader() {
           >
             Switch Project
           </Button>
-          <Button variant="subtle" leftIcon={<IconInfoCircle />}>
+          <Button variant="subtle" leftIcon={<IconHelpCircle />}>
             Help
           </Button>
         </Group>

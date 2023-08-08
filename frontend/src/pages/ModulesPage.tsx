@@ -1,4 +1,4 @@
-import { Divider, Paper, Stack } from "@mantine/core";
+import { Paper, Stack } from "@mantine/core";
 import PageHeader from "../components/PageHeader";
 import DocumentEntry from "../components/DocumentEntry";
 import { useProjectStore, Document } from "../stores/ProjectStore";
@@ -17,7 +17,6 @@ export default function ProjectPage() {
           title="Modules"
           description="API modules define the API surface. The interfaces, data structures and operations that can be consumed."
         />
-        <Divider />
         {modules.map((doc) => (
           <DocumentEntry doc={doc} key={doc.name} />
         ))}

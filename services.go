@@ -95,16 +95,22 @@ func StopServices() {
 }
 
 func StartUpdater(ctx context.Context) error {
+	log.Info().Msg("start updater")
 	updateInfo.CheckComplete = false
 	u, err := up.NewUpdater("apigear-io/studio-releases", cfg.BuildVersion())
+	log.Info().Msgf("current version: %s", cfg.BuildVersion())
 	if err != nil {
+		log.Error().Msgf("create updater: %v", err)
 		return fmt.Errorf("create updater: %v", err)
 	}
+	log.Info().Msgf("xxx updater: %v", u)
 	updateInfo.Updater = u
 	r, err := u.Check(ctx)
 	if err != nil {
+		log.Error().Msgf("check for update: %v", err)
 		return fmt.Errorf("check for update: %v", err)
 	}
+	log.Info().Msgf("latest release: %v", r)
 	updateInfo.LatestRelease = r
 	updateInfo.CheckComplete = true
 	return nil
@@ -227,7 +233,7 @@ func CheckAppUpdate() (*ReleaseInfo, error) {
 	}
 	if updateInfo.LatestRelease == nil {
 		// no update available
-		return nil, nil
+		return nil, fmt.Errorf("no update available")
 	}
 	rel := updateInfo.LatestRelease
 	return &ReleaseInfo{

@@ -18,6 +18,12 @@ import SettingsPage from "./pages/SettingsPage";
 import { Container } from "@mantine/core";
 import { useProjectStore } from "./stores/ProjectStore";
 import { useLayoutEffect } from "react";
+import { useLogsStore } from "./stores/LogsStore";
+import SimulationEventsPage from "./pages/SimulationEventsPage";
+import { useSimuStore } from "./stores/SimuStore";
+import { useMonitorStore } from "./stores/MonitorStore";
+import { useCacheStore, useRegistryStore } from "./stores/TemplatesStore";
+import { useAppStore } from "./stores/AppStore";
 
 const router = createHashRouter(
   createRoutesFromElements(
@@ -29,6 +35,7 @@ const router = createHashRouter(
         <Route path="solutions" element={<SolutionsPage />}></Route>
         <Route path="templates" element={<TemplatesPage />}></Route>
         <Route path="simulation" element={<SimulationPage />}></Route>
+        <Route path="simulation/events" element={<SimulationEventsPage />} />
         <Route path="monitor" element={<MonitorPage />}></Route>
         <Route path="logs" element={<LogsPage />}></Route>
         <Route path="settings" element={<SettingsPage />}></Route>
@@ -38,13 +45,26 @@ const router = createHashRouter(
 );
 
 function App() {
-  const refresh = useProjectStore((state) => state.refresh);
+  const initProject = useProjectStore((state) => state.init);
+  const initLogs = useLogsStore((state) => state.init);
+  const initSimu = useSimuStore((state) => state.init);
+  const initMonitor = useMonitorStore((state) => state.init);
+  const initCache = useCacheStore((state) => state.init);
+  const initRegistry = useRegistryStore((state) => state.init);
+  const initApp = useAppStore((state) => state.init);
   useLayoutEffect(() => {
-    refresh();
+    // run only once
+    initProject();
+    initLogs();
+    initSimu();
+    initMonitor();
+    initCache();
+    initRegistry();
+    initApp();
   });
   return (
-    <Container fluid p="md">
-      <RouterProvider router={router} />;
+    <Container fluid py="md">
+      <RouterProvider router={router} />
     </Container>
   );
 }

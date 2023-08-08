@@ -1,34 +1,62 @@
-import { Button, Menu, Modal, Select, TextInput, Group } from "@mantine/core";
+import {
+  Button,
+  Menu,
+  Modal,
+  Select,
+  TextInput,
+  Group,
+  NavLink,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCirclePlus } from "@tabler/icons-react";
-import { NewDocument } from "../wailsjs/go/main/App";
-import { notifyError } from "../toasts";
+import {
+  IconArmchair,
+  IconCirclePlus,
+  IconClockBolt,
+  IconComponents,
+} from "@tabler/icons-react";
+import { notifyError, notifySuccess } from "../toasts";
 import { useProjectStore } from "../stores/ProjectStore";
+import { forwardRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   name: string;
   kind: string;
 }
 
-export default function NewDocumentMenu() {
-  const refresh = useProjectStore((state) => state.refresh);
+type ItemProps = {
+  value: string;
+  label: string;
+  icon: React.FC<any>;
+};
+
+const SelectItem = forwardRef<HTMLButtonElement, ItemProps>(
+  ({ value, label, icon: Icon }: ItemProps, ref) => {
+    return <NavLink ref={ref} label={label} icon={<Icon />} value={value} />;
+  }
+);
+
+export default function NewDocumentAction() {
+  const newDocument = useProjectStore((state) => state.newDocument);
   const [opened, { open, close }] = useDisclosure();
+  const nav = useNavigate();
   const form = useForm({
     initialValues: {
       name: "",
       kind: "",
     } as FormData,
   });
-  function newDocument(kind: string) {
+  function openNewDocument(kind: string) {
     form.setValues({ kind: kind });
     open();
   }
   function submit(data: FormData) {
-    NewDocument(data.kind, data.name)
+    newDocument(data.kind, data.name)
       .then(() => {
-        refresh();
         close();
+        notifySuccess("Document created successfully!");
+        nav("/project");
       })
       .catch((err) => {
         notifyError(err);
@@ -46,6 +74,7 @@ export default function NewDocumentMenu() {
             label="Name"
             placeholder="Name"
             required
+            data-autofocus
             {...form.getInputProps("name")}
           />
           <Select
@@ -53,18 +82,22 @@ export default function NewDocumentMenu() {
             placeholder="Kind"
             required
             {...form.getInputProps("kind")}
+            itemComponent={SelectItem}
             data={[
               {
                 value: "module",
                 label: "API Module",
+                icon: IconComponents,
               },
               {
                 value: "solution",
                 label: "SDK Solution",
+                icon: IconArmchair,
               },
               {
                 value: "scenario",
                 label: "Simulation Scenario",
+                icon: IconClockBolt,
               },
             ]}
           />
@@ -80,11 +113,22 @@ export default function NewDocumentMenu() {
         </Button>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Item onClick={() => newDocument("module")}>API Module</Menu.Item>
-        <Menu.Item onClick={() => newDocument("solution")}>
+        <Menu.Item
+          icon={<IconComponents />}
+          onClick={() => openNewDocument("module")}
+        >
+          API Module
+        </Menu.Item>
+        <Menu.Item
+          icon={<IconArmchair />}
+          onClick={() => openNewDocument("solution")}
+        >
           SDK Solution
         </Menu.Item>
-        <Menu.Item onClick={() => newDocument("scenario")}>
+        <Menu.Item
+          icon={<IconClockBolt />}
+          onClick={() => openNewDocument("scenario")}
+        >
           Simulation Scenario
         </Menu.Item>
       </Menu.Dropdown>

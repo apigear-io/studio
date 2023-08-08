@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --profile",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -14,8 +14,11 @@
     "@mantine/core": "^6.0.17",
     "@mantine/form": "^6.0.17",
     "@mantine/hooks": "^6.0.17",
+    "@mantine/modals": "^6.0.17",
     "@mantine/notifications": "^6.0.17",
+    "@mantine/prism": "^6.0.17",
     "@tabler/icons-react": "^2.30.0",
+    "dayjs": "^1.11.9",
     "mantine-datatable": "^2.9.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

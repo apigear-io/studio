@@ -1,5 +1,9 @@
 import { create } from "zustand";
-import { RecentProjects, RefreshCurrentProject } from "../wailsjs/go/main/App";
+import {
+  NewDocument,
+  RecentProjects,
+  RefreshCurrentProject,
+} from "../wailsjs/go/main/App";
 
 export type Document = {
   name: string;
@@ -22,7 +26,9 @@ type ProjectActions = {
   setProject: (project: Project) => void;
   setRecent: (recent: string[]) => void;
   refresh: () => Promise<void>;
+  init(): void;
   getDocuments: (type: string) => Document[];
+  newDocument: (kind: string, name: string) => Promise<void>;
 };
 
 export const useProjectStore = create<ProjectState & ProjectActions>(
@@ -38,12 +44,20 @@ export const useProjectStore = create<ProjectState & ProjectActions>(
       }
       return project.documents.filter((doc) => doc.type === type);
     },
-
     refresh: async () => {
-      const recent = await RecentProjects();
-      set({ recent });
       const project: Project = await RefreshCurrentProject();
       set({ project });
+      const recent = await RecentProjects();
+      set({ recent });
+    },
+    init: async () => {
+      const { refresh } = get();
+      await refresh();
+    },
+    newDocument: async (kind, name) => {
+      const { refresh } = get();
+      await NewDocument(kind, name);
+      await refresh();
     },
   })
 );

@@ -1,8 +1,10 @@
-import { Divider, Paper, Stack } from "@mantine/core";
+import { Paper, Stack } from "@mantine/core";
 import PageHeader from "../components/PageHeader";
-import EventTable from "../components/EventTable";
+import MonitorEventTable from "../components/MonitorEventTable";
+import { useMonitorStore } from "../stores/MonitorStore";
 
 export default function LogsPage() {
+  const events = useMonitorStore((state) => state.events);
   return (
     <Paper>
       <Stack>
@@ -10,8 +12,7 @@ export default function LogsPage() {
           title="API Event Monitoring"
           description="Displays a list of events that have occurred in the system."
         />
-        <Divider />
-        <EventTable />
+        <MonitorEventTable events={events} />
       </Stack>
     </Paper>
   );
