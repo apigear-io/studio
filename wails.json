@@ -6,7 +6,7 @@
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
-  "frontend:dev:serverUrl": "http://localhost:5173",
+  "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "ApiGear",
     "email": "info@apigear.io"

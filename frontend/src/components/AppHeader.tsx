@@ -1,7 +1,16 @@
-import { Group, Header, Title, Code, Button } from "@mantine/core";
+import {
+  Group,
+  Header,
+  Title,
+  Code,
+  Button,
+  ActionIcon,
+  Image,
+} from "@mantine/core";
 import { IconHelpCircle, IconSwitchHorizontal } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import NewDocumentAction from "./NewDocumentAction";
+import appicon from "../assets/icons/appicon-96x96.png";
 
 export default function AppHeader() {
   const nav = useNavigate();
@@ -13,8 +22,10 @@ export default function AppHeader() {
     <Header height={60} p="xs" withBorder>
       <Group position="apart">
         <Group position="apart" px="md">
+          <ActionIcon variant="transparent" radius="xl">
+            <Image src={appicon} width={40} height={40} alt="ApiGear" />
+          </ActionIcon>
           <Title order={1}>ApiGear</Title>
-          <Code sx={{ fontWeight: 700 }}>v0.0.1</Code>
         </Group>
         <Group position="apart" px="md">
           <NewDocumentAction />
