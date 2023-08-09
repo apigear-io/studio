@@ -5,6 +5,7 @@ import { useProjectStore } from "../stores/ProjectStore";
 import { IconCheck } from "@tabler/icons-react";
 import { CheckDocument } from "../wailsjs/go/main/App";
 import { notifyError, notifyValid, notifyInvalid } from "../toasts";
+import Page from "../components/Page";
 
 export default function ProjectPage() {
   const project = useProjectStore((state) => state.project);
@@ -28,26 +29,28 @@ export default function ProjectPage() {
     console.log("check all");
   }
   return (
-    <Box>
-      <Stack>
-        <PageHeader
-          title="Dashboard"
-          description="An API project contains a set of documents to define APIs, generate SDKs, simulate APIs as also monitor APIs at runtime."
-        >
-          <>
-            <Button
-              variant="subtle"
-              leftIcon={<IconCheck />}
-              onClick={checkAll}
-            >
-              Check All
-            </Button>
-          </>
-        </PageHeader>
-        {documents.map((doc) => (
-          <DocumentEntry doc={doc} key={doc.name} />
-        ))}
-      </Stack>
-    </Box>
+    <Page title="Project">
+      <Box>
+        <Stack>
+          <PageHeader
+            title="Dashboard"
+            description="An API project contains a set of documents to define APIs, generate SDKs, simulate APIs as also monitor APIs at runtime."
+          >
+            <>
+              <Button
+                variant="subtle"
+                leftIcon={<IconCheck />}
+                onClick={checkAll}
+              >
+                Check All
+              </Button>
+            </>
+          </PageHeader>
+          {documents.map((doc) => (
+            <DocumentEntry doc={doc} key={doc.name} />
+          ))}
+        </Stack>
+      </Box>
+    </Page>
   );
 }

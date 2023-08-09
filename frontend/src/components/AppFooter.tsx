@@ -1,20 +1,34 @@
-import { Button, Code, Footer, Group } from "@mantine/core";
+import { Button, Footer, Group } from "@mantine/core";
 import { IconInfoCircle, IconMessages } from "@tabler/icons-react";
 import AppInfoAction from "./AppInfoAction";
+import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 
 export default function AppFooter() {
+  function openDiscussions() {
+    BrowserOpenURL("https://github.com/orgs/apigear-io/discussions");
+  }
+  function openHome() {
+    BrowserOpenURL("https://apigear.io");
+  }
   return (
     <Footer height={38}>
       <Group position="apart" px="md">
         <AppInfoAction />
-        <Button variant="link" size="sm">
-          ApiGear Studio <Code sx={{ fontWeight: 700 }}>v0.0.1</Code>
-        </Button>
         <Group position="apart" px="md">
-          <Button variant="link" size="xs" leftIcon={<IconMessages />}>
+          <Button
+            variant="link"
+            size="xs"
+            leftIcon={<IconMessages />}
+            onClick={openDiscussions}
+          >
             Discussions
           </Button>
-          <Button variant="link" size="xs" leftIcon={<IconInfoCircle />}>
+          <Button
+            variant="link"
+            size="xs"
+            leftIcon={<IconInfoCircle />}
+            onClick={openHome}
+          >
             About
           </Button>
         </Group>

@@ -27,6 +27,7 @@ import { notifyError, notifyOpen, notifySuccess } from "../toasts";
 import { useProjectStore } from "../stores/ProjectStore";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 import PageHeader from "../components/PageHeader";
+import Page from "../components/Page";
 
 function StartSection() {
   const refresh = useProjectStore((state) => state.refresh);
@@ -160,21 +161,23 @@ function MoreSection() {
 
 export default function WelcomePage() {
   return (
-    <Paper p="lg">
-      <Stack spacing="lg">
-        <PageHeader title="ApiGear Studio" description="APIs evolved" />
-        <Grid gutter="lg">
-          <Grid.Col span={6}>
-            <StartSection />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <MoreSection />
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <RecentSection />
-          </Grid.Col>
-        </Grid>
-      </Stack>
-    </Paper>
+    <Page title="Welcome">
+      <Paper p="lg">
+        <Stack spacing="lg">
+          <PageHeader title="ApiGear Studio" description="APIs evolved" />
+          <Grid gutter="lg">
+            <Grid.Col span={6}>
+              <StartSection />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <MoreSection />
+            </Grid.Col>
+            <Grid.Col span={12}>
+              <RecentSection />
+            </Grid.Col>
+          </Grid>
+        </Stack>
+      </Paper>
+    </Page>
   );
 }

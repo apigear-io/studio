@@ -24,10 +24,10 @@ import { useSimuStore } from "./stores/SimuStore";
 import { useMonitorStore } from "./stores/MonitorStore";
 import { useCacheStore, useRegistryStore } from "./stores/TemplatesStore";
 import { useAppStore } from "./stores/AppStore";
-
+import RootPage from "./pages/RootPage";
 const router = createHashRouter(
   createRoutesFromElements(
-    <Route path="/">
+    <Route path="/" element={<RootPage />}>
       <Route path="" element={<WelcomePage />}></Route>
       <Route path="/project" element={<ProjectLayout />}>
         <Route path="" element={<ProjectPage />}></Route>

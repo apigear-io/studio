@@ -15,6 +15,7 @@ import { useSimuStore } from "../stores/SimuStore";
 import LogEventTable from "../components/LogEventTable";
 import { StartScenario, StopScenario } from "../wailsjs/go/main/App";
 import { useNavigate } from "react-router-dom";
+import Page from "../components/Page";
 
 type PlayButtonProps = {
   doc: Document;
@@ -111,48 +112,52 @@ export default function ProjectPage() {
   const events = useLogsStore((state) => state.simEvents);
 
   return (
-    <Paper>
-      <Stack>
-        <PageHeader
-          title="Simulation Scenarios"
-          description="Simulation scenarios define how APIs are simulated at runtime."
+    <Page title="Simulation Scenarios">
+      <Paper>
+        <Stack>
+          <PageHeader
+            title="Simulation Scenarios"
+            description="Simulation scenarios define how APIs are simulated at runtime."
+          >
+            <>
+              <Button
+                variant="subtle"
+                leftIcon={<IconListSearch />}
+                onClick={open}
+              >
+                Logs
+              </Button>
+              <Button
+                variant="subtle"
+                leftIcon={<IconMessage />}
+                onClick={() => nav("/project/simulation/events")}
+              >
+                Events
+              </Button>
+            </>
+          </PageHeader>
+          {documents.map((doc) => {
+            return (
+              <DocumentEntry
+                doc={doc}
+                key={doc.name}
+                actions={
+                  <DocumentActions doc={doc} open={open} close={close} />
+                }
+              />
+            );
+          })}
+        </Stack>
+        <Drawer
+          opened={opened}
+          position="bottom"
+          onClose={close}
+          size="xs"
+          title="Simulation Logs"
         >
-          <>
-            <Button
-              variant="subtle"
-              leftIcon={<IconListSearch />}
-              onClick={open}
-            >
-              Logs
-            </Button>
-            <Button
-              variant="subtle"
-              leftIcon={<IconMessage />}
-              onClick={() => nav("/project/simulation/events")}
-            >
-              Events
-            </Button>
-          </>
-        </PageHeader>
-        {documents.map((doc) => {
-          return (
-            <DocumentEntry
-              doc={doc}
-              key={doc.name}
-              actions={<DocumentActions doc={doc} open={open} close={close} />}
-            />
-          );
-        })}
-      </Stack>
-      <Drawer
-        opened={opened}
-        position="bottom"
-        onClose={close}
-        size="xs"
-        title="Simulation Logs"
-      >
-        <LogEventTable events={events} />
-      </Drawer>
-    </Paper>
+          <LogEventTable events={events} />
+        </Drawer>
+      </Paper>
+    </Page>
   );
 }

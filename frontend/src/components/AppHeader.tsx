@@ -1,12 +1,4 @@
-import {
-  Group,
-  Header,
-  Title,
-  Code,
-  Button,
-  ActionIcon,
-  Image,
-} from "@mantine/core";
+import { Group, Header, Title, Button, ActionIcon, Image } from "@mantine/core";
 import { IconHelpCircle, IconSwitchHorizontal } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import NewDocumentAction from "./NewDocumentAction";

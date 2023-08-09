@@ -14,6 +14,7 @@ import { useForm } from "@mantine/form";
 import { ReadSettings, WriteSettings } from "../wailsjs/go/main/App";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconDeviceFloppy } from "@tabler/icons-react";
+import Page from "../components/Page";
 
 function ConnectionSettings() {
   useShallowEffect(() => {
@@ -44,53 +45,55 @@ function ConnectionSettings() {
     });
   }
   return (
-    <Box p="lg">
-      <Stack>
-        <Group position="apart">
-          <Stack>
-            <Title order={3}>Connection</Title>
-            <Text size="sm" weight={500} c="dimmed">
-              Network settings for API Studio.
-            </Text>
-          </Stack>
-          <Button.Group>
-            <Button
-              variant="subtle"
-              onClick={applyChanges}
-              leftIcon={<IconDeviceFloppy />}
-            >
-              Apply Changes
-            </Button>
-          </Button.Group>
-        </Group>
-        <Divider />
-        <form
-          onSubmit={(values) => {
-            console.log(values);
-          }}
-        >
-          <Stack spacing="xs" maw={400}>
-            <TextInput
-              label="Port"
-              description="The port to run the API Studio server on"
-              {...form.getInputProps("port")}
-            />
-            <TextInput
-              label="Monitor Address"
-              value={`http://:${form.values.port}/monitor/\${source}`}
-              description="The address of the monitor endpoint"
-              readOnly
-            />
-            <TextInput
-              label="Simulation Address"
-              description="The address of the simulation endpoint"
-              value={`ws://:${form.values.port}/ws`}
-              readOnly
-            />
-          </Stack>
-        </form>
-      </Stack>
-    </Box>
+    <Page title="Settings">
+      <Box p="lg">
+        <Stack>
+          <Group position="apart">
+            <Stack>
+              <Title order={3}>Connection</Title>
+              <Text size="sm" weight={500} c="dimmed">
+                Network settings for API Studio.
+              </Text>
+            </Stack>
+            <Button.Group>
+              <Button
+                variant="subtle"
+                onClick={applyChanges}
+                leftIcon={<IconDeviceFloppy />}
+              >
+                Apply Changes
+              </Button>
+            </Button.Group>
+          </Group>
+          <Divider />
+          <form
+            onSubmit={(values) => {
+              console.log(values);
+            }}
+          >
+            <Stack spacing="xs" maw={400}>
+              <TextInput
+                label="Port"
+                description="The port to run the API Studio server on"
+                {...form.getInputProps("port")}
+              />
+              <TextInput
+                label="Monitor Address"
+                value={`http://:${form.values.port}/monitor/\${source}`}
+                description="The address of the monitor endpoint"
+                readOnly
+              />
+              <TextInput
+                label="Simulation Address"
+                description="The address of the simulation endpoint"
+                value={`ws://:${form.values.port}/ws`}
+                readOnly
+              />
+            </Stack>
+          </form>
+        </Stack>
+      </Box>
+    </Page>
   );
 }
 
