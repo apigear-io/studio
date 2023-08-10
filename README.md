@@ -14,6 +14,36 @@ The workflow extends the API driven process with API monitoring and API simulati
 - Run [API simulations](https://docs.apigear.io/docs/category/api-simulation) based on provided scenarios
 - View [API monitoring](https://docs.apigear.io/docs/category/api-monitoring) results
 
+## Development
+
+We use Taskfile to manage the development tasks. You can install Taskfile from [here](https://taskfile.dev/#/installation).
+
+To install the dependencies run:
+
+```bash
+task init
+```
+
+To run the development version of the application run:
+
+```bash
+task dev
+```
+
+To build the application run:
+
+```bash
+task build
+```
+
+Releases are automatically created by Github Actions. To create a new release create a new tag and push it to git main branch.
+
+```bash
+git tag -a v0.1.0 -m "Initial release"
+git push origin v0.1.0
+```
+
+The releases are available at [Studio release page](https://github.com/apigear-io/studio-releases/releases).
 
 ## Install
 
