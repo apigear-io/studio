@@ -4,17 +4,20 @@ import { main } from "../../wailsjs/go/models";
 import { notifyError, notifySuccess } from "../../toasts";
 import { useCacheStore } from "../../stores/TemplatesStore";
 import { useState } from "react";
+import useTrackAction from "../../hooks/useTrackAction";
 
 export default function InstallAction({
   template,
 }: {
   template: main.RepoInfo;
 }) {
+  const trackAction = useTrackAction();
   const installFromRegistry = useCacheStore(
     (state) => state.installFromRegistry
   );
   const [loading, setLoading] = useState(false);
   function install(template: main.RepoInfo, version: string) {
+    trackAction("install_template", template.name + "@" + version);
     console.log(template, version);
     setLoading(true);
     installFromRegistry(template.name, version)

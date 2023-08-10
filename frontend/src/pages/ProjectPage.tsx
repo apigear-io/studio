@@ -6,11 +6,15 @@ import { IconCheck } from "@tabler/icons-react";
 import { CheckDocument } from "../wailsjs/go/main/App";
 import { notifyError, notifyValid, notifyInvalid } from "../toasts";
 import Page from "../components/Page";
+import useTrackAction from "../hooks/useTrackAction";
 
 export default function ProjectPage() {
   const project = useProjectStore((state) => state.project);
   const documents = project?.documents || [];
+  const trackAction = useTrackAction();
+
   function checkAll() {
+    trackAction("check_all");
     documents.forEach((doc) => {
       CheckDocument(doc.path)
         .then((result) => {

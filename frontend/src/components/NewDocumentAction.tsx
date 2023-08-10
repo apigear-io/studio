@@ -19,6 +19,7 @@ import { notifyError, notifySuccess } from "../toasts";
 import { useProjectStore } from "../stores/ProjectStore";
 import { forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
+import useTrackAction from "../hooks/useTrackAction";
 
 interface FormData {
   name: string;
@@ -38,6 +39,7 @@ const SelectItem = forwardRef<HTMLButtonElement, ItemProps>(
 );
 
 export default function NewDocumentAction() {
+  const trackAction = useTrackAction();
   const newDocument = useProjectStore((state) => state.newDocument);
   const [opened, { open, close }] = useDisclosure();
   const nav = useNavigate();
@@ -52,6 +54,7 @@ export default function NewDocumentAction() {
     open();
   }
   function submit(data: FormData) {
+    trackAction("new_document", data.kind + "/" + data.name);
     newDocument(data.kind, data.name)
       .then(() => {
         close();

@@ -19,6 +19,7 @@ import {
   notifySuccess,
   notifyValid,
 } from "../toasts";
+import useTrackAction from "../hooks/useTrackAction";
 
 function IconForType(type: string): React.FC<any> {
   switch (type) {
@@ -53,11 +54,14 @@ interface DocumentEntryProps {
 export default function DocumentEntry(props: DocumentEntryProps) {
   const doc = props.doc;
   const Icon = IconForType(doc.type);
+  const trackAction = useTrackAction();
 
   const openInEditor = () => {
+    trackAction("open_document", doc.path);
     OpenSourceInEditor(doc.path);
   };
   const checkDocument = () => {
+    trackAction("check_document", doc.path);
     CheckDocument(doc.path)
       .then((result) => {
         console.log(result);
@@ -72,6 +76,7 @@ export default function DocumentEntry(props: DocumentEntryProps) {
       });
   };
   const copyPath = () => {
+    trackAction("copy_document_path", doc.path);
     navigator.clipboard.writeText(doc.path);
     notifySuccess(`Copied path to ${doc.name} to clipboard`);
   };

@@ -5,11 +5,14 @@ import InfoAction from "./InfoAction";
 import TemplateCopyNameAction from "./CopyNameAction";
 import { notifyError, notifySuccess } from "../../toasts";
 import { useCacheStore } from "../../stores/TemplatesStore";
+import useTrackAction from "../../hooks/useTrackAction";
 
 export default function CachePanel() {
+  const trackAction = useTrackAction();
   const remove = useCacheStore((state) => state.remove);
   const cache = useCacheStore((state) => state.cache);
   function removeTemplate(template: main.RepoInfo) {
+    trackAction("remove_template", template.name);
     console.log(template);
     remove(template)
       .then(() => {

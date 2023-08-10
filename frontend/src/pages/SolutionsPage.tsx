@@ -9,8 +9,10 @@ import { useDisclosure } from "@mantine/hooks";
 import LogEventTable from "../components/LogEventTable";
 import { useLogsStore } from "../stores/LogsStore";
 import Page from "../components/Page";
+import useTrackAction from "../hooks/useTrackAction";
 
 export default function ProjectPage() {
+  const trackAction = useTrackAction();
   const getDocuments = useProjectStore((state) => state.getDocuments);
   const documents = useMemo(() => {
     return getDocuments("solution") || [];
@@ -26,6 +28,7 @@ export default function ProjectPage() {
   );
 
   function handleRun(doc: Document) {
+    trackAction("run_solution", doc.path);
     open();
     startRecording();
     RunSolution(doc.path)

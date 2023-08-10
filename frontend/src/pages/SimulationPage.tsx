@@ -16,6 +16,7 @@ import LogEventTable from "../components/LogEventTable";
 import { StartScenario, StopScenario } from "../wailsjs/go/main/App";
 import { useNavigate } from "react-router-dom";
 import Page from "../components/Page";
+import useTrackAction from "../hooks/useTrackAction";
 
 type PlayButtonProps = {
   doc: Document;
@@ -24,9 +25,11 @@ type PlayButtonProps = {
 
 // PlayButton is a component that is used play a scenario document.
 function PlayButton({ doc, open }: PlayButtonProps) {
+  const trackAction = useTrackAction();
   const startRecording = useLogsStore((state) => state.startRecordingSimEvents);
   const startSimu = useSimuStore((state) => state.start);
   const playScenario = (doc: Document) => {
+    trackAction("play_scenario", doc.path);
     console.log("play scenario", doc.name);
     open();
     startRecording();
@@ -57,9 +60,11 @@ type StopButtonProps = {
 
 // StopButton is a component that is used to stop a scenario document.
 function StopButton({ doc, close }: StopButtonProps) {
+  const trackAction = useTrackAction();
   const stopSimu = useSimuStore((state) => state.stop);
   const stopRecording = useLogsStore((state) => state.stopRecordingSimEvents);
   const stopScenario = (doc: Document) => {
+    trackAction("stop_scenario", doc.path);
     close();
     stopRecording();
     StopScenario(doc.path)

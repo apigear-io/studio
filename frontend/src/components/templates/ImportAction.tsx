@@ -4,8 +4,10 @@ import { notifyError, notifySuccess } from "../../toasts";
 import { Button, Group, Modal, Stack, TextInput } from "@mantine/core";
 import { IconFileImport } from "@tabler/icons-react";
 import { useCacheStore } from "../../stores/TemplatesStore";
+import useTrackAction from "../../hooks/useTrackAction";
 
 export default function ImportAction() {
+  const trackAction = useTrackAction();
   const [opened, { open, close }] = useDisclosure();
   const installFromSource = useCacheStore((state) => state.installFromSource);
   const form = useForm({
@@ -14,6 +16,7 @@ export default function ImportAction() {
     },
   });
   function onSubmit(values: { url: string }) {
+    trackAction("import_template", values.url);
     installFromSource(values.url)
       .then(() => {
         notifySuccess("Template imported successfully!");

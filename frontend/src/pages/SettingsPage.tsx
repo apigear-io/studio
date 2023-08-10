@@ -15,8 +15,10 @@ import { ReadSettings, WriteSettings } from "../wailsjs/go/main/App";
 import { useShallowEffect } from "@mantine/hooks";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import Page from "../components/Page";
+import useTrackAction from "../hooks/useTrackAction";
 
 function ConnectionSettings() {
+  const trackAction = useTrackAction();
   useShallowEffect(() => {
     async function read() {
       const settings = await ReadSettings();
@@ -32,7 +34,9 @@ function ConnectionSettings() {
   });
 
   function applyChanges() {
+    trackAction("settings_apply_changes");
     console.log(form.values);
+
     ReadSettings().then((settings) => {
       settings.server_port = form.values.port;
       WriteSettings(settings)
