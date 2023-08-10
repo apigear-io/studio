@@ -111,7 +111,7 @@ export const useRegistryStore = create<RegistryState & RegistryActions>(
     },
     init: async () => {
       console.log("init registry store");
-      const { update } = get();
+      const update = get().update;
       await update();
     },
     update: async () => {
