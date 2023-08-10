@@ -33,7 +33,7 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	err := StartServices(ctx, cfg.ServerPort())
 	if err != nil {
-		log.Error().Msgf("error starting services: %s", err)
+		log.Error().Err(err).Msgf("start services: %s", err)
 	}
 }
 

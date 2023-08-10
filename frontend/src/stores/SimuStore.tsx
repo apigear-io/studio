@@ -44,6 +44,7 @@ export const useSimuStore = create<SimuState & SimuActions>((set, get) => ({
     set({ running });
   },
   init: async () => {
+    console.log("init simu store");
     const { clear: clearEvents } = get();
     clearEvents();
     EventsOff("sim");

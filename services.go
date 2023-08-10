@@ -48,32 +48,32 @@ func init() {
 
 func StartServices(ctx context.Context, port string) error {
 	log.Info().Msg("start background services")
-	log.Info().Msg("start updater")
+	log.Info().Msg("start updater ...")
 	err := StartUpdater(ctx)
 	if err != nil {
-		return err
+		log.Error().Err(err).Msg("start updater")
 	}
-	log.Info().Msg("start http server")
+	log.Info().Msg("start http server ...")
 	server = net.NewHTTPServer()
-	log.Info().Msg("register log service")
+	log.Info().Msg("register log service ...")
 	err = RegisterLogService(ctx)
 	if err != nil {
-		return err
+		log.Error().Err(err).Msg("register log service")
 	}
-	log.Info().Msg("register monitor service")
+	log.Info().Msg("register monitor service ...")
 	err = RegisterMonitorService(ctx)
 	if err != nil {
-		return err
+		log.Error().Err(err).Msg("register monitor service")
 	}
-	log.Info().Msg("register simulation service")
+	log.Info().Msg("register simulation service ...")
 	err = RegisterSimulationService(ctx)
 	if err != nil {
-		return err
+		log.Error().Err(err).Msg("register simulation service")
 	}
-	log.Info().Msg("run server")
+	log.Info().Msg("run server ...")
 	err = RunServer(fmt.Sprintf(":%s", port))
 	if err != nil {
-		return err
+		log.Error().Err(err).Msg("run server")
 	}
 	return nil
 }
@@ -107,13 +107,12 @@ func StartUpdater(ctx context.Context) error {
 	updateInfo.Updater = u
 	r, err := u.Check(ctx)
 	if err != nil {
-		log.Error().Msgf("check for update: %v", err)
-		return fmt.Errorf("check for update: %v", err)
+		log.Error().Err(err).Msg("check for update")
 	}
 	log.Info().Msgf("latest release: %v", r)
 	updateInfo.LatestRelease = r
 	updateInfo.CheckComplete = true
-	return nil
+	return err
 }
 
 func RunServer(addr string) error {
