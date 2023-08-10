@@ -121,18 +121,17 @@ function ActionsSection() {
   return (
     <Navbar.Section py="md">
       <SectionHeader label="Actions" />
-      <NavLink
-        label="Open Folder"
-        icon={<IconFolderOpen />}
-        description="Open project folder"
-        onClick={openFolder}
-      />
-      <NavLink
-        label="Reload"
-        icon={<IconReload />}
-        description="Reload project"
-        onClick={reloadProject}
-      />
+      <Tooltip label="Open project folder" openDelay={2000}>
+        <NavLink
+          label="Open Folder"
+          icon={<IconFolderOpen />}
+          // description="Open project folder"
+          onClick={openFolder}
+        />
+      </Tooltip>
+      <Tooltip label="Reload project" openDelay={2000}>
+        <NavLink label="Reload" icon={<IconReload />} onClick={reloadProject} />
+      </Tooltip>
     </Navbar.Section>
   );
 }
