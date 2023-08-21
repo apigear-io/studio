@@ -1,44 +1,42 @@
 {
-  "name": "frontend",
-  "version": "0.0.1",
-  "description": "ApiGear Desktop Studio Application",
-  "productName": "ApiGear Studio",
-  "author": "JRyannel",
+  "name": "ui",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "quasar dev",
-    "build": "quasar build",
-    "lint": "eslint --ext .js,.ts,.vue ./",
-    "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    "test": "echo \"No test specified\" && exit 0"
+    "dev": "vite --profile",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@gtm-support/vue-gtm": "^1.6.0",
-    "@quasar/cli": "^2.0.0",
-    "@quasar/extras": "^1.15.10",
-    "pinia": "^2.0.11",
-    "quasar": "^2.12.0",
-    "vue": "^3.0.0",
-    "vue-json-pretty": "^2.2.2",
-    "vue-router": "^4.1.0"
+    "@emotion/react": "^11.11.1",
+    "@mantine/core": "^6.0.17",
+    "@mantine/form": "^6.0.17",
+    "@mantine/hooks": "^6.0.17",
+    "@mantine/modals": "^6.0.17",
+    "@mantine/notifications": "^6.0.17",
+    "@mantine/prism": "^6.0.17",
+    "@tabler/icons-react": "^2.30.0",
+    "dayjs": "^1.11.9",
+    "mantine-datatable": "^2.9.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-ga4": "^2.1.0",
+    "react-router-dom": "^6.14.2",
+    "react-use": "^17.4.0",
+    "zustand": "^4.4.0"
   },
   "devDependencies": {
-    "@quasar/app-vite": "^1.2.0",
-    "@types/node": "^12.20.21",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
-    "@vue/devtools": "^6.2.1",
-    "autoprefixer": "^10.4.2",
-    "esbuild": "^0.15.18",
-    "eslint": "^8.10.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-vue": "^9.0.0",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.4"
-  },
-  "engines": {
-    "node": "^18 || ^16 || ^14.19",
-    "npm": ">= 6.13.4",
-    "yarn": ">= 1.21.1"
+    "@types/react": "^18.0.37",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9"
   }
 }

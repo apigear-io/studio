@@ -1,12 +1,12 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
   "name": "ApiGear-Studio",
-  "assetdir": "frontend/dist/spa",
+  "assetdir": "frontend/dist",
   "wailsjsdir": "frontend/src",
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
-  "frontend:dev:serverUrl": "http://localhost:9000",
+  "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "ApiGear",
     "email": "info@apigear.io"

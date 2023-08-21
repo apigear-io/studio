@@ -11,8 +11,8 @@ type DocumentInfo struct {
 
 // ProjectInfo represents a project information
 type ProjectInfo struct {
-	Path      string         `json:"path"`
 	Name      string         `json:"name"`
+	Path      string         `json:"path"`
 	Documents []DocumentInfo `json:"documents"`
 }
 

@@ -3,7 +3,7 @@ module github.com/apigear-io/studio
 go 1.20
 
 require (
-	github.com/apigear-io/cli v0.31.1
+	github.com/apigear-io/cli v0.31.3
 	github.com/creativeprojects/go-selfupdate v1.0.1
 	github.com/google/go-github/v47 v47.1.0
 	github.com/magefile/mage v1.14.0

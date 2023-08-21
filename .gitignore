@@ -28,3 +28,4 @@ build/windows/installer/
 build/windows/info.json
 build/bin/
 *.old
+frontend/.quasar
