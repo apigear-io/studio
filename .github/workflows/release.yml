@@ -169,7 +169,7 @@ jobs:
             artifact/*-installer.exe
 
           body: ${{steps.changelog.outputs.changelog}}
-          repository: "apigear-io/studio-releases"
+          repository: "apigear-io/studio"
           token: ${{ secrets.APIGEAR_REPOS }}
         env:
           GITHUB_TOKEN: ${{ secrets.APIGEAR_REPOS }}

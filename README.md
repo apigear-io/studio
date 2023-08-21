@@ -43,11 +43,11 @@ git tag -a v0.1.0 -m "Initial release"
 git push origin v0.1.0
 ```
 
-The releases are available at [Studio release page](https://github.com/apigear-io/studio-releases/releases).
+The releases are available at [Studio release page](https://github.com/apigear-io/studio/releases).
 
 ## Install
 
-ApiGear Studio is a desktop application that runs on Windows, Mac and Linux. You can download the latest version from [Studio release page](https://github.com/apigear-io/studio-releases/releases/latest).
+ApiGear Studio is a desktop application that runs on Windows, Mac and Linux. You can download the latest version from [Studio release page](https://github.com/apigear-io/studio/releases/latest).
 
 The product has not yet a certification from Microsoft, Apple or Linux. So you may need to disable the security check to run the application.
 
