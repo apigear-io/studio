@@ -134,7 +134,8 @@ jobs:
           retention-days: 5          
   release:
     runs-on: ubuntu-latest
-    needs: [build-windows-amd64, build-linux-amd64, build-macos-amd64, build-macos-arm64]
+    # needs: [build-windows-amd64, build-linux-amd64, build-macos-amd64, build-macos-arm64]
+    needs: [build-macos-arm64]
     steps:
       - uses: actions/download-artifact@v3
       - run: (for i in *.*; do shasum -a 256 "$i"; done) >> checksums.txt
