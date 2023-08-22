@@ -6,18 +6,27 @@ import {
   Stack,
   Text,
   ActionIcon,
+  Card,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconExternalLink, IconInfoCircle, IconX } from "@tabler/icons-react";
+import {
+  IconExternalLink,
+  IconInfoCircle,
+  IconRefresh,
+} from "@tabler/icons-react";
 import { useAppStore } from "../stores/AppStore";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
+import { UpdateProgram } from "../wailsjs/go/main/App";
 
 export default function AppInfoAction() {
+  const [visible, { toggle }] = useDisclosure(false);
   const [opened, { open, close }] = useDisclosure();
   const currentVersion = useAppStore((state) => state.currentVersion);
   const latestVersion = useAppStore((state) => state.latestVersion);
   const commitHash = useAppStore((state) => state.commitHash);
   const commitDate = useAppStore((state) => state.commitDate);
+  const refresh = useAppStore((state) => state.refresh);
 
   const entries = [
     {
@@ -50,9 +59,20 @@ export default function AppInfoAction() {
     BrowserOpenURL(url);
   }
 
+  function openModal() {
+    refresh();
+    open();
+  }
+
+  function updateProgram() {
+    toggle();
+    UpdateProgram(latestVersion);
+  }
+
   return (
     <>
       <Modal title="ApiGear Studio" opened={opened} onClose={close} size="lg">
+        <LoadingOverlay visible={visible} />
         <Stack>
           <Text c="dimmed">
             ApiGear Studio helps you to manage Object APIs in an API driven
@@ -89,12 +109,29 @@ export default function AppInfoAction() {
               ))}
             </tbody>
           </Table>
-          <Text>Latest version is {latestVersion}</Text>
-          <Group position="right">
-            <Button leftIcon={<IconX />} onClick={close}>
-              Close
-            </Button>
-          </Group>
+          {latestVersion && (
+            <Card>
+              <Text weight={700} size="sm" color="dimmed">
+                A new version is available {latestVersion}
+              </Text>
+              <Button
+                variant="light"
+                fullWidth
+                leftIcon={<IconRefresh />}
+                onClick={updateProgram}
+                mt="md"
+              >
+                Update to {latestVersion}
+              </Button>
+            </Card>
+          )}
+          {!latestVersion && (
+            <Card>
+              <Text weight={700} size="sm" color="dimmed">
+                You are using the latest version
+              </Text>
+            </Card>
+          )}
         </Stack>
       </Modal>
       <Group>
@@ -102,7 +139,7 @@ export default function AppInfoAction() {
           variant="link"
           size="xs"
           leftIcon={<IconInfoCircle />}
-          onClick={open}
+          onClick={openModal}
         >
           ApiGear Studio {currentVersion}
         </Button>
