@@ -76,7 +76,10 @@ jobs:
   build-macos-universal:
     runs-on: macos-latest
     env:
-      artifact: ApiGear-Studio_darwin_universal.zip
+      artifact_amd64: ApiGear-Studio_darwin_amd64.zip
+      artifact_arm64: ApiGear-Studio_darwin_arm64.zip
+      artifact_universal: ApiGear-Studio_darwin_universal.zip
+
       platform: darwin/universal
     steps:
       - uses: actions/setup-go@v3
@@ -94,13 +97,20 @@ jobs:
         with:
           type: "zip"
           directory: build/bin
-          filename: ${{env.artifact}}
+          filename: ${{env.artifact_amd64}}
+          exclusions: "*.zip"
+      - run: cp build/bin/${{env.artifact_amd64}} build/bin/${{env.artifact_universal}}
+        shell: bash
+      - run: cp build/bin/${{env.artifact_amd64}} build/bin/${{env.artifact_arm64}}
+        shell: bash
       - run: ls -lR build
         shell: bash
       - uses: actions/upload-artifact@v3
         with:
-          path: build/bin/${{env.artifact}}
-          retention-days: 5
+          path: |
+            build/bin/${{env.artifact_amd64}}
+            build/bin/${{env.artifact_arm64}}
+            build/bin/${{env.artifact_universal}}
   release:
     runs-on: ubuntu-latest
     needs: [build-windows-amd64, build-linux-amd64, build-macos-universal]
