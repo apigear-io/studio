@@ -13,7 +13,6 @@ env:
   node_version: "18.x"
 jobs:
   build-windows-amd64:
-    if: false
     runs-on: windows-latest
     env:
       artifact: ApiGear-Studio_windows_amd64.zip
@@ -46,7 +45,6 @@ jobs:
             build/bin/${{env.installer}}
           retention-days: 5
   build-linux-amd64:
-    if: false
     runs-on: ubuntu-latest
     env:
       artifact: ApiGear-Studio_linux_amd64.zip
