@@ -103,38 +103,9 @@ jobs:
         with:
           path: build/bin/${{env.artifact}}
           retention-days: 5
-  build-macos-arm64:
-    runs-on: macos-latest
-    env:
-      artifact: ApiGear-Studio_darwin_arm64.zip
-      platform: darwin/arm64
-    steps:
-      - uses: actions/setup-go@v3
-        with:
-          go-version: ${{env.go_version}}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{env.node_version}}
-      - run: go install github.com/wailsapp/wails/v2/cmd/wails@${{env.wails_version}}
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - run: wails build --platform "${{env.platform}}" -ldflags="-X 'main.version=${{github.ref_name}}' -X 'main.commit=${{github.sha}}' -X 'main.date=${{github.event.head_commit.timestamp}}'"
-      - uses: thedoctor0/zip-release@main
-        with:
-          type: "zip"
-          directory: build/bin
-          filename: ${{env.artifact}}
-      - run: ls -lR build
-        shell: bash
-      - uses: actions/upload-artifact@v3
-        with:
-          path: build/bin/${{env.artifact}}
-          retention-days: 5
   release:
     runs-on: ubuntu-latest
-    # needs: [build-windows-amd64, build-linux-amd64, build-macos-amd64, build-macos-arm64]
-    needs: [build-macos-universal, build-macos-arm64]
+    needs: [build-windows-amd64, build-linux-amd64, build-macos-universal]
     steps:
       - uses: actions/download-artifact@v3
       - run: (for i in *.*; do shasum -a 256 "$i"; done) >> checksums.txt
