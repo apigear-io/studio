@@ -6,6 +6,10 @@ import {
   Paper,
   Stack,
   Title,
+  useMantineTheme,
+  Text,
+  ActionIcon,
+  Image,
 } from "@mantine/core";
 import {
   IconBook,
@@ -14,7 +18,7 @@ import {
   IconFolderOpen,
   IconInfoCircle,
   IconPlus,
-  IconTrash,
+  IconTrash,  
 } from "@tabler/icons-react";
 import {
   CreateProject,
@@ -26,8 +30,9 @@ import { useNavigate } from "react-router-dom";
 import { notifyError, notifyOpen, notifySuccess } from "../toasts";
 import { useProjectStore } from "../stores/ProjectStore";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
-import PageHeader from "../components/PageHeader";
 import Page from "../components/Page";
+import AppIcon from "../assets/icons/appicon-96x96.png";
+
 
 function StartSection() {
   const refresh = useProjectStore((state) => state.refresh);
@@ -160,11 +165,22 @@ function MoreSection() {
 }
 
 export default function WelcomePage() {
+  const theme = useMantineTheme();
   return (
     <Page title="Welcome">
       <Paper p="lg">
         <Stack spacing="lg">
-          <PageHeader title="ApiGear Studio" description="APIs evolved" />
+          <Group>
+            <ActionIcon variant="transparent" radius="xl" mb="md">
+              <Image src={AppIcon} width={48} height={48} alt="ApiGear" />
+            </ActionIcon>
+            <Stack spacing="0">              
+              <Title order={1} c={theme.primaryColor}>ApiGear</Title>
+              <Text fz="sm" c="dimmed" italic>
+                APIs evolved
+              </Text>
+            </Stack>
+          </Group>
           <Grid gutter="lg">
             <Grid.Col span={6}>
               <StartSection />
