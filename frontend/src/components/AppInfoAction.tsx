@@ -18,6 +18,7 @@ import {
 import { useAppStore } from "../stores/AppStore";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 import { UpdateProgram } from "../wailsjs/go/main/App";
+import { notifyError } from "../toasts";
 
 export default function AppInfoAction() {
   const [visible, { toggle }] = useDisclosure(false);
@@ -66,7 +67,14 @@ export default function AppInfoAction() {
 
   function updateProgram() {
     toggle();
-    UpdateProgram(latestVersion);
+    UpdateProgram(latestVersion).then(() => {
+      toggle();
+      close();
+    }
+    ).catch((err) => {
+      toggle();
+      notifyError(err);
+    });    
   }
 
   return (
