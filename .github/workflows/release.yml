@@ -75,12 +75,11 @@ jobs:
         with:
           path: build/bin/${{env.artifact}}
           retention-days: 5
-  build-macos-amd64:
-    if: false
+  build-macos-universal:
     runs-on: macos-latest
     env:
-      artifact: ApiGear-Studio_darwin_amd64.zip
-      platform: darwin/amd64
+      artifact: ApiGear-Studio_darwin_universal.zip
+      platform: darwin/universal
     steps:
       - uses: actions/setup-go@v3
         with:
@@ -105,10 +104,11 @@ jobs:
           path: build/bin/${{env.artifact}}
           retention-days: 5
   build-macos-arm64:
+    if: false
     runs-on: macos-latest
     env:
       artifact: ApiGear-Studio_darwin_arm64.zip
-      platform: darwin/arm64            
+      platform: darwin/arm64
     steps:
       - uses: actions/setup-go@v3
         with:
@@ -131,11 +131,11 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           path: build/bin/${{env.artifact}}
-          retention-days: 5          
+          retention-days: 5
   release:
     runs-on: ubuntu-latest
     # needs: [build-windows-amd64, build-linux-amd64, build-macos-amd64, build-macos-arm64]
-    needs: [build-macos-arm64]
+    needs: [build-macos-universal]
     steps:
       - uses: actions/download-artifact@v3
       - run: (for i in *.*; do shasum -a 256 "$i"; done) >> checksums.txt
@@ -146,7 +146,6 @@ jobs:
         with:
           owner: apigear-io
           repo: studio
-          token: ${{ secrets.APIGEAR_REPOS }}
       - run: ls -lR
         shell: bash
       - uses: softprops/action-gh-release@v1
