@@ -1,17 +1,20 @@
-import { Box, Button, Drawer, Stack } from "@mantine/core";
+import { Box, Button, Drawer, Stack, Menu, Indicator } from "@mantine/core";
 import PageHeader from "../components/PageHeader";
 import DocumentEntry from "../components/DocumentEntry";
 import { Document, useProjectStore } from "../stores/ProjectStore";
 import { useMemo } from "react";
-import { IconListSearch, IconRun } from "@tabler/icons-react";
-import { RunSolution } from "../wailsjs/go/main/App";
+import { IconListSearch, IconRefresh, IconRun } from "@tabler/icons-react";
+import { RunSolution, WatchSolution } from "../wailsjs/go/main/App";
 import { useDisclosure } from "@mantine/hooks";
 import LogEventTable from "../components/LogEventTable";
 import { useLogsStore } from "../stores/LogsStore";
 import Page from "../components/Page";
 import useTrackAction from "../hooks/useTrackAction";
+import { useSolutionStore } from "../stores/SolutionStore";
 
 export default function ProjectPage() {
+  const autoRuns = useSolutionStore((state) => state.autoRuns);
+  const setAutoRun = useSolutionStore((state) => state.setAutoRun);
   const trackAction = useTrackAction();
   const getDocuments = useProjectStore((state) => state.getDocuments);
   const documents = useMemo(() => {
@@ -28,6 +31,10 @@ export default function ProjectPage() {
   );
 
   function handleRun(doc: Document) {
+    const autoRun = autoRuns[doc.path];
+    if (autoRun) {
+      return handleStopAutoRun(doc);
+    }
     trackAction("run_solution", doc.path);
     open();
     startRecording();
@@ -42,6 +49,43 @@ export default function ProjectPage() {
         stopRecording();
       });
   }
+  function handleAutoRun(doc: Document) {
+    const autoRun = autoRuns[doc.path];
+    const toggledRun = !autoRun;
+    if (toggledRun) {
+      open();
+      startRecording();
+    } else {
+      close();
+      stopRecording();
+    }
+    WatchSolution(doc.path, toggledRun)
+      .then(() => {
+        setAutoRun(doc.path, toggledRun);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        if (!toggledRun) {
+          stopRecording();
+        }
+      });
+  }
+
+  function handleStopAutoRun(doc: Document) {
+    close();
+    stopRecording();
+    WatchSolution(doc.path, false)
+      .then(() => {
+        console.log("stopped auto run");
+        setAutoRun(doc.path, false);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   return (
     <Page title="Solutions">
       <Box>
@@ -60,23 +104,39 @@ export default function ProjectPage() {
               </Button>
             </>
           </PageHeader>
-          {documents.map((doc) => (
-            <DocumentEntry
-              doc={doc}
-              key={doc.name}
-              actions={
-                <>
-                  <Button
-                    variant="subtle"
-                    leftIcon={<IconRun />}
-                    onClick={() => handleRun(doc)}
-                  >
-                    Run
-                  </Button>
-                </>
-              }
-            />
-          ))}
+          {documents.map((doc) => {
+            const autoRun = autoRuns[doc.path];
+            return (
+              <DocumentEntry
+                doc={doc}
+                key={doc.name}
+                actions={
+                  <>
+                    <Indicator offset={8} disabled={!autoRun}>
+                      <Button
+                        variant="subtle"
+                        leftIcon={<IconRun />}
+                        onClick={() => handleRun(doc)}
+                      >
+                        {autoRun ? "Stop" : "Run"}
+                      </Button>
+                    </Indicator>
+                  </>
+                }
+                menuItems={
+                  <>
+                    <Menu.Item
+                      icon={<IconRefresh />}
+                      onClick={() => handleAutoRun(doc)}
+                      c={autoRun ? "green" : ""}
+                    >
+                      Auto Run
+                    </Menu.Item>
+                  </>
+                }
+              />
+            );
+          })}
         </Stack>
         <Drawer
           opened={opened}

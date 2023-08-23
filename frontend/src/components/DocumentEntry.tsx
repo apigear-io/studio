@@ -49,6 +49,7 @@ function RouteForType(type: string): string {
 interface DocumentEntryProps {
   doc: Document;
   actions?: React.ReactNode;
+  menuItems?: React.ReactNode;
 }
 
 export default function DocumentEntry(props: DocumentEntryProps) {
@@ -112,6 +113,7 @@ export default function DocumentEntry(props: DocumentEntryProps) {
             <Menu.Item onClick={copyPath} icon={<IconCopy />}>
               Copy Path
             </Menu.Item>
+            {props.menuItems}
           </Menu.Dropdown>
         </Menu>
       </Button.Group>

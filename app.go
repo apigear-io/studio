@@ -350,6 +350,7 @@ func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 	log.Info().Msgf("watch solution %s: enabled: %t", source, enabled)
 	r := GetRunner()
 	ctx := context.Background()
+	r.StopWatch(source)
 	if enabled {
 		doc, err := sol.ReadSolutionDoc(source)
 		if err != nil {
@@ -360,8 +361,6 @@ func (a App) WatchSolution(source string, enabled bool) ([]string, error) {
 		if err != nil {
 			log.Error().Msgf("watch solution: %s", err)
 		}
-	} else {
-		r.StopWatch(source)
 	}
 	return r.TaskFiles(), nil
 }
