@@ -18,7 +18,7 @@ import {
   IconFolderOpen,
   IconInfoCircle,
   IconPlus,
-  IconTrash,  
+  IconTrash,
 } from "@tabler/icons-react";
 import {
   CreateProject,
@@ -32,7 +32,6 @@ import { useProjectStore } from "../stores/ProjectStore";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 import Page from "../components/Page";
 import AppIcon from "../assets/icons/appicon-96x96.png";
-
 
 function StartSection() {
   const refresh = useProjectStore((state) => state.refresh);
@@ -52,6 +51,7 @@ function StartSection() {
   function createProject() {
     CreateProject()
       .then(() => {
+        refresh();
         nav("/project");
         notifyOpen("Project created");
       })
@@ -174,8 +174,10 @@ export default function WelcomePage() {
             <ActionIcon variant="transparent" radius="xl" mb="md">
               <Image src={AppIcon} width={48} height={48} alt="ApiGear" />
             </ActionIcon>
-            <Stack spacing="0">              
-              <Title order={1} c={theme.primaryColor}>ApiGear</Title>
+            <Stack spacing="0">
+              <Title order={1} c={theme.primaryColor}>
+                ApiGear
+              </Title>
               <Text fz="sm" c="dimmed" italic>
                 APIs evolved
               </Text>
