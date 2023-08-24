@@ -11,10 +11,8 @@ import { useLogsStore } from "../stores/LogsStore";
 import Page from "../components/Page";
 import useTrackAction from "../hooks/useTrackAction";
 import { useSolutionStore } from "../stores/SolutionStore";
-import { useCacheStore } from "../stores/TemplatesStore";
 
 export default function ProjectPage() {
-  const refresh = useCacheStore((state) => state.refresh);
   const autoRuns = useSolutionStore((state) => state.autoRuns);
   const setAutoRun = useSolutionStore((state) => state.setAutoRun);
   const trackAction = useTrackAction();
@@ -43,7 +41,6 @@ export default function ProjectPage() {
     RunSolution(doc.path)
       .then((result) => {
         console.log(result);
-        refresh();
       })
       .catch((err) => {
         console.error(err);
@@ -64,7 +61,6 @@ export default function ProjectPage() {
     }
     WatchSolution(doc.path, toggledRun)
       .then(() => {
-        refresh();
         setAutoRun(doc.path, toggledRun);
       })
       .catch((err) => {

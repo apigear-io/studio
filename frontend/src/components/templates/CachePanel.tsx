@@ -6,8 +6,14 @@ import TemplateCopyNameAction from "./CopyNameAction";
 import { notifyError, notifySuccess } from "../../toasts";
 import { useCacheStore } from "../../stores/TemplatesStore";
 import useTrackAction from "../../hooks/useTrackAction";
+import { useLayoutEffect } from "react";
 
 export default function CachePanel() {
+  const refresh = useCacheStore((state) => state.refresh);
+  useLayoutEffect(() => {
+    refresh();
+  }, [refresh]);
+
   const trackAction = useTrackAction();
   const remove = useCacheStore((state) => state.remove);
   const cache = useCacheStore((state) => state.cache);
