@@ -34,6 +34,8 @@ func main() {
 		Title:            "ApiGear Studio",
 		Width:            1280,
 		Height:           800,
+		MinWidth:         960,
+		MinHeight:        720,
 		Assets:           assets,
 		BackgroundColour: &options.RGBA{R: 0, G: 0, B: 0, A: 255},
 		OnStartup:        app.startup,

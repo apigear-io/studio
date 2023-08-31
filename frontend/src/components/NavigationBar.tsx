@@ -68,6 +68,12 @@ const modes: NavbarLinkProps[] = [
     desc: "View API Logs",
     to: "/project/logs",
   },
+  {
+    label: "Settings",
+    icon: IconSettings,
+    desc: "Project settings",
+    to: "/project/settings",
+  },
 ];
 
 interface SectionHeaderProps {
@@ -93,7 +99,7 @@ function NavbarLink({
 }: NavbarLinkProps) {
   const active = currentTo === to;
   return (
-    <Tooltip label={desc} openDelay={2000}>
+    <Tooltip label={desc} openDelay={1200}>
       <NavLink
         component={Link}
         to={to}
@@ -105,37 +111,6 @@ function NavbarLink({
   );
 }
 
-function ActionsSection() {
-  const project = useProjectStore((state) => state.project);
-  const refresh = useProjectStore((state) => state.refresh);
-  function openFolder() {
-    console.log("Open folder", project?.path);
-    if (!project?.path) {
-      return;
-    }
-    BrowserOpenURL(project?.path);
-  }
-  function reloadProject() {
-    refresh();
-  }
-  return (
-    <Navbar.Section py="md">
-      <SectionHeader label="Actions" />
-      <Tooltip label="Open project folder" openDelay={2000}>
-        <NavLink
-          label="Open Folder"
-          icon={<IconFolderOpen />}
-          // description="Open project folder"
-          onClick={openFolder}
-        />
-      </Tooltip>
-      <Tooltip label="Reload project" openDelay={2000}>
-        <NavLink label="Reload" icon={<IconReload />} onClick={reloadProject} />
-      </Tooltip>
-    </Navbar.Section>
-  );
-}
-
 export default function NavigationBar() {
   const location = useLocation();
   const [currentTo, setCurrentTo] = useState<string>(location.pathname);
@@ -144,24 +119,12 @@ export default function NavigationBar() {
   }, [location]);
 
   return (
-    <Navbar width={{ sm: 200 }} withBorder>
+    <Navbar width={{ sm: 180 }} withBorder>
       <Navbar.Section grow py="md">
         <SectionHeader label="Modes" />
         {modes.map((item) => (
           <NavbarLink {...item} key={item.label} currentTo={currentTo} />
         ))}
-      </Navbar.Section>
-      <Divider />
-      <ActionsSection />
-      <Divider />
-      <Navbar.Section py="md">
-        <NavbarLink
-          label="Settings"
-          icon={IconSettings}
-          desc="Application settings"
-          to="/project/settings"
-          currentTo={currentTo}
-        />
       </Navbar.Section>
     </Navbar>
   );
