@@ -1,20 +1,16 @@
-import { Divider, Group, NavLink, Navbar, Text, Tooltip } from "@mantine/core";
+import { Group, NavLink, Navbar, Text, Tooltip } from "@mantine/core";
 import {
   IconAnalyze,
   IconArmchair,
   IconClockBolt,
   IconComponents,
-  IconFolderOpen,
   IconHome,
   IconListSearch,
-  IconReload,
   IconSettings,
   IconWand,
 } from "@tabler/icons-react";
 import { useLayoutEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useProjectStore } from "../stores/ProjectStore";
-import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 
 interface NavbarLinkProps {
   label: string;

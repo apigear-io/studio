@@ -1,6 +1,6 @@
 import { Button, Footer, Group } from "@mantine/core";
 import { IconInfoCircle, IconMessages } from "@tabler/icons-react";
-import AppInfoAction from "./AppInfoAction";
+import AboutDialogAction from "./AboutDialogAction";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 import useTrackAction from "../hooks/useTrackAction";
 
@@ -17,7 +17,7 @@ export default function AppFooter() {
   return (
     <Footer height={38}>
       <Group position="apart" px="md">
-        <AppInfoAction />
+        <AboutDialogAction />
         <Group position="apart" px="md">
           <Button
             variant="link"

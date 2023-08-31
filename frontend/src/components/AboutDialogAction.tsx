@@ -8,6 +8,7 @@ import {
   ActionIcon,
   Card,
   LoadingOverlay,
+  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -20,7 +21,7 @@ import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
 import { UpdateProgram } from "../wailsjs/go/main/App";
 import { notifyError } from "../toasts";
 
-export default function AppInfoAction() {
+export default function AboutDialogAction() {
   const [visible, { toggle }] = useDisclosure(false);
   const [opened, { open, close }] = useDisclosure();
   const currentVersion = useAppStore((state) => state.currentVersion);
@@ -67,32 +68,44 @@ export default function AppInfoAction() {
 
   function updateProgram() {
     toggle();
-    UpdateProgram(latestVersion).then(() => {
-      toggle();
-      close();
-    }
-    ).catch((err) => {
-      toggle();
-      notifyError(err);
-    });    
+    UpdateProgram(latestVersion)
+      .then(() => {
+        toggle();
+        close();
+      })
+      .catch((err) => {
+        toggle();
+        notifyError(err);
+      });
   }
 
   return (
     <>
-      <Modal title="ApiGear Studio" opened={opened} onClose={close} size="lg">
+      <Modal
+        title={<Title order={3}>ApiGear Studio - Disclaimer</Title>}
+        opened={opened}
+        onClose={close}
+        size="xl"
+      >
         <LoadingOverlay visible={visible} />
-        <Stack>
-          <Text c="dimmed">
-            ApiGear Studio helps you to manage Object APIs in an API driven
-            project. It allows you to manage APIs, create SDKs as also to
-            monitor and simulate your local API.
+        <Stack spacing="xs">
+          <Text>Privacy</Text>
+          <Text c="dimmed" fz="sm">
+            ApiGear Studio uses Google Analytics and Sentry to collect anonymous
+            usage data. The data helps us to improve the product. By using this
+            software you agree to the collection of anonymous usage data.
           </Text>
-          <Text c="dimmed">
-            ApiGear Studio helps you to manage Object APIs in an API driven
-            project. It allows you to manage APIs, create SDKs as also to
-            monitor and simulate your local API.
+          <Text>Disclaimer</Text>
+          <Text c="dimmed" fz="sm">
+            ApiGear Studio is a free and open-source project. You can find the
+            source code on Github. ApiGear Studio is provided "as is" without
+            warranty of any kind. In no event shall the authors or copyright
+            holders be liable for any claim, damages or other liability, whether
+            in an action of contract, tort or otherwise, arising from, out of or
+            in connection with the software or the use or other dealings in the
+            software.
           </Text>
-          <Table>
+          <Table verticalSpacing="xs" fontSize="xs">
             <tbody>
               {entries.map((entry) => (
                 <tr key={entry.label}>
