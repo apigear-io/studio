@@ -3,7 +3,7 @@ module github.com/apigear-io/studio
 go 1.20
 
 require (
-	github.com/apigear-io/cli v0.31.5
+	github.com/apigear-io/cli v0.31.6
 	github.com/creativeprojects/go-selfupdate v1.0.1
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/wailsapp/wails/v2 v2.6.0
