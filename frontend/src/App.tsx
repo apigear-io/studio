@@ -64,7 +64,7 @@ function App() {
     initApp();
   });
   return (
-    <Container fluid py="md">
+    <Container fluid>
       <RouterProvider router={router} />
     </Container>
   );

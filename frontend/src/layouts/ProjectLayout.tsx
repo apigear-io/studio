@@ -7,8 +7,8 @@ import AppFooter from "../components/AppFooter";
 export default function ProjectLayout() {
   return (
     <AppShell
-      header={<AppHeader />}
       navbar={<NavigationBar />}
+      header={<AppHeader />}
       footer={<AppFooter />}
     >
       <Outlet />
