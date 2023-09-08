@@ -31,6 +31,9 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	w := cfg.GetInt(cfg.KeyWindowWidth)
+	h := cfg.GetInt(cfg.KeyWindowHeight)
+	runtime.WindowSetSize(ctx, w, h)
 	err := StartServices(ctx, cfg.ServerPort())
 	if err != nil {
 		log.Error().Err(err).Msgf("start services: %s", err)
@@ -40,6 +43,10 @@ func (a *App) startup(ctx context.Context) {
 func (a *App) shutdown(ctx context.Context) {
 	log.Info().Msg("shutdown")
 	StopServices()
+	w, h := runtime.WindowGetSize(ctx)
+	cfg.Set(cfg.KeyWindowWidth, w)
+	cfg.Set(cfg.KeyWindowHeight, h)
+	cfg.WriteConfig()
 }
 
 func (a App) RecentProjects() []string {
