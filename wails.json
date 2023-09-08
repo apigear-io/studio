@@ -1,8 +1,6 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
   "name": "ApiGear-Studio",
-  "assetdir": "frontend/dist",
-  "wailsjsdir": "frontend/src",
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
@@ -17,6 +15,5 @@
     "productVersion": "1.0.0",
     "copyright": "(c) 2022 ApiGear",
     "comments": "ApiGear Studio is an application for creating and managing API driven workflow."
-  },
-  "debounceMS": 1000
+  }
 }

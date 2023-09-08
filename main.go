@@ -5,6 +5,7 @@ import (
 	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
+	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
@@ -31,12 +32,14 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:            "ApiGear Studio",
-		Width:            1280,
-		Height:           800,
-		MinWidth:         960,
-		MinHeight:        720,
-		Assets:           assets,
+		Title:     "ApiGear Studio",
+		Width:     1280,
+		Height:    800,
+		MinWidth:  960,
+		MinHeight: 720,
+		AssetServer: &assetserver.Options{
+			Assets: assets,
+		},
 		BackgroundColour: &options.RGBA{R: 0, G: 0, B: 0, A: 255},
 		OnStartup:        app.startup,
 		OnShutdown:       app.shutdown,
