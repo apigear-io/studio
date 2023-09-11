@@ -96,7 +96,7 @@ func StopServices() {
 
 func StartUpdater(ctx context.Context) error {
 	updateInfo.CheckComplete = false
-	u, err := up.NewUpdater("apigear-io/studio-releases", cfg.BuildVersion())
+	u, err := up.NewUpdater("apigear-io/studio", cfg.BuildVersion())
 	if err != nil {
 		return fmt.Errorf("create updater: %v", err)
 	}
