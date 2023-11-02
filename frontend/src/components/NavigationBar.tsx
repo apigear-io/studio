@@ -41,12 +41,6 @@ const modes: NavbarLinkProps[] = [
     to: "/project/solutions",
   },
   {
-    label: "Templates",
-    icon: IconWand,
-    desc: "Manage API Templates",
-    to: "/project/templates",
-  },
-  {
     label: "Simulation",
     icon: IconClockBolt,
     desc: "Simulate API",
@@ -57,6 +51,12 @@ const modes: NavbarLinkProps[] = [
     icon: IconAnalyze,
     desc: "Monitor API",
     to: "/project/monitor",
+  },
+  {
+    label: "Templates",
+    icon: IconWand,
+    desc: "Manage API Templates",
+    to: "/project/templates",
   },
   {
     label: "Logs",
