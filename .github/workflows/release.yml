@@ -9,7 +9,7 @@ on:
 
 env:
   wails_version: "v2.6.0"
-  go_version: "1.20.x"
+  go_version: "1.21.x"
   node_version: "18.x"
 jobs:
   build-windows-amd64:
