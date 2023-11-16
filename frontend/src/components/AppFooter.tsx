@@ -1,4 +1,4 @@
-import { Button, Footer, Group } from "@mantine/core";
+import { AppShell, Button, Center, Group, Stack } from "@mantine/core";
 import { IconInfoCircle, IconMessages } from "@tabler/icons-react";
 import AboutDialogAction from "./AboutDialogAction";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
@@ -15,28 +15,28 @@ export default function AppFooter() {
     BrowserOpenURL("https://apigear.io");
   }
   return (
-    <Footer height={38}>
-      <Group position="apart" px="md">
+    <AppShell.Footer>
+      <Group justify="space-between" px="md">
         <AboutDialogAction />
-        <Group position="apart" px="md">
+        <Group justify="space-between" px="md">
           <Button
-            variant="link"
+            variant="subtle"
             size="xs"
-            leftIcon={<IconMessages />}
+            leftSection={<IconMessages />}
             onClick={openDiscussions}
           >
             Discussions
           </Button>
           <Button
-            variant="link"
+            variant="subtle"
             size="xs"
-            leftIcon={<IconInfoCircle />}
+            leftSection={<IconInfoCircle />}
             onClick={openHome}
           >
             About
           </Button>
         </Group>
       </Group>
-    </Footer>
+    </AppShell.Footer>
   );
 }

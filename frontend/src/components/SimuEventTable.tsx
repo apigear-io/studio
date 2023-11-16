@@ -1,5 +1,5 @@
 import { DataTable, DataTableColumn } from "mantine-datatable";
-import { Prism } from "@mantine/prism";
+import { CodeHighlight } from "@mantine/code-highlight";
 import dayjs from "dayjs";
 import { SimuEvent } from "../stores/SimuStore";
 
@@ -7,7 +7,7 @@ const columns: DataTableColumn<SimuEvent>[] = [
   {
     accessor: "timestamp",
     title: "time",
-    textAlignment: "left",
+    textAlign: "left",
     width: 80,
     render: (row) => dayjs(row.timestamp).format("HH:mm:ss"),
   },
@@ -37,16 +37,18 @@ export interface EventTableProps {
 export default function SimuEventTable(props: EventTableProps) {
   return (
     <DataTable
-      withBorder
+      withTableBorder
       withColumnBorders
       records={props.events}
       columns={columns}
-      fontSize="xs"
       highlightOnHover
       height="67vh"
       rowExpansion={{
         content: ({ record }) => (
-          <Prism language="json">{JSON.stringify(record, null, 2)}</Prism>
+          <CodeHighlight
+            language="json"
+            code={JSON.stringify(record, null, 2)}
+          />
         ),
       }}
     />

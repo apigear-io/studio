@@ -43,7 +43,7 @@ export default function ImportAction() {
               data-autofocus
               {...form.getInputProps("url")}
             />
-            <Group position="right">
+            <Group justify="flex-start">
               <Button onClick={close}>Cancel</Button>
               <Button type="submit">Import</Button>
             </Group>
@@ -51,7 +51,11 @@ export default function ImportAction() {
         </form>
       </Modal>
       <Group>
-        <Button variant="subtle" onClick={open} leftIcon={<IconFileImport />}>
+        <Button
+          variant="subtle"
+          onClick={open}
+          leftSection={<IconFileImport />}
+        >
           Import
         </Button>
       </Group>

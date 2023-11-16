@@ -31,7 +31,7 @@ export default function TemplatesPage() {
               <Button
                 variant="subtle"
                 onClick={refresh}
-                leftIcon={<IconRefresh />}
+                leftSection={<IconRefresh />}
               >
                 Refresh Registry
               </Button>

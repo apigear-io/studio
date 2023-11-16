@@ -37,8 +37,8 @@ export default function InstallAction({
       <Menu.Target>
         <Button
           variant="subtle"
-          leftIcon={<IconDownload />}
-          rightIcon={<IconChevronDown />}
+          leftSection={<IconDownload />}
+          rightSection={<IconChevronDown />}
           loading={loading}
         >
           Install
@@ -48,7 +48,7 @@ export default function InstallAction({
         {template.versions.map((version) => {
           return (
             <Menu.Item
-              icon={<IconDownload />}
+              leftSection={<IconDownload />}
               onClick={() => install(template, version)}
             >
               {version}

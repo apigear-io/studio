@@ -52,10 +52,10 @@ function ConnectionSettings() {
     <Page title="Settings">
       <Box p="lg">
         <Stack>
-          <Group position="apart">
+          <Group justify="space-between">
             <Stack>
               <Title order={3}>Connection</Title>
-              <Text size="sm" weight={500} c="dimmed">
+              <Text size="sm" fw={500} c="dimmed">
                 Network settings for API Studio.
               </Text>
             </Stack>
@@ -63,7 +63,7 @@ function ConnectionSettings() {
               <Button
                 variant="subtle"
                 onClick={applyChanges}
-                leftIcon={<IconDeviceFloppy />}
+                leftSection={<IconDeviceFloppy />}
               >
                 Apply Changes
               </Button>
@@ -75,7 +75,7 @@ function ConnectionSettings() {
               console.log(values);
             }}
           >
-            <Stack spacing="xs" maw={400}>
+            <Stack gap="xs" maw={400}>
               <TextInput
                 label="Port"
                 description="The port to run the API Studio server on"
@@ -139,10 +139,10 @@ function ApplicationSettings() {
   return (
     <Box p="lg">
       <Stack>
-        <Group position="apart">
+        <Group justify="space-between">
           <Stack>
             <Title order={3}>Application</Title>
-            <Text size="sm" weight={500} c="dimmed">
+            <Text size="sm" fw={500} c="dimmed">
               Application settings for API Studio.
             </Text>
           </Stack>
@@ -150,7 +150,7 @@ function ApplicationSettings() {
             <Button
               variant="subtle"
               onClick={applyChanges}
-              leftIcon={<IconDeviceFloppy />}
+              leftSection={<IconDeviceFloppy />}
             >
               Apply Changes
             </Button>
@@ -162,7 +162,7 @@ function ApplicationSettings() {
             console.log(values);
           }}
         >
-          <Stack spacing="xs" maw={400}>
+          <Stack gap="xs" maw={400}>
             <TextInput
               label="Update Channel"
               description="The update channel to use for API Studio"

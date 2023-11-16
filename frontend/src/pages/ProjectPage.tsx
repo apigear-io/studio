@@ -43,7 +43,7 @@ export default function ProjectPage() {
             <>
               <Button
                 variant="subtle"
-                leftIcon={<IconCheck />}
+                leftSection={<IconCheck />}
                 onClick={checkAll}
               >
                 Check All

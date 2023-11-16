@@ -1,4 +1,4 @@
-import { Group, NavLink, Navbar, Text, Tooltip } from "@mantine/core";
+import { Group, NavLink, AppShell, Text, Tooltip } from "@mantine/core";
 import {
   IconAnalyze,
   IconArmchair,
@@ -78,8 +78,8 @@ interface SectionHeaderProps {
 
 function SectionHeader({ label }: SectionHeaderProps) {
   return (
-    <Group position="apart" px="md">
-      <Text size="sm" weight={300} c="dimmed">
+    <Group justify="space-between" px="md">
+      <Text size="sm" fw={300} c="dimmed">
         {label}
       </Text>
     </Group>
@@ -99,7 +99,7 @@ function NavbarLink({
       <NavLink
         component={Link}
         to={to}
-        icon={<Icon />}
+        leftSection={<Icon />}
         label={label}
         active={active}
       />
@@ -115,13 +115,13 @@ export default function NavigationBar() {
   }, [location]);
 
   return (
-    <Navbar width={{ sm: 180 }} withBorder>
-      <Navbar.Section grow py="md">
+    <AppShell.Navbar withBorder>
+      <AppShell.Section grow py="md">
         <SectionHeader label="Modes" />
         {modes.map((item) => (
           <NavbarLink {...item} key={item.label} currentTo={currentTo} />
         ))}
-      </Navbar.Section>
-    </Navbar>
+      </AppShell.Section>
+    </AppShell.Navbar>
   );
 }

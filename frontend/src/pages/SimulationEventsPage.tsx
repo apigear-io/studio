@@ -21,7 +21,7 @@ export default function SimulationEventsPage() {
               <Button
                 variant="subtle"
                 onClick={() => nav(-1)}
-                leftIcon={<IconChevronLeft />}
+                leftSection={<IconChevronLeft />}
               >
                 Back
               </Button>

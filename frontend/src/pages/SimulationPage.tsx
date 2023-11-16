@@ -45,7 +45,7 @@ function PlayButton({ doc, open }: PlayButtonProps) {
   return (
     <Button
       variant="subtle"
-      leftIcon={<IconPlayerPlay />}
+      leftSection={<IconPlayerPlay />}
       onClick={() => playScenario(doc)}
     >
       Play
@@ -78,7 +78,7 @@ function StopButton({ doc, close }: StopButtonProps) {
   return (
     <Button
       variant="subtle"
-      leftIcon={<IconPlayerStop />}
+      leftSection={<IconPlayerStop />}
       onClick={() => stopScenario(doc)}
     >
       Stop
@@ -127,14 +127,14 @@ export default function ProjectPage() {
             <>
               <Button
                 variant="subtle"
-                leftIcon={<IconListSearch />}
+                leftSection={<IconListSearch />}
                 onClick={open}
               >
                 Logs
               </Button>
               <Button
                 variant="subtle"
-                leftIcon={<IconMessage />}
+                leftSection={<IconMessage />}
                 onClick={() => nav("/project/simulation/events")}
               >
                 Events
