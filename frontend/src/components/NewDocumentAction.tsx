@@ -1,12 +1,4 @@
-import {
-  Button,
-  Menu,
-  Modal,
-  Select,
-  TextInput,
-  Group,
-  NavLink,
-} from "@mantine/core";
+import { Button, Menu, Modal, Select, TextInput, Group } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -17,7 +9,6 @@ import {
 } from "@tabler/icons-react";
 import { notifyError, notifySuccess } from "../toasts";
 import { useProjectStore } from "../stores/ProjectStore";
-import { forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useTrackAction from "../hooks/useTrackAction";
 
@@ -25,18 +16,6 @@ interface FormData {
   name: string;
   kind: string;
 }
-
-type ItemProps = {
-  value: string;
-  label: string;
-  icon: React.FC<any>;
-};
-
-const SelectItem = forwardRef<HTMLButtonElement, ItemProps>(
-  ({ value, label, icon: Icon }: ItemProps, ref) => {
-    return <NavLink ref={ref} label={label} icon={<Icon />} value={value} />;
-  }
-);
 
 export default function NewDocumentAction() {
   const trackAction = useTrackAction();
@@ -85,51 +64,47 @@ export default function NewDocumentAction() {
             placeholder="Kind"
             required
             {...form.getInputProps("kind")}
-            itemComponent={SelectItem}
             data={[
               {
                 value: "module",
                 label: "API Module",
-                icon: IconComponents,
               },
               {
                 value: "solution",
                 label: "SDK Solution",
-                icon: IconArmchair,
               },
               {
                 value: "scenario",
                 label: "Simulation Scenario",
-                icon: IconClockBolt,
               },
             ]}
           />
-          <Group position="right" mt="md">
+          <Group justify="flex-start" mt="md">
             <Button onClick={close}>Cancel</Button>
             <Button type="submit">Create</Button>
           </Group>
         </form>
       </Modal>
       <Menu.Target>
-        <Button variant="subtle" leftIcon={<IconCirclePlus />}>
+        <Button variant="subtle" leftSection={<IconCirclePlus />}>
           New Document
         </Button>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
-          icon={<IconComponents />}
+          leftSection={<IconComponents />}
           onClick={() => openNewDocument("module")}
         >
           API Module
         </Menu.Item>
         <Menu.Item
-          icon={<IconArmchair />}
+          leftSection={<IconArmchair />}
           onClick={() => openNewDocument("solution")}
         >
           SDK Solution
         </Menu.Item>
         <Menu.Item
-          icon={<IconClockBolt />}
+          leftSection={<IconClockBolt />}
           onClick={() => openNewDocument("scenario")}
         >
           Simulation Scenario

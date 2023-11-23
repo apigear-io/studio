@@ -7,11 +7,17 @@ import AppFooter from "../components/AppFooter";
 export default function ProjectLayout() {
   return (
     <AppShell
-      navbar={<NavigationBar />}
-      header={<AppHeader />}
-      footer={<AppFooter />}
+      header={{ height: 60 }}
+      navbar={{ width: 180, breakpoint: "sm" }}
+      footer={{ height: 38 }}
+      padding="md"
     >
-      <Outlet />
+      <AppHeader />
+      <NavigationBar />
+      <AppShell.Main>
+        <Outlet />
+      </AppShell.Main>
+      <AppFooter />
     </AppShell>
   );
 }

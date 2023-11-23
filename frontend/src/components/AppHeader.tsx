@@ -1,11 +1,11 @@
 import {
   Group,
-  Header,
   Title,
   Button,
   ActionIcon,
   Image,
   Tooltip,
+  AppShell,
 } from "@mantine/core";
 import {
   IconFolderOpen,
@@ -46,19 +46,17 @@ export default function AppHeader() {
   }
 
   return (
-    <Header height={60} p="xs" withBorder>
-      <Group position="apart">
-        <Group position="apart" px="md">
-          <ActionIcon variant="transparent" radius="xl">
-            <Image src={AppIcon} width={40} height={40} alt="ApiGear" />
-          </ActionIcon>
+    <AppShell.Header p="xs" withBorder>
+      <Group justify="space-between">
+        <Group justify="flex-start" px="md">
+          <Image src={AppIcon} width={40} height={40} alt="ApiGear" />
           <Title order={1}>ApiGear</Title>
         </Group>
-        <Group position="apart" px="md">
+        <Group justify="space-between" px="md">
           <NewDocumentAction />
           <Button
             variant="subtle"
-            leftIcon={<IconSwitchHorizontal />}
+            leftSection={<IconSwitchHorizontal />}
             onClick={switchProject}
           >
             Switch Project
@@ -83,6 +81,6 @@ export default function AppHeader() {
           </Button.Group>
         </Group>
       </Group>
-    </Header>
+    </AppShell.Header>
   );
 }

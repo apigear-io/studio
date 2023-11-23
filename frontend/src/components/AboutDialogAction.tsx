@@ -88,7 +88,7 @@ export default function AboutDialogAction() {
         size="xl"
       >
         <LoadingOverlay visible={visible} />
-        <Stack spacing="xs">
+        <Stack gap="xs">
           <Text>Privacy</Text>
           <Text c="dimmed" fz="sm">
             ApiGear Studio uses Google Analytics and Sentry to collect anonymous
@@ -105,14 +105,14 @@ export default function AboutDialogAction() {
             in connection with the software or the use or other dealings in the
             software.
           </Text>
-          <Table verticalSpacing="xs" fontSize="xs">
+          <Table verticalSpacing="xs">
             <tbody>
               {entries.map((entry) => (
                 <tr key={entry.label}>
                   <td>{entry.label}</td>
                   <td>
                     {entry.href ? (
-                      <Group noWrap>
+                      <Group wrap="nowrap">
                         <Text>{entry.value}</Text>
                         <ActionIcon
                           variant="transparent"
@@ -132,13 +132,13 @@ export default function AboutDialogAction() {
           </Table>
           {latestVersion && (
             <Card>
-              <Text weight={700} size="sm" color="dimmed">
+              <Text fw={700} fs="sm" c="dimmed">
                 A new version is available {latestVersion}
               </Text>
               <Button
                 variant="light"
                 fullWidth
-                leftIcon={<IconRefresh />}
+                leftSection={<IconRefresh />}
                 onClick={updateProgram}
                 mt="md"
               >
@@ -148,7 +148,7 @@ export default function AboutDialogAction() {
           )}
           {!latestVersion && (
             <Card>
-              <Text weight={700} size="sm" color="dimmed">
+              <Text fw={700} fs="sm" c="dimmed">
                 You are using the latest version
               </Text>
             </Card>
@@ -157,9 +157,9 @@ export default function AboutDialogAction() {
       </Modal>
       <Group>
         <Button
-          variant="link"
+          variant="subtle"
           size="xs"
-          leftIcon={<IconInfoCircle />}
+          leftSection={<IconInfoCircle />}
           onClick={openModal}
         >
           ApiGear Studio {currentVersion}

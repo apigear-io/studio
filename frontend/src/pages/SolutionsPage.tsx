@@ -98,7 +98,7 @@ export default function ProjectPage() {
               <Button
                 variant="subtle"
                 onClick={open}
-                leftIcon={<IconListSearch />}
+                leftSection={<IconListSearch />}
               >
                 Logs
               </Button>
@@ -115,7 +115,7 @@ export default function ProjectPage() {
                     <Indicator offset={8} disabled={!autoRun}>
                       <Button
                         variant="subtle"
-                        leftIcon={<IconRun />}
+                        leftSection={<IconRun />}
                         onClick={() => handleRun(doc)}
                       >
                         {autoRun ? "Stop" : "Run"}
@@ -126,7 +126,7 @@ export default function ProjectPage() {
                 menuItems={
                   <>
                     <Menu.Item
-                      icon={<IconRefresh />}
+                      leftSection={<IconRefresh />}
                       onClick={() => handleAutoRun(doc)}
                       c={autoRun ? "green" : ""}
                     >

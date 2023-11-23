@@ -31,7 +31,7 @@ export default function CachePanel() {
   return (
     <Stack p="lg">
       {cache.length === 0 && (
-        <Group position="center">
+        <Group justify="justify-center">
           <Stack align="center">
             <Title order={4}>No templates in cache</Title>
             <Text c="dimmed">
@@ -42,18 +42,18 @@ export default function CachePanel() {
       )}
       {cache.map((template) => {
         return (
-          <Group position="apart" noWrap>
+          <Group justify="space-between" wrap="nowrap">
             <NavLink
               label={template.name}
               description={template.description}
-              icon={<IconWand />}
+              leftSection={<IconWand />}
             />
             <Button.Group>
               <InfoAction template={template} />
               <TemplateCopyNameAction template={template} />
               <Button
                 variant="subtle"
-                leftIcon={<IconTrash />}
+                leftSection={<IconTrash />}
                 onClick={() => removeTemplate(template)}
               >
                 Remove

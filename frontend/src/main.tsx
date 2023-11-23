@@ -2,20 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import { MantineProvider, MantineThemeOverride } from "@mantine/core";
+import "@mantine/core/styles.css";
+import "@mantine/code-highlight/styles.css";
+import "@mantine/notifications/styles.css";
+import "@mantine/dates/styles.css";
+
+import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 
 import ReactGA from "react-ga4";
 ReactGA.initialize("G-LQ3EHQGD5Z");
 
-const theme: MantineThemeOverride = {
-  colorScheme: "dark",
-};
-
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
+    <MantineProvider defaultColorScheme="dark">
       <ModalsProvider>
         <Notifications />
         <App />

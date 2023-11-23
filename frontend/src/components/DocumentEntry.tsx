@@ -82,13 +82,13 @@ export default function DocumentEntry(props: DocumentEntryProps) {
     notifySuccess(`Copied path to ${doc.name} to clipboard`);
   };
   return (
-    <Group position="apart" noWrap>
+    <Group justify="space-between" wrap="nowrap">
       <NavLink
         component={Link}
         to={RouteForType(doc.type)}
         state={doc}
         label={doc.name}
-        icon={<Icon />}
+        leftSection={<Icon />}
         description={doc.path}
       />
       <Button.Group>
@@ -96,7 +96,7 @@ export default function DocumentEntry(props: DocumentEntryProps) {
         <Button
           variant="subtle"
           onClick={openInEditor}
-          leftIcon={<IconExternalLink />}
+          leftSection={<IconExternalLink />}
         >
           Open
         </Button>
@@ -107,10 +107,10 @@ export default function DocumentEntry(props: DocumentEntryProps) {
             </Button>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item onClick={checkDocument} icon={<IconCheck />}>
+            <Menu.Item onClick={checkDocument} leftSection={<IconCheck />}>
               Check
             </Menu.Item>
-            <Menu.Item onClick={copyPath} icon={<IconCopy />}>
+            <Menu.Item onClick={copyPath} leftSection={<IconCopy />}>
               Copy Path
             </Menu.Item>
             {props.menuItems}

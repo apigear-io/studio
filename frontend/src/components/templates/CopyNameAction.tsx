@@ -15,7 +15,7 @@ export default function CopyNameAction({
   return (
     <Button
       variant="subtle"
-      leftIcon={<IconCopy />}
+      leftSection={<IconCopy />}
       onClick={() => copyName(template)}
     >
       Copy

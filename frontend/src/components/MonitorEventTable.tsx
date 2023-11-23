@@ -1,5 +1,5 @@
 import { DataTable, DataTableColumn } from "mantine-datatable";
-import { Prism } from "@mantine/prism";
+import { CodeHighlight } from "@mantine/code-highlight";
 import dayjs from "dayjs";
 import { MonitorEvent } from "../stores/MonitorStore";
 
@@ -7,32 +7,32 @@ const columns: DataTableColumn<MonitorEvent>[] = [
   {
     accessor: "timestamp",
     title: "time",
-    textAlignment: "left",
+    textAlign: "left",
     width: 80,
     render: (row) => dayjs(row.timestamp).format("HH:mm:ss"),
   },
   {
     accessor: "source",
     title: "source",
-    textAlignment: "left",
+    textAlign: "left",
     width: 80,
   },
   {
     accessor: "type",
     title: "type",
-    textAlignment: "left",
+    textAlign: "left",
     width: 60,
   },
   {
     accessor: "symbol",
     title: "symbol",
-    textAlignment: "left",
+    textAlign: "left",
     width: 240,
   },
   {
     accessor: "data",
     title: "data",
-    textAlignment: "left",
+    textAlign: "left",
     render: (row) => JSON.stringify(row.data),
   },
 ];
@@ -45,16 +45,18 @@ export interface EventTableProps {
 export default function MonitorEventTable(props: EventTableProps) {
   return (
     <DataTable
-      withBorder
+      withTableBorder
       withColumnBorders
       records={props.events}
       columns={columns}
-      fontSize="xs"
       highlightOnHover
       height={props.height || "67vh"}
       rowExpansion={{
         content: ({ record }) => (
-          <Prism language="json">{JSON.stringify(record, null, 2)}</Prism>
+          <CodeHighlight
+            language="json"
+            code={JSON.stringify(record, null, 2)}
+          />
         ),
       }}
     />

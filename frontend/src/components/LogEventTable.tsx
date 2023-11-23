@@ -1,5 +1,5 @@
 import { DataTable, DataTableColumn } from "mantine-datatable";
-import { Prism } from "@mantine/prism";
+import { CodeHighlight } from "@mantine/code-highlight";
 import dayjs from "dayjs";
 import { useMantineTheme } from "@mantine/core";
 import { LogEvent } from "../stores/LogsStore";
@@ -8,26 +8,26 @@ const columns: DataTableColumn<LogEvent>[] = [
   {
     accessor: "time",
     title: "time",
-    textAlignment: "left",
+    textAlign: "left",
     width: 80,
     render: (row) => dayjs(row.time).format("HH:mm:ss"),
   },
   {
     accessor: "level",
     title: "level",
-    textAlignment: "left",
+    textAlign: "left",
     width: 60,
   },
   {
     accessor: "topic",
     title: "topic",
-    textAlignment: "left",
+    textAlign: "left",
     width: 60,
   },
   {
     accessor: "message",
     title: "message",
-    textAlignment: "left",
+    textAlign: "left",
     render: (row) => {
       return row.error ? `${row.message}: ${row.error}` : row.message;
     },
@@ -44,11 +44,10 @@ export default function LogEventTable(props: EventTableProps) {
 
   return (
     <DataTable
-      withBorder
+      withTableBorder
       withColumnBorders
       records={props.events}
       columns={columns}
-      fontSize="xs"
       highlightOnHover
       height={props.height || "67vh"}
       rowStyle={({ level }) => {
@@ -63,7 +62,10 @@ export default function LogEventTable(props: EventTableProps) {
       }}
       rowExpansion={{
         content: ({ record }) => (
-          <Prism language="json">{JSON.stringify(record, null, 2)}</Prism>
+          <CodeHighlight
+            language="json"
+            code={JSON.stringify(record, null, 2)}
+          />
         ),
       }}
     />

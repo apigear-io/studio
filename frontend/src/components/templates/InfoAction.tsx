@@ -71,12 +71,12 @@ export default function InfoAction({ template }: { template: main.RepoInfo }) {
               })}
             </tbody>
           </Table>
-          <Group position="right">
+          <Group justify="flex-end">
             <Button onClick={close}>Close</Button>
           </Group>
         </Stack>
       </Modal>
-      <Button variant="subtle" leftIcon={<IconInfoCircle />} onClick={open}>
+      <Button variant="subtle" leftSection={<IconInfoCircle />} onClick={open}>
         Info
       </Button>
     </>

@@ -10,6 +10,7 @@ import {
   Text,
   ActionIcon,
   Image,
+  Card,
 } from "@mantine/core";
 import {
   IconBook,
@@ -65,28 +66,32 @@ function StartSection() {
   }
 
   return (
-    <Stack spacing="xs">
-      <Title order={3}>Start ...</Title>
-      <NavLink
-        label="Create Project"
-        description="Create a new API driven project"
-        icon={<IconPlus />}
-        onClick={createProject}
-      />
-      <NavLink
-        label="Open Project"
-        description="Open an existing API driven project"
-        icon={<IconFolderOpen />}
-        onClick={openProject}
-      />
-      <NavLink
-        label="Import Project"
-        description="Import an existing API driven project"
-        icon={<IconFileImport />}
-        onClick={importProject}
-        disabled
-      />
-    </Stack>
+    <Card shadow="md" p="md" style={{ height: "100%" }} withBorder>
+      <Stack gap="xs">
+        <Title order={3} mb="lg">
+          Start ...
+        </Title>
+        <NavLink
+          label="Create Project"
+          description="Create a new API driven project"
+          leftSection={<IconPlus />}
+          onClick={createProject}
+        />
+        <NavLink
+          label="Open Project"
+          description="Open an existing API driven project"
+          leftSection={<IconFolderOpen />}
+          onClick={openProject}
+        />
+        <NavLink
+          label="Import Project"
+          description="Import an existing API driven project"
+          leftSection={<IconFileImport />}
+          onClick={importProject}
+          disabled
+        />
+      </Stack>
+    </Card>
   );
 }
 
@@ -115,27 +120,31 @@ function RecentSection() {
       });
   }
   return (
-    <Stack spacing="xs">
-      <Title order={3}>Recent ...</Title>
-      <Stack spacing="xs">
-        {recent.map((item, index) => (
-          <Group key={index} position="apart" noWrap>
-            <NavLink
-              label={item}
-              icon={<IconFolder />}
-              onClick={() => openRecent(item)}
-            />
-            <Button
-              variant="link"
-              onClick={() => deleteRecent(item)}
-              leftIcon={<IconTrash size={18} />}
-            >
-              Delete
-            </Button>
-          </Group>
-        ))}
+    <Card shadow="md" p="md" withBorder>
+      <Stack gap="xs">
+        <Title order={3} mb="lg">
+          Recent ...
+        </Title>
+        <Stack gap="xs">
+          {recent.map((item, index) => (
+            <Group key={index} justify="space-between" wrap="nowrap">
+              <NavLink
+                label={item}
+                leftSection={<IconFolder />}
+                onClick={() => openRecent(item)}
+              />
+              <Button
+                variant="subtle"
+                onClick={() => deleteRecent(item)}
+                leftSection={<IconTrash size={18} />}
+              >
+                Delete
+              </Button>
+            </Group>
+          ))}
+        </Stack>
       </Stack>
-    </Stack>
+    </Card>
   );
 }
 function MoreSection() {
@@ -146,21 +155,25 @@ function MoreSection() {
     BrowserOpenURL("https://docs.apigear.io");
   }
   return (
-    <Stack spacing="xs">
-      <Title order={3}>More ...</Title>
-      <NavLink
-        label="About ApiGear"
-        description="Learn more about ApiGear"
-        icon={<IconInfoCircle />}
-        onClick={openApiGear}
-      />
-      <NavLink
-        label="Documentation"
-        description="Read the documentation"
-        icon={<IconBook />}
-        onClick={openDocs}
-      />
-    </Stack>
+    <Card shadow="md" p="md" style={{ height: "100%" }} withBorder>
+      <Stack gap="xs">
+        <Title order={3} mb="lg">
+          More ...
+        </Title>
+        <NavLink
+          label="About ApiGear"
+          description="Design your APIs and generate your SDKs with ease."
+          leftSection={<IconInfoCircle />}
+          onClick={openApiGear}
+        />
+        <NavLink
+          label="Documentation"
+          description="Tutorials, best practices, open standards and more."
+          leftSection={<IconBook />}
+          onClick={openDocs}
+        />
+      </Stack>
+    </Card>
   );
 }
 
@@ -169,21 +182,19 @@ export default function WelcomePage() {
   return (
     <Page title="Welcome">
       <Paper p="lg">
-        <Stack spacing="lg">
-          <Group>
-            <ActionIcon variant="transparent" radius="xl" mb="md">
-              <Image src={AppIcon} width={48} height={48} alt="ApiGear" />
-            </ActionIcon>
-            <Stack spacing="0">
+        <Stack gap="lg">
+          <Group gap="lg">
+            <Image src={AppIcon} width={64} height={64} alt="ApiGear" />
+            <Stack gap="0">
               <Title order={1} c={theme.primaryColor}>
                 ApiGear
               </Title>
-              <Text fz="sm" c="dimmed" italic>
-                APIs evolved
+              <Text fz="sm" c="dimmed" fs="italic">
+                APIs evolved.
               </Text>
             </Stack>
           </Group>
-          <Grid gutter="lg">
+          <Grid gutter="lg" align="stretch">
             <Grid.Col span={6}>
               <StartSection />
             </Grid.Col>

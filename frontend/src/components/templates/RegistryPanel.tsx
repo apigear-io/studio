@@ -10,7 +10,7 @@ export default function RegistryPanel() {
   return (
     <Stack p="lg">
       {registry.length === 0 && (
-        <Group position="center">
+        <Group justify="center">
           <Stack align="center">
             <Title order={4}>No templates in registry</Title>
             <Text c="dimmed">
@@ -21,11 +21,11 @@ export default function RegistryPanel() {
       )}
       {registry.map((template) => {
         return (
-          <Group position="apart" noWrap>
+          <Group justify="space-between" wrap="nowrap">
             <NavLink
               label={template.name}
               description={template.description}
-              icon={<IconWand />}
+              leftSection={<IconWand />}
             />
             <Button.Group>
               <TemplateInfoAction template={template} />

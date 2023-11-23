@@ -23,12 +23,12 @@ export default function PageHeader({
   const theme = useMantineTheme();
   return (
     <Paper>
-      <Group position="apart" noWrap>
-        <Stack spacing="0">
+      <Group justify="space-between" wrap="nowrap">
+        <Stack gap="0">
           <Title order={1} c={theme.primaryColor}>
             {title}
           </Title>
-          <Text fz="sm" c="dimmed" italic>
+          <Text fz="sm" c="dimmed" fs="italic">
             {description}
           </Text>
         </Stack>
