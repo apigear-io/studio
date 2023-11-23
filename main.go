@@ -2,16 +2,11 @@ package main
 
 import (
 	"github.com/apigear-io/cli/pkg/cfg"
-	zlog "github.com/apigear-io/cli/pkg/log"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
-)
-
-const (
-	DSN = "https://4957208c21894938999efd9742a596e0@o170438.ingest.sentry.io/4503901330866176"
 )
 
 var (
@@ -25,8 +20,6 @@ func main() {
 	cfg.SetBuildInfo(version, commit, date)
 	log.Info().Msgf("Version: %s, Commit: %s, Date: %s", version, commit, date)
 
-	zlog.SentryInit(DSN)
-	zlog.SentryCaptureArgs()
 	// Create an instance of the app structure
 	app := NewApp()
 
@@ -75,6 +68,5 @@ func main() {
 
 	if err != nil {
 		log.Error().Msgf("start application: %s", err.Error())
-		zlog.SentryCaptureError(err)
 	}
 }

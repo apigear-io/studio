@@ -3,7 +3,7 @@ module github.com/apigear-io/studio
 go 1.21
 
 require (
-	github.com/apigear-io/cli v0.33.1
+	github.com/apigear-io/cli v0.34.0
 	github.com/creativeprojects/go-selfupdate v1.1.1
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/wailsapp/wails/v2 v2.6.0
@@ -32,7 +32,6 @@ require (
 	github.com/ettle/strcase v0.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gertd/go-pluralize v0.2.1 // indirect
-	github.com/getsentry/sentry-go v0.24.1 // indirect
 	github.com/gitsight/go-vcsurl v1.0.1 // indirect
 	github.com/go-chi/chi/v5 v5.0.10 // indirect
 	github.com/go-fed/httpsig v1.1.0 // indirect
