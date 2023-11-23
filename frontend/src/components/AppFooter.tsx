@@ -1,4 +1,4 @@
-import { AppShell, Button, Center, Group, Stack } from "@mantine/core";
+import { AppShell, Button, Group } from "@mantine/core";
 import { IconInfoCircle, IconMessages } from "@tabler/icons-react";
 import AboutDialogAction from "./AboutDialogAction";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";

@@ -1,12 +1,4 @@
-import {
-  Group,
-  Title,
-  Button,
-  ActionIcon,
-  Image,
-  Tooltip,
-  AppShell,
-} from "@mantine/core";
+import { Group, Title, Button, Image, Tooltip, AppShell } from "@mantine/core";
 import {
   IconFolderOpen,
   IconHelpCircle,

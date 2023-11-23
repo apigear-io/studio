@@ -8,7 +8,6 @@ import {
   Title,
   useMantineTheme,
   Text,
-  ActionIcon,
   Image,
   Card,
 } from "@mantine/core";
