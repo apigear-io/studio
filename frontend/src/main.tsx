@@ -11,9 +11,6 @@ import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 
-import ReactGA from "react-ga4";
-ReactGA.initialize("G-LQ3EHQGD5Z");
-
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <MantineProvider defaultColorScheme="dark">
