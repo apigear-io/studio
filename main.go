@@ -1,12 +1,19 @@
 package main
 
 import (
+	"fmt"
+	"runtime/debug"
+
 	"github.com/apigear-io/cli/pkg/cfg"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
+)
+
+const (
+	CLI_PATH = "github.com/apigear-io/cli"
 )
 
 var (
@@ -16,15 +23,47 @@ var (
 	date    = "2021.01.01"
 )
 
+func ParseCliBuildInfo() error {
+	bi, ok := debug.ReadBuildInfo()
+	if !ok {
+		return fmt.Errorf("no build info")
+	}
+	for _, m := range bi.Deps {
+		if m.Path == CLI_PATH {
+			cliVersion := m.Version
+			if cliVersion == "(devel)" {
+				cliVersion = ""
+			}
+			cfg.SetBuildInfo("cli", cfg.BuildInfo{
+				Version: cliVersion,
+				Commit:  "",
+				Date:    date,
+			})
+			break
+		}
+	}
+	return nil
+}
+
 func main() {
-	cfg.SetBuildInfo(version, commit, date)
+	// Parse build information from cli
+	err := ParseCliBuildInfo()
+	if err != nil {
+		log.Error().Err(err).Msg("parse cli build info")
+	}
+
+	cfg.SetBuildInfo("studio", cfg.BuildInfo{
+		Version: version,
+		Commit:  commit,
+		Date:    date,
+	})
 	log.Info().Msgf("Version: %s, Commit: %s, Date: %s", version, commit, date)
 
 	// Create an instance of the app structure
 	app := NewApp()
 
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Title:     "ApiGear Studio",
 		Width:     1280,
 		Height:    800,

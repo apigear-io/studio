@@ -427,15 +427,8 @@ func (a App) StopScenario(source string) error {
 	return err
 }
 
-func (a App) VersionInfo() (*VersionInfo, error) {
-	version := cfg.BuildVersion()
-	commit := cfg.BuildCommit()
-	date := cfg.BuildDate()
-	return &VersionInfo{
-		Version: version,
-		Commit:  commit,
-		Date:    date,
-	}, nil
+func (a App) VersionInfo() cfg.BuildInfo {
+	return cfg.GetBuildInfo("studio")
 }
 
 // TODO: need to cache results

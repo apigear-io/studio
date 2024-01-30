@@ -34,12 +34,6 @@ type RepoInfo struct {
 	Versions    []string `json:"versions"`
 }
 
-type VersionInfo struct {
-	Version string `json:"version"`
-	Commit  string `json:"commit"`
-	Date    string `json:"date"`
-}
-
 type ReleaseInfo struct {
 	Version      string    `json:"version"`
 	PublishedAt  time.Time `json:"published_at"`
