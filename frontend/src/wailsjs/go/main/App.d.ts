@@ -7,6 +7,8 @@ export function CheckDocument(arg1:string):Promise<main.CheckResult>;
 
 export function CheckUpdate():Promise<main.ReleaseInfo>;
 
+export function CliVersionInfo():Promise<main.ReleaseInfo>;
+
 export function CreateProject():Promise<main.ProjectInfo>;
 
 export function EmitProjectChanged():Promise<void>;

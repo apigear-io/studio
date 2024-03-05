@@ -26,6 +26,7 @@ export default function AboutDialogAction() {
   const [opened, { open, close }] = useDisclosure();
   const currentVersion = useAppStore((state) => state.currentVersion);
   const latestVersion = useAppStore((state) => state.latestVersion);
+  const cliVersion = useAppStore((state) => state.cliVersion);
   const commitHash = useAppStore((state) => state.commitHash);
   const commitDate = useAppStore((state) => state.commitDate);
   const refresh = useAppStore((state) => state.refresh);
@@ -55,6 +56,7 @@ export default function AboutDialogAction() {
     { label: "New Version", value: latestVersion },
     { label: "Commit Hash", value: commitHash },
     { label: "Commit Date", value: commitDate },
+    { label: "CLI Version", value: cliVersion },
   ];
 
   function openInBrowser(url: string) {
