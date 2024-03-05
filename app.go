@@ -428,11 +428,12 @@ func (a App) StopScenario(source string) error {
 	return err
 }
 
-func (a App) VersionInfo() cfg.BuildInfo {
-	return cfg.GetBuildInfo("studio")
+func (a App) VersionInfo() *BuildInfo {
+	var info = cfg.GetBuildInfo("studio")
+	return &BuildInfo{Version: info.Version, Commit: info.Commit, Date: info.Date}
 }
 
-func (a App) CliVersionInfo() (*ReleaseInfo, error) {
+func (a App) CliVersionInfo() (*BuildInfo, error) {
 	bi, ok := debug.ReadBuildInfo()
 	if !ok {
 		return nil, fmt.Errorf("no build info")
@@ -445,7 +446,7 @@ func (a App) CliVersionInfo() (*ReleaseInfo, error) {
 			break
 		}
 	}
-	return &ReleaseInfo{
+	return &BuildInfo{
 		Version: cli_version,
 	}, nil
 }

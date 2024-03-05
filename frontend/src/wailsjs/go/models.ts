@@ -16,6 +16,22 @@ export namespace main {
 	        this.editor_command = source["editor_command"];
 	    }
 	}
+	export class BuildInfo {
+	    version: string;
+	    commit: string;
+	    date: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new BuildInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.version = source["version"];
+	        this.commit = source["commit"];
+	        this.date = source["date"];
+	    }
+	}
 	export class CheckResult {
 	    is_valid: boolean;
 	    errors: string[];

@@ -1,6 +1,8 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 // DocumentInfo represents a document's metadata.
 type DocumentInfo struct {
@@ -44,4 +46,9 @@ type ReleaseInfo struct {
 type CheckResult struct {
 	IsValid bool     `json:"is_valid"`
 	Errors  []string `json:"errors"`
+}
+type BuildInfo struct {
+	Version string `json:"version"`
+	Commit  string `json:"commit"`
+	Date    string `json:"date"`
 }
