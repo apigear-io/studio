@@ -1,11 +1,12 @@
 import { create } from "zustand";
-import { CheckUpdate, VersionInfo } from "../wailsjs/go/main/App";
+import { CheckUpdate, VersionInfo, CliVersionInfo } from "../wailsjs/go/main/App";
 
 type AppState = {
   isLoading: boolean;
   error: string;
   currentVersion: string;
   latestVersion: string;
+  cliVersion: string;
   commitHash: string;
   commitDate: string;
 };
@@ -18,6 +19,7 @@ type AppActions = {
 export const useAppStore = create<AppState & AppActions>((set, get) => ({
   currentVersion: "",
   latestVersion: "",
+  cliVersion: "",
   commitHash: "",
   commitDate: "",
   isLoading: false,
@@ -33,6 +35,13 @@ export const useAppStore = create<AppState & AppActions>((set, get) => ({
           currentVersion: info.version,
           commitHash: info.commit,
           commitDate: info.date,
+        });
+      }
+      const cli_info = await CliVersionInfo();
+      console.log("cli info", cli_info);
+      if (cli_info) {
+        set({
+          cliVersion: cli_info.version,
         });
       }
       const rel = await CheckUpdate();

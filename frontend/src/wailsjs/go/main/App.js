@@ -10,6 +10,10 @@ export function CheckUpdate() {
   return window['go']['main']['App']['CheckUpdate']();
 }
 
+export function CliVersionInfo() {
+  return window['go']['main']['App']['CliVersionInfo']();
+}
+
 export function CreateProject() {
   return window['go']['main']['App']['CreateProject']();
 }

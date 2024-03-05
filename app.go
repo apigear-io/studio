@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime/debug"
 
 	"github.com/apigear-io/cli/pkg/cfg"
 	"github.com/apigear-io/cli/pkg/helper"
@@ -429,6 +430,24 @@ func (a App) StopScenario(source string) error {
 
 func (a App) VersionInfo() cfg.BuildInfo {
 	return cfg.GetBuildInfo("studio")
+}
+
+func (a App) CliVersionInfo() (*ReleaseInfo, error) {
+	bi, ok := debug.ReadBuildInfo()
+	if !ok {
+		return nil, fmt.Errorf("no build info")
+	}
+
+	var cli_version = "v0.0.0"
+	for _, dep := range bi.Deps {
+		if dep.Path == "github.com/apigear-io/cli" {
+			cli_version = dep.Version
+			break
+		}
+	}
+	return &ReleaseInfo{
+		Version: cli_version,
+	}, nil
 }
 
 // TODO: need to cache results
