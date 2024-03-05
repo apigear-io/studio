@@ -20,6 +20,8 @@
 # Go workspace file
 go.work
 
+# Ignore temporary wails files
+frontend/wailsjs/
 
 .vscode/
 .DS_Store
