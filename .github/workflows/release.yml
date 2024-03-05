@@ -40,6 +40,7 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v4
         with:
+          name: ApiGear-Studio-windows-latest
           path: |
             build/bin/${{env.artifact}}
             build/bin/${{env.installer}}
@@ -71,6 +72,7 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v4
         with:
+          name: ApiGear-Studio-ubuntu-latest
           path: build/bin/${{env.artifact}}
           retention-days: 5
   build-macos-universal:
@@ -107,6 +109,7 @@ jobs:
         shell: bash
       - uses: actions/upload-artifact@v4
         with:
+          name: ApiGear-Studio-macos-latest
           path: |
             build/bin/${{env.artifact_amd64}}
             build/bin/${{env.artifact_arm64}}
@@ -116,6 +119,10 @@ jobs:
     needs: [build-windows-amd64, build-linux-amd64, build-macos-universal]
     steps:
       - uses: actions/download-artifact@v4
+        with:
+          path: artifact
+          pattern: ApiGear-Studio-*
+          merge-multiple: true
       - run: (for i in *.*; do shasum -a 256 "$i"; done) >> checksums.txt
         working-directory: artifact
         shell: bash
