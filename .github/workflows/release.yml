@@ -84,7 +84,7 @@ jobs:
 
       platform: darwin/universal
     steps:
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v4
         with:
           go-version: ${{env.go_version}}
       - uses: actions/setup-node@v4
