@@ -45,7 +45,7 @@ export default function InstallAction({
         </Button>
       </Menu.Target>
       <Menu.Dropdown>
-        {template.versions.map((version) => {
+        {template.versions.sort().map((version) => {
           return (
             <Menu.Item
               leftSection={<IconDownload />}
