@@ -48,7 +48,7 @@ export default function InfoAction({ template }: { template: main.RepoInfo }) {
       key: "versions",
       label: "Versions",
       description: "Versions of the template",
-      value: template.versions.join(", "),
+      value: template.versions.sort().join(", "),
     },
   ];
   return (
