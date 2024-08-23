@@ -8,7 +8,7 @@ require (
 	github.com/apigear-io/cli v0.39.0
 	github.com/creativeprojects/go-selfupdate v1.3.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
-	github.com/wailsapp/wails/v2 v2.8.0
+	github.com/wailsapp/wails/v2 v2.9.1
 )
 
 require github.com/gorilla/websocket v1.5.3 // indirect
