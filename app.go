@@ -158,7 +158,7 @@ func (a App) NewDocument(docType string, name string) (string, error) {
 		return "", fmt.Errorf("no open project to add new document")
 	}
 	dir := a.currentProject.Path
-	target, err := prj.CreateProjectDocument(dir, docType, name)
+	target, err := prj.AddDocument(dir, docType, name)
 	a.openProject(dir)
 	if err != nil {
 		log.Error().Err(err).Msgf("create document: %s", err)
