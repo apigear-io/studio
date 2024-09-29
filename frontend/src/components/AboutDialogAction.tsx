@@ -53,7 +53,7 @@ export default function AboutDialogAction() {
       href: "https://www.apache.org/licenses/LICENSE-2.0",
     },
     { label: "Current Version", value: currentVersion },
-    { label: "New Version", value: latestVersion },
+    { label: "New Version", value: `v${latestVersion}` },
     { label: "Commit Hash", value: commitHash },
     { label: "Commit Date", value: commitDate },
     { label: "CLI Version", value: cliVersion },
@@ -135,7 +135,7 @@ export default function AboutDialogAction() {
           {latestVersion && (
             <Card>
               <Text fw={700} fs="sm" c="dimmed">
-                A new version is available {latestVersion}
+                A new version is available v{latestVersion}
               </Text>
               <Button
                 variant="light"
@@ -144,7 +144,7 @@ export default function AboutDialogAction() {
                 onClick={updateProgram}
                 mt="md"
               >
-                Update to {latestVersion}
+                Update to v{latestVersion}
               </Button>
             </Card>
           )}
