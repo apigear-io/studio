@@ -8,7 +8,7 @@ tasks:
   init:
     desc: install initial dependencies
     cmds:
-      - go install github.com/wailsapp/wails/v2/cmd/wails@v2.9.1
+      - go install github.com/wailsapp/wails/v2/cmd/wails@v2.9.2
       - go version
       - go mod tidy
 
@@ -19,7 +19,7 @@ tasks:
   update:
     desc: Update wails
     cmds:
-      - go install github.com/wailsapp/wails/v2/cmd/wails@v2.9.1
+      - go install github.com/wailsapp/wails/v2/cmd/wails@v2.9.2
   build:
     desc: Build the project
     cmds:

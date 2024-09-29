@@ -8,7 +8,7 @@ require (
 	github.com/apigear-io/cli v0.39.0
 	github.com/creativeprojects/go-selfupdate v1.3.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
-	github.com/wailsapp/wails/v2 v2.9.1
+	github.com/wailsapp/wails/v2 v2.9.2
 )
 
 require github.com/gorilla/websocket v1.5.3 // indirect
@@ -87,7 +87,7 @@ require (
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	github.com/wailsapp/go-webview2 v1.0.10 // indirect
+	github.com/wailsapp/go-webview2 v1.0.16 // indirect
 	github.com/wailsapp/mimetype v1.4.1 // indirect
 	github.com/whilp/git-urls v1.0.0 // indirect
 	github.com/xanzy/go-gitlab v0.107.0 // indirect
