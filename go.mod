@@ -5,7 +5,7 @@ go 1.22.2
 toolchain go1.22.7
 
 require (
-	github.com/apigear-io/cli v0.41.0
+	github.com/apigear-io/cli v0.42.0
 	github.com/creativeprojects/go-selfupdate v1.3.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/wailsapp/wails/v2 v2.9.2
