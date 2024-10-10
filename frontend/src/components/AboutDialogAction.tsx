@@ -53,11 +53,19 @@ export default function AboutDialogAction() {
       href: "https://www.apache.org/licenses/LICENSE-2.0",
     },
     { label: "Current Version", value: currentVersion },
-    { label: "New Version", value: `v${latestVersion}` },
+  ];
+
+  if (latestVersion) {
+    entries.push({ label: "Latest Version", value: `v${latestVersion}` });
+  } else {
+    entries.push({ label: "Latest Version", value: "You are using the latest version" });
+  }
+
+  entries.push(
     { label: "Commit Hash", value: commitHash },
     { label: "Commit Date", value: commitDate },
-    { label: "CLI Version", value: cliVersion },
-  ];
+    { label: "CLI Version", value: cliVersion }
+  );
 
   function openInBrowser(url: string) {
     BrowserOpenURL(url);
