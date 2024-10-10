@@ -93,9 +93,15 @@ export default function AboutDialogAction() {
         <Stack gap="xs">
           <Text>Privacy</Text>
           <Text c="dimmed" fz="sm">
-            ApiGear Studio uses Google Analytics and Sentry to collect anonymous
-            usage data. The data helps us to improve the product. By using this
-            software you agree to the collection of anonymous usage data.
+          See the Epic Games privacy policy (
+                        https://www.epicgames.com/privacypolicy
+                        <ActionIcon
+                          variant="transparent"
+                          onClick={() => openInBrowser("https://www.epicgames.com/privacypolicy")}
+                          size="xs"
+                        >
+                          <IconExternalLink />
+                        </ActionIcon>) for more info.
           </Text>
           <Text>Disclaimer</Text>
           <Text c="dimmed" fz="sm">
