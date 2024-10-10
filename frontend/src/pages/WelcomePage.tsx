@@ -6,8 +6,6 @@ import {
   Paper,
   Stack,
   Title,
-  useMantineTheme,
-  Text,
   Image,
   Card,
 } from "@mantine/core";
@@ -26,10 +24,12 @@ import {
   OpenRecentProject,
   RemoveRecentProject,
 } from "../wailsjs/go/main/App";
+import { AppShell } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { notifyError, notifyOpen, notifySuccess } from "../toasts";
 import { useProjectStore } from "../stores/ProjectStore";
 import { BrowserOpenURL } from "../wailsjs/runtime/runtime";
+import AppFooter from "../components/AppFooter";
 import Page from "../components/Page";
 import AppIcon from "../assets/icons/appicon-96x96.png";
 
@@ -177,35 +177,34 @@ function MoreSection() {
 }
 
 export default function WelcomePage() {
-  const theme = useMantineTheme();
   return (
-    <Page title="Welcome">
-      <Paper p="lg">
-        <Stack gap="lg">
-          <Group gap="lg">
-            <Image src={AppIcon} width={64} height={64} alt="ApiGear" />
-            <Stack gap="0">
-              <Title order={1} c={theme.primaryColor}>
-                ApiGear
-              </Title>
-              <Text fz="sm" c="dimmed" fs="italic">
-                APIs evolved.
-              </Text>
+    <AppShell header={{ height: 60 }} footer={{ height: 38 }} padding="md">
+      <AppShell.Header p="xs" withBorder>
+        <Group justify="flex-start" px="md">
+          <Image src={AppIcon} width={45} height={45} alt="ApiGear" />
+          <Title order={1}>ApiGear</Title>
+        </Group>
+      </AppShell.Header>
+      <AppShell.Main>
+        <Page title="Welcome">
+          <Paper p="lg">
+            <Stack gap="lg">
+              <Grid gutter="lg" align="stretch">
+                <Grid.Col span={6}>
+                  <StartSection />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <MoreSection />
+                </Grid.Col>
+                <Grid.Col span={12}>
+                  <RecentSection />
+                </Grid.Col>
+              </Grid>
             </Stack>
-          </Group>
-          <Grid gutter="lg" align="stretch">
-            <Grid.Col span={6}>
-              <StartSection />
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <MoreSection />
-            </Grid.Col>
-            <Grid.Col span={12}>
-              <RecentSection />
-            </Grid.Col>
-          </Grid>
-        </Stack>
-      </Paper>
-    </Page>
+          </Paper>
+        </Page>
+      </AppShell.Main>
+      <AppFooter />
+    </AppShell>
   );
 }
