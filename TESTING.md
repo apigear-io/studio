@@ -80,7 +80,7 @@ Verify:
 ### About
 
 - Click `About` and external browser opens with: https://apigear.io
-- Click `Documentation` and external browser opens with: https:/docs.apigear.io
+- Click `Documentation` and external browser opens with: https:/apigear.io/docs
 
 ## Dashboard
 

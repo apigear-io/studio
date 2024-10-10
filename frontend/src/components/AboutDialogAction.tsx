@@ -39,8 +39,8 @@ export default function AboutDialogAction() {
     },
     {
       label: "Documentation",
-      value: "https://docs.apigear.io",
-      href: "https://docs.apigear.io",
+      value: "https://apigear.io/docs",
+      href: "https://apigear.io/docs",
     },
     {
       label: "Source Code",

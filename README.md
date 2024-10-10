@@ -1,18 +1,18 @@
 # ApiGear Studio
 
-ApiGear Studio is a desktop application that helps you to create and manage your API projects. It is documented at [ApiGear](https://docs.apigear.io).
+ApiGear Studio is a desktop application that helps you to create and manage your API projects. It is documented at [ApiGear](https://apigear.io/docs).
 
-Studio focus on the user interface integration towards platform or external services. APIs are co-created by designers and developers. The API projects are created using [ObjectAPI](https://docs.apigear.io/docs/category/objectapi) and [technology templates](https://docs.apigear.io/docs/category/sdk-templates). The technology templates are used to generate SDKs for the API projects.
+Studio focus on the user interface integration towards platform or external services. APIs are co-created by designers and developers. The API projects are created using [ObjectAPI](https://apigear.io/docs/objectapi/intro) and [technology templates](https://apigear.io/docs/sdk/intro). The technology templates are used to generate SDKs for the API projects.
 
 The workflow extends the API driven process with API monitoring and API simulation. This allows to create a complete API driven process with feedback loops.
 
 ## Features
 
-- Create new API projects from templates using [ObjectAPI](https://docs.apigear.io/docs/category/objectapi)
-- Install [technology templates](https://docs.apigear.io/docs/category/sdk-templates) from our Marketplace
+- Create new API projects from templates using [ObjectAPI](https://apigear.io/docs/objectapi/intro)
+- Install [technology templates](https://apigear.io/docs/sdk/intro) from our Marketplace
 - Generate SDKs for your API projects using solutions
-- Run [API simulations](https://docs.apigear.io/docs/category/api-simulation) based on provided scenarios
-- View [API monitoring](https://docs.apigear.io/docs/category/api-monitoring) results
+- Run [API simulations](https://apigear.io/docs/advanced/simulation/intro) based on provided scenarios
+- View [API monitoring](https://apigear.io/docs/advanced/monitor/intro) results
 
 ## Development
 

@@ -151,7 +151,7 @@ function MoreSection() {
     BrowserOpenURL("https://apigear.io");
   }
   function openDocs() {
-    BrowserOpenURL("https://docs.apigear.io");
+    BrowserOpenURL("https://apigear.io/docs");
   }
   return (
     <Card shadow="md" p="md" style={{ height: "100%" }} withBorder>
