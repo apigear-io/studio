@@ -23,7 +23,7 @@ export default function AppHeader() {
   }
   function openHelp() {
     trackAction("open-help");
-    BrowserOpenURL("https://docs.apigear.io");
+    BrowserOpenURL("https://apigear.io/docs");
   }
 
   function openFolder() {
