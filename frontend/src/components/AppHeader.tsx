@@ -41,7 +41,7 @@ export default function AppHeader() {
     <AppShell.Header p="xs" withBorder>
       <Group justify="space-between">
         <Group justify="flex-start" px="md">
-          <Image src={AppIcon} width={40} height={40} alt="ApiGear" />
+          <Image src={AppIcon} width={45} height={45} alt="ApiGear" />
           <Title order={1}>ApiGear</Title>
         </Group>
         <Group justify="space-between" px="md">
