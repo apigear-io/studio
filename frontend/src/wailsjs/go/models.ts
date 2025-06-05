@@ -160,3 +160,37 @@ export namespace main {
 
 }
 
+export namespace net {
+	
+	export class NetworkManager {
+	
+	
+	    static createFrom(source: any = {}) {
+	        return new NetworkManager(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	
+	    }
+	}
+
+}
+
+export namespace sim {
+	
+	export class Manager {
+	
+	
+	    static createFrom(source: any = {}) {
+	        return new Manager(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	
+	    }
+	}
+
+}
+

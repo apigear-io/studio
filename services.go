@@ -11,10 +11,7 @@ import (
 
 	"github.com/apigear-io/cli/pkg/cfg"
 	zlog "github.com/apigear-io/cli/pkg/log"
-	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
-	"github.com/apigear-io/cli/pkg/sim"
-	"github.com/apigear-io/cli/pkg/sim/core"
 	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/apigear-io/cli/pkg/up"
 	"github.com/creativeprojects/go-selfupdate"
@@ -33,64 +30,43 @@ type UpdateInfo struct {
 }
 
 var (
-	server         *net.Server
-	simulation     = sim.NewSimulation()
-	monitorStarted bool
-	runner         = sol.NewRunner()
-	serviceCancel  context.CancelFunc
-	serviceCtx     context.Context
-	updateInfo     = &UpdateInfo{}
+	runner     = sol.NewRunner()
+	updateInfo = &UpdateInfo{}
 )
 
-func init() {
-	serviceCtx, serviceCancel = context.WithCancel(context.Background())
-}
-
-func StartServices(ctx context.Context, port string) error {
+// TODO: stop using getManager, will kepp a singelton instance of the manager, cretae maanager when services start
+func StartServices(app *App) error {
 	log.Info().Msg("start background services")
-	log.Info().Msg("start updater ...")
-	err := StartUpdater(ctx)
-	if err != nil {
-		log.Error().Err(err).Msg("start updater")
-	}
-	log.Info().Msg("start http server ...")
-	server = net.NewHTTPServer()
-	log.Info().Msg("register log service ...")
-	err = RegisterLogService(ctx)
+	err := RegisterLogService(app.ctx)
 	if err != nil {
 		log.Error().Err(err).Msg("register log service")
 	}
-	log.Info().Msg("register monitor service ...")
-	err = RegisterMonitorService(ctx)
+	netman := app.NetworkManager()
+
+	err = netman.Start(net.DefaultOptions)
 	if err != nil {
-		log.Error().Err(err).Msg("register monitor service")
+		log.Error().Err(err).Msg("start network manager")
+		return err
 	}
-	log.Info().Msg("register simulation service ...")
-	err = RegisterSimulationService(ctx)
+
+	log.Info().Msg("start simulation service")
+	simman := app.SimulationManager()
+	simman.Start(netman)
+
+	log.Info().Msg("start updater ...")
+	err = StartUpdater(app.ctx)
 	if err != nil {
-		log.Error().Err(err).Msg("register simulation service")
-	}
-	log.Info().Msg("run server ...")
-	err = RunServer(fmt.Sprintf(":%s", port))
-	if err != nil {
-		log.Error().Err(err).Msg("run server")
+		log.Error().Err(err).Msg("start updater")
 	}
 	return nil
 }
 
-func StopServices() {
+func StopServices(app *App) {
 	log.Info().Msg("stop background services")
-	if server != nil {
-		server.Stop()
-	}
-	if simulation != nil {
-		simulation.Stop()
-	}
+	app.NetworkManager().Stop()
+	app.SimulationManager().Stop()
 	if runner != nil {
 		runner.Clear()
-	}
-	if serviceCancel != nil {
-		serviceCancel()
 	}
 }
 
@@ -116,76 +92,34 @@ func StartUpdater(ctx context.Context) error {
 	return err
 }
 
-func RunServer(addr string) error {
-	log.Info().Msgf("start http server on %s", addr)
-	err := server.Start(addr)
-	if err != nil {
-		log.Error().Msgf("start server: %v", err)
-	}
-	return nil
-}
-
-func RestartServer(ctx context.Context, addr string) error {
+func RestartServer(app *App, addr string) error {
 	log.Info().Msgf("restart server on %s", addr)
-	if server == nil {
-		return fmt.Errorf("server not started")
+	err := app.NetworkManager().Stop()
+	if err != nil {
+		log.Error().Err(err).Msg("stop server")
 	}
-	return server.Restart(serviceCtx, addr)
+	return app.NetworkManager().Start(net.DefaultOptions)
 }
 
-func RegisterMonitorService(ctx context.Context) error {
-	log.Info().Msg("start monitor service")
-	if server == nil {
-		return fmt.Errorf("server not started")
-	}
-	if monitorStarted {
-		return fmt.Errorf("monitor service already started")
-	}
-	monitorStarted = true
-	server.Router().Post("/monitor/{source}", net.HandleMonitorRequest)
-	log.Info().Msgf("handle monitor request on %s/monitor/{source}", server.Address())
-	mon.Emitter.On(func(event *mon.Event) {
-		log.Debug().Msgf("send monitor event: %v", event)
-		runtime.EventsEmit(ctx, "mon", event)
-	})
+func RegisterSimulationService(app *App) error {
+	log.Info().Msg("start simulation manager")
+	// if server == nil {
+	// 	log.Error().Msg("server not started")
+	// 	return fmt.Errorf("server not started")
+	// }
+	// if simulation == nil {
+	// 	log.Error().Msg("simulation not started")
+	// 	return nil
+	// }
+	// hub := net.NewSimuHub(ctx, simulation)
+	// server.Router().HandleFunc("/ws", hub.ServeHTTP)
+	// log.Debug().Msgf("simulation server listening on %s/ws", server.Address())
+	// log.Info().Msg("register simulation events")
+	// simulation.OnEvent(func(evt *core.SimuEvent) {
+	// 	log.Info().Msgf("send simulation event: %v", evt)
+	// 	runtime.EventsEmit(ctx, "sim", evt)
+	// })
 	return nil
-}
-
-func RegisterSimulationService(ctx context.Context) error {
-	log.Info().Msg("start simulation service")
-	if server == nil {
-		log.Error().Msg("server not started")
-		return fmt.Errorf("server not started")
-	}
-	if simulation == nil {
-		log.Error().Msg("simulation not started")
-		return nil
-	}
-	hub := net.NewSimuHub(ctx, simulation)
-	server.Router().HandleFunc("/ws", hub.ServeHTTP)
-	log.Debug().Msgf("simulation server listening on %s/ws", server.Address())
-	log.Info().Msg("register simulation events")
-	simulation.OnEvent(func(evt *core.SimuEvent) {
-		log.Info().Msgf("send simulation event: %v", evt)
-		runtime.EventsEmit(ctx, "sim", evt)
-	})
-	return nil
-}
-
-func GetMonitorAddress() (string, error) {
-	if server == nil {
-		return "", fmt.Errorf("server not started")
-	}
-	return fmt.Sprintf("http://%s/monitor/${source}", server.Address()), nil
-}
-
-func GetSimulationAddress() (string, error) {
-	if server == nil {
-		return "", fmt.Errorf("server not started")
-	}
-	addr := fmt.Sprintf("ws://%s/ws", server.Address())
-	log.Info().Msgf("simulation address: %s", addr)
-	return addr, nil
 }
 
 func RegisterLogService(ctx context.Context) error {
@@ -217,10 +151,6 @@ func RestartSelf() error {
 		return err
 	}
 	return syscall.Exec(self, args, env)
-}
-
-func GetSimulation() *sim.Simulation {
-	return simulation
 }
 
 func GetRunner() *sol.Runner {

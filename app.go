@@ -9,9 +9,10 @@ import (
 
 	"github.com/apigear-io/cli/pkg/cfg"
 	"github.com/apigear-io/cli/pkg/helper"
+	"github.com/apigear-io/cli/pkg/net"
 	"github.com/apigear-io/cli/pkg/prj"
 	"github.com/apigear-io/cli/pkg/repos"
-	"github.com/apigear-io/cli/pkg/sim/actions"
+	"github.com/apigear-io/cli/pkg/sim"
 	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/apigear-io/cli/pkg/spec"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -21,11 +22,27 @@ import (
 type App struct {
 	ctx            context.Context
 	currentProject *ProjectInfo
+	netman         *net.NetworkManager
+	simman         *sim.Manager
 }
 
 // NewApp creates a new App application struct
 func NewApp() *App {
-	return &App{}
+	netman := net.NewManager()
+	siman := sim.NewManager(sim.ManagerOptions{})
+	return &App{
+		ctx:    context.Background(),
+		netman: netman,
+		simman: siman,
+	}
+}
+
+func (a *App) NetworkManager() *net.NetworkManager {
+	return a.netman
+}
+
+func (a *App) SimulationManager() *sim.Manager {
+	return a.simman
 }
 
 // startup is called when the app starts. The context is saved
@@ -35,7 +52,7 @@ func (a *App) startup(ctx context.Context) {
 	w := cfg.GetInt(cfg.KeyWindowWidth)
 	h := cfg.GetInt(cfg.KeyWindowHeight)
 	runtime.WindowSetSize(ctx, w, h)
-	err := StartServices(ctx, cfg.ServerPort())
+	err := StartServices(a)
 	if err != nil {
 		log.Error().Err(err).Msgf("start services: %s", err)
 	}
@@ -43,7 +60,7 @@ func (a *App) startup(ctx context.Context) {
 
 func (a *App) shutdown(ctx context.Context) {
 	log.Info().Msg("shutdown")
-	StopServices()
+	StopServices(a)
 	w, h := runtime.WindowGetSize(ctx)
 	cfg.Set(cfg.KeyWindowWidth, w)
 	cfg.Set(cfg.KeyWindowHeight, h)
@@ -168,21 +185,11 @@ func (a App) NewDocument(docType string, name string) (string, error) {
 }
 
 func (a App) GetMonitorAddress() (string, error) {
-	s, err := GetMonitorAddress()
-	if err != nil {
-		log.Error().Err(err).Msgf("get monitor address: %s", err)
-		return "", err
-	}
-	return s, err
+	return a.NetworkManager().GetMonitorAddress()
 }
 
 func (a App) GetSimulationAddress() (string, error) {
-	s, err := GetSimulationAddress()
-	if err != nil {
-		log.Error().Err(err).Msgf("get simulation address: %s", err)
-		return "", err
-	}
-	return s, err
+	return a.NetworkManager().GetSimulationAddress()
 }
 
 func (a App) RemoveRecentProject(source string) {
@@ -381,49 +388,23 @@ func (a App) RestartApp() {
 	}
 }
 
-func (a App) StartScenario(source string) error {
-	log.Debug().Msgf("start scenario %s", source)
-	s := GetSimulation()
-	result, err := spec.CheckFile(source)
+func (a App) StartSimulation(source string) error {
+	log.Debug().Msgf("start client simulation %s", source)
+	content, err := os.ReadFile(source)
 	if err != nil {
-		simLog.Error().Err(err).Msgf("invalid scenario: %s", source)
 		return err
 	}
-	if !result.Valid() {
-		for _, err := range result.Errors {
-			simLog.Error().Str("context", err.Related).Msgf("%s: %s", err.Field, err.Description)
-		}
-		return fmt.Errorf("invalid scenario: %s", source)
-	}
-
-	doc, err := actions.ReadScenario(source)
-	if err != nil {
-		simLog.Error().Err(err).Msgf("read scenario: %s", err)
-		return err
-	}
-	err = s.LoadScenario(source, doc)
-	if err != nil {
-		simLog.Error().Err(err).Msgf("load scenario: %s", err)
-		return err
-	}
-	ctx := context.Background()
-	err = s.PlayAllSequences(ctx)
-
-	if err != nil {
-		simLog.Error().Err(err).Msgf("play scenario: %s", err)
-		return err
-	}
-
+	a.SimulationManager().ScriptRun(sim.NewScript(source, string(content)))
 	return nil
 }
 
-func (a App) StopScenario(source string) error {
-	simLog.Debug().Msgf("stop scenario %s", source)
-	s := GetSimulation()
-	s.StopAllSequences()
-	err := s.UnloadScenario(source)
+func (a App) StopSimulation(source string) error {
+	log.Debug().Msgf("stop client simulation %s", source)
+	err := a.SimulationManager().ScriptStop(source)
 	if err != nil {
-		simLog.Error().Err(err).Msgf("stop scenario: %s", err)
+		log.Error().Err(err).Msgf("stop simulation: %s", err)
+	} else {
+		log.Info().Msgf("simulation stopped")
 	}
 	return err
 }

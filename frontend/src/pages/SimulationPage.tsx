@@ -13,7 +13,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useLogsStore } from "../stores/LogsStore";
 import { useSimuStore } from "../stores/SimuStore";
 import LogEventTable from "../components/LogEventTable";
-import { StartScenario, StopScenario } from "../wailsjs/go/main/App";
+import { StartSimulation, StopSimulation } from "../wailsjs/go/main/App";
 import { useNavigate } from "react-router-dom";
 import Page from "../components/Page";
 import useTrackAction from "../hooks/useTrackAction";
@@ -29,19 +29,18 @@ function PlayButton({ doc, open }: PlayButtonProps) {
   const startRecording = useLogsStore((state) => state.startRecordingSimEvents);
   const startSimu = useSimuStore((state) => state.start);
   const playScenario = (doc: Document) => {
-    trackAction("play_scenario", doc.path);
-    console.log("play scenario", doc.name);
+    trackAction("play_client_simulation", doc.path);
+    console.log("play client simulation", doc.name);
     open();
     startRecording();
-    StartScenario(doc.path)
-      .then((result) => {
-        startSimu(doc.path);
-        console.log(result);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    StartSimulation(doc.path).then((result) => {
+      startSimu(doc.path);
+      console.log(result);
+    }).catch((err) => {
+      console.error(err);
+    });
   };
+      
   return (
     <Button
       variant="subtle"
@@ -64,16 +63,15 @@ function StopButton({ doc, close }: StopButtonProps) {
   const stopSimu = useSimuStore((state) => state.stop);
   const stopRecording = useLogsStore((state) => state.stopRecordingSimEvents);
   const stopScenario = (doc: Document) => {
-    trackAction("stop_scenario", doc.path);
     close();
+    trackAction("stop_scenario", doc.path);
     stopRecording();
-    StopScenario(doc.path)
-      .then(() => {
-        stopSimu(doc.path);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    StopSimulation(doc.path).then((result) => {
+      stopSimu(doc.path);
+      console.log(result);
+    }).catch((err) => {
+      console.error(err);
+    });
   };
   return (
     <Button
@@ -109,7 +107,7 @@ export default function ProjectPage() {
   const nav = useNavigate();
   const getDocuments = useProjectStore((state) => state.getDocuments);
   const documents = useMemo(() => {
-    return getDocuments("scenario") || [];
+    return getDocuments("simulation") || [];
   }, [getDocuments]);
 
   // drawer
