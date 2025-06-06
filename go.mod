@@ -3,7 +3,7 @@ module github.com/apigear-io/studio
 go 1.24.1
 
 require (
-	github.com/apigear-io/cli v0.44.0
+	github.com/apigear-io/cli v0.45.0
 	github.com/creativeprojects/go-selfupdate v1.5.0
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/wailsapp/wails/v2 v2.10.1
@@ -113,5 +113,3 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/apigear-io/cli => ../cli
