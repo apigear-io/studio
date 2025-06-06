@@ -50,6 +50,10 @@ export function InstallTemplateFromSource(arg1) {
   return window['go']['main']['App']['InstallTemplateFromSource'](arg1);
 }
 
+export function NetworkManager() {
+  return window['go']['main']['App']['NetworkManager']();
+}
+
 export function NewDocument(arg1, arg2) {
   return window['go']['main']['App']['NewDocument'](arg1, arg2);
 }
@@ -102,12 +106,16 @@ export function ShareProject(arg1) {
   return window['go']['main']['App']['ShareProject'](arg1);
 }
 
-export function StartScenario(arg1) {
-  return window['go']['main']['App']['StartScenario'](arg1);
+export function SimulationManager() {
+  return window['go']['main']['App']['SimulationManager']();
 }
 
-export function StopScenario(arg1) {
-  return window['go']['main']['App']['StopScenario'](arg1);
+export function StartSimulation(arg1) {
+  return window['go']['main']['App']['StartSimulation'](arg1);
+}
+
+export function StopSimulation(arg1) {
+  return window['go']['main']['App']['StopSimulation'](arg1);
 }
 
 export function UpdateProgram(arg1) {
