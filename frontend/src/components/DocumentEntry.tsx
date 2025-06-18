@@ -40,7 +40,7 @@ function RouteForType(type: string): string {
       return "/project/modules";
     case "solution":
       return "/project/solutions";
-    case "scenario":
+    case "simulation":
       return "/project/simulation";
     default:
       return "/project";

@@ -394,7 +394,9 @@ func (a App) StartSimulation(source string) error {
 	if err != nil {
 		return err
 	}
-	a.SimulationManager().ScriptRun(sim.NewScript(source, string(content)))
+	simman := a.SimulationManager()
+	simman.ScriptRun(sim.NewScript(source, string(content)))
+	simman.FunctionRun("main", nil)
 	return nil
 }
 

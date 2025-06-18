@@ -125,6 +125,7 @@ func RegisterSimulationService(app *App) error {
 func RegisterLogService(ctx context.Context) error {
 	log.Info().Msg("start log service")
 	zlog.OnReportBytes(func(s string) {
+		fmt.Printf("log msg: %s", s)
 		runtime.EventsEmit(ctx, "log", s)
 	})
 	return nil

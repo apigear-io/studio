@@ -88,6 +88,7 @@ export const useLogsStore = create<LogsState & LogsActions>((set, get) => ({
     const { pushEvent, pushSimEvent, pushSolutionEvent } = get();
     set({ events: [], solutionEvents: [], simEvents: [] });
     EventsOn("log", (data) => {
+      console.log("log-event", data)
       const event = JSON.parse(data);
       pushEvent(event);
       pushSimEvent(event);
