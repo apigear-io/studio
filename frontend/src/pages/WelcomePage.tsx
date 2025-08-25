@@ -131,14 +131,15 @@ function RecentSection() {
                 label={item}
                 leftSection={<IconFolder />}
                 onClick={() => openRecent(item)}
-              />
-              <Button
+                rightSection={              <Button
                 variant="subtle"
                 onClick={() => deleteRecent(item)}
                 leftSection={<IconTrash size={18} />}
               >
                 Delete
               </Button>
+            }
+              />
             </Group>
           ))}
         </Stack>
@@ -181,7 +182,7 @@ export default function WelcomePage() {
     <AppShell header={{ height: 60 }} footer={{ height: 38 }} padding="md">
       <AppShell.Header p="xs" withBorder>
         <Group justify="flex-start" px="md">
-          <Image src={AppIcon} width={45} height={45} alt="ApiGear" />
+          <Image src={AppIcon} w={45} h={45} alt="ApiGear" />
           <Title order={1}>ApiGear</Title>
         </Group>
       </AppShell.Header>
