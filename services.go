@@ -11,6 +11,7 @@ import (
 
 	"github.com/apigear-io/cli/pkg/cfg"
 	zlog "github.com/apigear-io/cli/pkg/log"
+	"github.com/apigear-io/cli/pkg/mon"
 	"github.com/apigear-io/cli/pkg/net"
 	"github.com/apigear-io/cli/pkg/sol"
 	"github.com/apigear-io/cli/pkg/up"
@@ -40,6 +41,11 @@ func StartServices(app *App) error {
 	err := RegisterLogService(app.ctx)
 	if err != nil {
 		log.Error().Err(err).Msg("register log service")
+	}
+
+	err = RegisterMonitorService(app)
+	if err != nil {
+		log.Error().Err(err).Msg("register monitor service")
 	}
 	netman := app.NetworkManager()
 
@@ -119,6 +125,19 @@ func RegisterSimulationService(app *App) error {
 	// 	log.Info().Msgf("send simulation event: %v", evt)
 	// 	runtime.EventsEmit(ctx, "sim", evt)
 	// })
+	return nil
+}
+
+func RegisterMonitorService(app *App) error {
+	log.Info().Msg("start monitor service")
+	netman := app.NetworkManager()
+	if netman == nil {
+		log.Error().Msg("network manager not started")
+		return fmt.Errorf("network manager not started")
+	}
+	netman.MonitorEmitter().AddHook(func(e *mon.Event) {
+		runtime.EventsEmit(app.ctx, "mon", e)
+	})
 	return nil
 }
 

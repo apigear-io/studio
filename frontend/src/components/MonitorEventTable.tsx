@@ -51,6 +51,9 @@ export default function MonitorEventTable(props: EventTableProps) {
       columns={columns}
       highlightOnHover
       height={props.height || "67vh"}
+      minHeight={200}
+      noRecordsText=""
+      noRecordsIcon={null}
       rowExpansion={{
         content: ({ record }) => (
           <CodeHighlight
